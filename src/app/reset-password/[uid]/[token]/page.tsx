@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_BASE } from '@/lib/api';
 
 interface ResetPasswordProps {
   params: {
@@ -42,7 +43,7 @@ export default function ResetPassword({ params }: ResetPasswordProps) {
     setError('');
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/password/reset/confirm/', {
+      const response = await fetch(API_BASE + '/api/password/reset/confirm/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

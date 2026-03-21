@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Post, Comment } from '@/types/blog';
 import CommentTree from '@/components/CommentTree';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { API_BASE } from '@/lib/api';
 
 interface ViewPostProps {
   params: {
@@ -44,7 +45,7 @@ export default function ViewPost({ params }: ViewPostProps) {
           return;
         }
 
-        const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/`, {
+        const response = await fetch(`${API_BASE}/api/posts/${slug}/`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ export default function ViewPost({ params }: ViewPostProps) {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:8000/api/posts/${slug}/comments/`,
+        `${API_BASE}/api/posts/${slug}/comments/`,
         {
           method: 'POST',
           headers: {
@@ -140,7 +141,7 @@ export default function ViewPost({ params }: ViewPostProps) {
     
     try {
       const token = localStorage.getItem('access_token') || localStorage.getItem('token');
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/comments/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${slug}/comments/`, {
         headers: {
           ...(token && {'Authorization': `Bearer ${token}`}),
           'Content-Type': 'application/json',
@@ -195,7 +196,7 @@ export default function ViewPost({ params }: ViewPostProps) {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/comments/${commentId}/moderate/`, {
+      const response = await fetch(`${API_BASE}/api/comments/${commentId}/moderate/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -228,7 +229,7 @@ export default function ViewPost({ params }: ViewPostProps) {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${slug}/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -257,7 +258,7 @@ export default function ViewPost({ params }: ViewPostProps) {
   const getImageUrl = (url: string | null) => {
     if (!url) return '/default-post.jpg'; // Local fallback image
     if (url.startsWith('http')) return url;
-    return `http://127.0.0.1:8000${url}`;
+    return `${API_BASE}${url}`;
   };
 
   if (isLoading) {
@@ -329,7 +330,7 @@ export default function ViewPost({ params }: ViewPostProps) {
                     router.push('/login');
                     return;
                   }
-                  const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/pin/`, {
+                  const response = await fetch(`${API_BASE}/api/posts/${slug}/pin/`, {
                     method: 'POST',
                     headers: {
                       'Authorization': `Bearer ${token}`,

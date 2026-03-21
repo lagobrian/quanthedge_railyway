@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 // import shortuuid from 'shortuuid';
 import dynamic from 'next/dynamic';
+import { API_BASE } from '@/lib/api';
 
 const DashboardCharts = dynamic(() => import('@/components/DashboardCharts'), { ssr: false });
 
@@ -60,7 +61,7 @@ export default function Dashboard() {
   const handleApproveComment = async (commentId: number) => {
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch(`http://127.0.0.1:8000/api/comments/${commentId}/moderate/`, {
+    const response = await fetch(`${API_BASE}/api/comments/${commentId}/moderate/`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -90,7 +91,7 @@ export default function Dashboard() {
   if (!confirm('Are you sure you want to delete this comment?')) return;
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch(`http://127.0.0.1:8000/api/comments/${commentId}/moderate/`, {
+    const response = await fetch(`${API_BASE}/api/comments/${commentId}/moderate/`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -148,7 +149,7 @@ const fetchDashboardData = async () => {
       }
 
       // Fetch dashboard statistics
-      const statsResponse = await fetch('http://127.0.0.1:8000/api/dashboard/stats/', {
+      const statsResponse = await fetch(API_BASE + '/api/dashboard/stats/', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -176,7 +177,7 @@ const fetchDashboardData = async () => {
       setStats(statsData);
 
       // Fetch posts with filters
-      const postsUrl = new URL('http://127.0.0.1:8000/api/dashboard/posts/');
+      const postsUrl = new URL(API_BASE + '/api/dashboard/posts/');
       if (selectedCategory !== 'all') {
         postsUrl.searchParams.append('category', selectedCategory);
       }
@@ -212,7 +213,7 @@ const fetchDashboardData = async () => {
       setPosts(postsData);
 
       // Fetch draft posts
-      const draftPostsResponse = await fetch('http://127.0.0.1:8000/api/dashboard/posts/?status=draft', {
+      const draftPostsResponse = await fetch(API_BASE + '/api/dashboard/posts/?status=draft', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -246,7 +247,7 @@ const fetchDashboardData = async () => {
           router.push('/login');
           return;
         }
-        const commentsResponse = await fetch(`http://127.0.0.1:8000/api/dashboard/comments/?page=${commentsPage}`, {
+        const commentsResponse = await fetch(`${API_BASE}/api/dashboard/comments/?page=${commentsPage}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -288,7 +289,7 @@ const fetchDashboardData = async () => {
       }
 
       // Fetch analytics
-      const analyticsResponse = await fetch('http://127.0.0.1:8000/api/dashboard/analytics/', {
+      const analyticsResponse = await fetch(API_BASE + '/api/dashboard/analytics/', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -342,7 +343,7 @@ const fetchDashboardData = async () => {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${slug}/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -429,7 +430,7 @@ const fetchDashboardData = async () => {
                 if (!email) return;
                 const token = localStorage.getItem('access_token');
                 try {
-                  const res = await fetch('http://127.0.0.1:8000/api/dashboard/send-test-email/', {
+                  const res = await fetch(API_BASE + '/api/dashboard/send-test-email/', {
                     method: 'POST',
                     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email }),
@@ -455,7 +456,7 @@ const fetchDashboardData = async () => {
                   const formData = new FormData();
                   formData.append('file', file);
                   try {
-                    const res = await fetch('http://127.0.0.1:8000/api/dashboard/import-posts/', {
+                    const res = await fetch(API_BASE + '/api/dashboard/import-posts/', {
                       method: 'POST',
                       headers: { Authorization: `Bearer ${token}` },
                       body: formData,
@@ -722,7 +723,7 @@ const fetchDashboardData = async () => {
                                   if (!confirm(`Send "${post.title}" as newsletter to all subscribers?`)) return;
                                   const token = localStorage.getItem('access_token');
                                   try {
-                                    const res = await fetch(`http://127.0.0.1:8000/api/dashboard/send-newsletter/${post.slug}/`, {
+                                    const res = await fetch(`${API_BASE}/api/dashboard/send-newsletter/${post.slug}/`, {
                                       method: 'POST',
                                       headers: { Authorization: `Bearer ${token}` },
                                     });
@@ -941,7 +942,7 @@ const fetchDashboardData = async () => {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="flex-shrink-0 h-10 w-10">
-                                <img className="h-10 w-10 rounded-md object-cover" src={post.image ? (post.image.startsWith('http') ? post.image : `http://127.0.0.1:8000${post.image}`) : '/placeholder.png'} alt="" />
+                                <img className="h-10 w-10 rounded-md object-cover" src={post.image ? (post.image.startsWith('http') ? post.image : `${API_BASE}${post.image}`) : '/placeholder.png'} alt="" />
                               </div>
                               <div className="ml-4">
                                 <div className="text-sm font-medium">
@@ -1035,7 +1036,7 @@ const fetchDashboardData = async () => {
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               <div className="flex-shrink-0 h-10 w-10">
-                                <img className="h-10 w-10 rounded-md object-cover" src={post.image ? (post.image.startsWith('http') ? post.image : `http://127.0.0.1:8000${post.image}`) : '/placeholder.png'} alt="" />
+                                <img className="h-10 w-10 rounded-md object-cover" src={post.image ? (post.image.startsWith('http') ? post.image : `${API_BASE}${post.image}`) : '/placeholder.png'} alt="" />
                               </div>
                               <div className="ml-4">
                                 <div className="text-sm font-medium">{post.title}</div>
@@ -1221,7 +1222,7 @@ function UsersTab() {
   const fetchUsers = async () => {
     const token = localStorage.getItem('access_token');
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/dashboard/users/', {
+      const res = await fetch(API_BASE + '/api/dashboard/users/', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) setUsers(await res.json());
@@ -1235,7 +1236,7 @@ function UsersTab() {
     const token = localStorage.getItem('access_token');
     setGranting(userId);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/dashboard/users/grant-premium/', {
+      const res = await fetch(API_BASE + '/api/dashboard/users/grant-premium/', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: userId, duration }),

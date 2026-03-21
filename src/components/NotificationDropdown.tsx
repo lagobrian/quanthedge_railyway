@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useAppSelector } from "@/store/hooks";
+import { API_BASE } from '@/lib/api';
 
 interface Notification {
   id: number;
@@ -25,7 +26,7 @@ export default function NotificationDropdown() {
     if (!token) return;
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/notifications/", {
+      const res = await fetch(`${API_BASE}/api/notifications/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,7 +47,7 @@ export default function NotificationDropdown() {
   const markNotificationsSeen = async () => {
     const token = localStorage.getItem('access_token');
     if (!token) return;
-    await fetch("http://127.0.0.1:8000/api/notifications/mark-seen/", {
+    await fetch(`${API_BASE}/api/notifications/mark-seen/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

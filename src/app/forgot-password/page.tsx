@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { API_BASE } from '@/lib/api';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ export default function ForgotPassword() {
     setError('');
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/password/reset/', {
+      const response = await fetch(API_BASE + '/api/password/reset/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

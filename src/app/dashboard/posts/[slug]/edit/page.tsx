@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
+import { API_BASE } from '@/lib/api';
 
 // Dynamically import ReactQuill with proper SSR handling
 const ReactQuill = dynamic(() => import('react-quill-new'), {
@@ -62,7 +63,7 @@ export default function EditPost({ params }: EditPostProps) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/categories/');
+        const response = await fetch(API_BASE + '/api/categories/');
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data = await response.json();
         console.log('Fetched categories:', data);
@@ -104,7 +105,7 @@ export default function EditPost({ params }: EditPostProps) {
         }
         
         console.log(`Fetching post with slug: ${slug}`);
-        const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/`, {
+        const response = await fetch(`${API_BASE}/api/posts/${slug}/`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -214,7 +215,7 @@ export default function EditPost({ params }: EditPostProps) {
 // tags is always sent as a string
       
       console.log(`Updating post with slug: ${slug}`);
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${slug}/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -297,7 +298,7 @@ export default function EditPost({ params }: EditPostProps) {
       console.log('Full publish request data:', requestBody);
 // tags is omitted if empty
       
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${slug}/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

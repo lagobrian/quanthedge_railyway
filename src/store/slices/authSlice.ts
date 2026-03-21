@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { API_BASE } from '@/lib/api';
 
 interface User {
   id: number;
@@ -31,7 +32,7 @@ export const refreshUser = createAsyncThunk('auth/refreshUser', async (_, { reje
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
   if (!token) return rejectWithValue('No token');
 
-  const res = await fetch('http://127.0.0.1:8000/api/profile/', {
+  const res = await fetch(API_BASE + '/api/profile/', {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) return rejectWithValue('Invalid token');
@@ -41,7 +42,7 @@ export const refreshUser = createAsyncThunk('auth/refreshUser', async (_, { reje
 export const login = createAsyncThunk(
   'auth/login',
   async ({ email, password }: { email: string; password: string }, { dispatch, rejectWithValue }) => {
-    const res = await fetch('http://127.0.0.1:8000/api/token/', {
+    const res = await fetch(API_BASE + '/api/token/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
+import { API_BASE } from '@/lib/api';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), {
   ssr: false,
@@ -70,7 +71,7 @@ export default function PostForm({ mode, initialData, onSave }: PostFormProps) {
     const fetchCategories = async () => {
       try {
         setIsLoadingCategories(true);
-        const response = await fetch('http://127.0.0.1:8000/api/categories/', {
+        const response = await fetch(API_BASE + '/api/categories/', {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -196,8 +197,8 @@ export default function PostForm({ mode, initialData, onSave }: PostFormProps) {
       });
 
       const url = mode === 'create' 
-        ? 'http://127.0.0.1:8000/api/posts/'
-        : `http://127.0.0.1:8000/api/posts/${initialData?.slug}/`;
+        ? API_BASE + '/api/posts/'
+        : `${API_BASE}/api/posts/${initialData?.slug}/`;
 
       const response = await fetch(url, {
         method: mode === 'create' ? 'POST' : 'PUT',

@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { API_BASE } from '@/lib/api';
 
 interface User {
   id: number;
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/profile/", {
+      const res = await fetch(`${API_BASE}/api/profile/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -67,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const loginResponse = await fetch("http://127.0.0.1:8000/api/token/", {
+      const loginResponse = await fetch(`${API_BASE}/api/token/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

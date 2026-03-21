@@ -8,6 +8,7 @@ import CommentSection from '@/components/CommentSection';
 import React from 'react';
 import { Share2 } from 'lucide-react';
 import BlogShareMenu from './BlogShareMenu';
+import { API_BASE } from '@/lib/api';
 
 interface BlogPostParams {
   slug: string;
@@ -69,7 +70,7 @@ export default function BlogPost({ params }: BlogPostProps) {
       }
       
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/profile/', {
+        const response = await fetch(API_BASE + '/api/profile/', {
           headers: {
             'Authorization': `Bearer ${token}`,
           }
@@ -105,7 +106,7 @@ export default function BlogPost({ params }: BlogPostProps) {
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/`, {
+        const response = await fetch(`${API_BASE}/api/posts/${slug}/`, {
           headers
         }).catch(error => {
           console.error('Network error:', error);
@@ -186,8 +187,8 @@ export default function BlogPost({ params }: BlogPostProps) {
         <div className="max-w-4xl mx-auto px-6">
           <div className="flex justify-center items-center h-64">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-700 mb-2">Post Not Found</h2>
-              <p className="text-gray-500 mb-4">The post you're looking for doesn't exist or has been removed.</p>
+              <h2 className="text-2xl font-bold text-foreground mb-2">Post Not Found</h2>
+              <p className="text-grey mb-4">The post you&apos;re looking for doesn&apos;t exist or has been removed.</p>
               <button
                 onClick={() => router.push('/blog')}
                 className="mt-4 px-4 py-2 bg-blue text-white rounded hover:bg-blue-dark transition-colors"
@@ -227,7 +228,7 @@ export default function BlogPost({ params }: BlogPostProps) {
                 )}
                 <div>
                   <p className="font-medium">{post.user?.username || 'Anonymous'}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-grey">
                     {post.date ? new Date(post.date).toLocaleDateString() : 'Unknown date'}
                   </p>
                 </div>
@@ -252,8 +253,8 @@ export default function BlogPost({ params }: BlogPostProps) {
           )}
 
           {post.excerpt && (
-            <div className="bg-gray-50 border-l-4 border-blue p-4 mb-8">
-              <p className="text-lg text-gray-700 italic">{post.excerpt}</p>
+            <div className="bg-darkBlue/30 border-l-4 border-blue p-4 mb-8 rounded-r">
+              <p className="text-lg text-grey italic">{post.excerpt}</p>
             </div>
           )}
 
@@ -270,7 +271,7 @@ export default function BlogPost({ params }: BlogPostProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
                 <h3 className="text-xl font-bold mb-2">Premium Content</h3>
-                <p className="text-gray-400 mb-6">This article is available exclusively to premium subscribers. Upgrade to continue reading.</p>
+                <p className="text-grey mb-6">This article is available exclusively to premium subscribers. Upgrade to continue reading.</p>
                 <a href="/pricing" className="inline-block px-6 py-3 bg-[#00ced1] text-[#061829] font-semibold rounded-lg hover:bg-[#00ced1]/80 transition-colors">
                   Upgrade to Premium
                 </a>
@@ -279,7 +280,7 @@ export default function BlogPost({ params }: BlogPostProps) {
           )}
 
           {!(post as any).is_paywalled && (
-            <div className="mt-8 border-t border-gray-200 pt-8">
+            <div className="mt-8 border-t border-blue/20 pt-8">
               <CommentSection postSlug={post.slug} initialComments={[]} />
             </div>
           )}

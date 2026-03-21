@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import TipTapEditor from './TipTapEditor';
 import { useRouter } from 'next/navigation';
+import { API_BASE } from '@/lib/api';
 
 export default function NewPost() {
   const [title, setTitle] = useState('');
@@ -39,7 +40,7 @@ export default function NewPost() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/categories/');
+        const response = await fetch(API_BASE + '/api/categories/');
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data = await response.json();
         console.log('Fetched categories:', data);
@@ -101,7 +102,7 @@ export default function NewPost() {
       }
 
       const { body, headers } = buildRequestBody('draft');
-      const response = await fetch('http://127.0.0.1:8000/api/posts/', {
+      const response = await fetch(API_BASE + '/api/posts/', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -151,7 +152,7 @@ export default function NewPost() {
       }
 
       const { body, headers } = buildRequestBody('published');
-      const response = await fetch('http://127.0.0.1:8000/api/posts/', {
+      const response = await fetch(API_BASE + '/api/posts/', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

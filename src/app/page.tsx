@@ -109,7 +109,7 @@ export default function Home() {
                 </p>
               </CardContent>
               <CardFooter className="flex justify-center">
-                <Link href="/markets">
+                <Link href="/models">
                   <Button variant="link" className="gap-1">
                     View Markets <ArrowRight className="h-4 w-4" />
                   </Button>

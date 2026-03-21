@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_BASE } from '@/lib/api';
 
 interface AuthorRouteProps {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ export default function AuthorRoute({ children }: AuthorRouteProps) {
           return;
         }
         
-        const response = await fetch('http://127.0.0.1:8000/api/profile/', {
+        const response = await fetch(API_BASE + '/api/profile/', {
           headers: {
             'Authorization': `Bearer ${token}`,
           }

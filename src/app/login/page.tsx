@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { useAppDispatch } from '@/store/hooks';
 import { refreshUser } from '@/store/slices/authSlice';
+import { API_BASE } from '@/lib/api';
 
 export default function Login() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function Login() {
     
     try {
       // Send login request with email and password
-      const loginResponse = await fetch('http://127.0.0.1:8000/api/token/', {
+      const loginResponse = await fetch(API_BASE + '/api/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

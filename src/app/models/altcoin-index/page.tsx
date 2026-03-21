@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { Line } from "react-chartjs-2";
+import { API_BASE } from '@/lib/api';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -33,7 +34,7 @@ export default function AltcoinIndexPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://127.0.0.1:8000/api/models/crypto-index/?index=alt100")
+    fetch(`${API_BASE}/api/models/crypto-index/?index=alt100`)
       .then(res => { if (!res.ok) throw new Error("Failed to fetch"); return res.json(); })
       .then(setData)
       .catch((e) => setError(e.message))
@@ -150,7 +151,7 @@ export default function AltcoinIndexPage() {
   return (
     <div className="max-w-7xl mx-auto py-10 px-4">
       <h1 className="text-3xl font-bold mb-2 text-center">Altcoin 100 Index</h1>
-      <p className="mb-4 text-center text-lg text-gray-500">
+      <p className="mb-4 text-center text-lg text-grey">
         Market-cap weighted index of the top 100 altcoins, excluding Bitcoin and stablecoins. Rebalanced monthly.
       </p>
 

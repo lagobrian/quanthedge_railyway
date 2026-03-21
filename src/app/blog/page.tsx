@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Lock, Heart, Bookmark, Search, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
+import { API_BASE } from '@/lib/api';
 
 interface Profile {
   image: string;
@@ -102,7 +103,7 @@ export default function Blog() {
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch('http://127.0.0.1:8000/api/categories/', {
+        const response = await fetch(API_BASE + '/api/categories/', {
           headers,
           mode: 'cors',
         });
@@ -149,9 +150,9 @@ export default function Blog() {
           params.append('search', searchQuery);
         }
 
-        console.log('Fetching posts from:', `http://127.0.0.1:8000/api/posts/?${params.toString()}`);
+        console.log('Fetching posts from:', `${API_BASE}/api/posts/?${params.toString()}`);
         
-        const response = await fetch(`http://127.0.0.1:8000/api/posts/?${params.toString()}`, {
+        const response = await fetch(`${API_BASE}/api/posts/?${params.toString()}`, {
           headers,
           mode: 'cors', 
         });
@@ -190,7 +191,7 @@ export default function Blog() {
 
     try {
       setIsSubscribing(true);
-      const response = await fetch('http://127.0.0.1:8000/api/newsletter/subscribe/', {
+      const response = await fetch(API_BASE + '/api/newsletter/subscribe/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -221,7 +222,7 @@ export default function Blog() {
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/like/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${slug}/like/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -257,7 +258,7 @@ export default function Blog() {
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${slug}/bookmark/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${slug}/bookmark/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -311,7 +312,7 @@ export default function Blog() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${post.slug}/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${post.slug}/`, {
         headers,
       });
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { HeartIcon, HeartFilledIcon } from '@radix-ui/react-icons';
+import { API_BASE } from '@/lib/api';
 
 interface LikeButtonProps {
   postSlug: string;
@@ -25,7 +26,7 @@ export default function LikeButton({ postSlug, initialLikes, isLiked }: LikeButt
         throw new Error('Please log in to like posts');
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${postSlug}/like/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${postSlug}/like/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

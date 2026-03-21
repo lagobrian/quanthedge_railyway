@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { API_BASE } from '@/lib/api';
 
 // Mock data for demonstration
 const mockModels = [
@@ -13,7 +14,7 @@ const mockModels = [
     dataSource: 'Coin price history',
     updateFrequency: 'Daily',
     isPremium: false,
-    image: 'http://127.0.0.1:8000/api/models/chart-thumbnail/crypto-breadth/',
+    image: API_BASE + '/api/models/chart-thumbnail/crypto-breadth/',
     link: '/models/crypto-breadth',
   },
   {
@@ -24,7 +25,7 @@ const mockModels = [
     dataSource: 'CoinMarketCap',
     updateFrequency: 'Hourly',
     isPremium: false,
-    image: 'http://127.0.0.1:8000/api/models/chart-thumbnail/altcoin-index/',
+    image: API_BASE + '/api/models/chart-thumbnail/altcoin-index/',
     link: '/models/altcoin-index',
   },
   {
@@ -35,7 +36,7 @@ const mockModels = [
     dataSource: 'CoinMarketCap',
     updateFrequency: 'Hourly',
     isPremium: false,
-    image: 'http://127.0.0.1:8000/api/models/chart-thumbnail/global-metrics/',
+    image: API_BASE + '/api/models/chart-thumbnail/global-metrics/',
     link: '/models/global-metrics',
   },
   {
@@ -287,7 +288,7 @@ export default function Models() {
                 </div>
                 <div className="mt-auto pt-4 border-t border-[#18324f]">
                   {model.isPremium && !isPaidUser ? (
-                    <div className="flex justify-center items-center gap-2 py-2 text-gray-500">
+                    <div className="flex justify-center items-center gap-2 py-2 text-grey">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 17a2 2 0 002-2v-2a2 2 0 00-2-2 2 2 0 00-2 2v2a2 2 0 002 2zm6-2V9a6 6 0 10-12 0v6a2 2 0 002 2h8a2 2 0 002-2z" />
                       </svg>

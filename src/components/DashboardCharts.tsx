@@ -42,7 +42,7 @@ export default function DashboardCharts({ analytics }: DashboardChartsProps) {
   if (!analytics || !analytics.monthly_views || analytics.monthly_views.length === 0) {
     return (
       <div className="my-8 text-center text-gray-500 dark:text-gray-300">
-        <div className="bg-white/90 dark:bg-slate-900 rounded-2xl shadow-xl p-8 inline-block">
+        <div className="bg-[#0e2239] border border-[#18324f] rounded-2xl shadow-xl p-8 inline-block">
           <span className="text-lg">No analytics data available yet.</span>
         </div>
       </div>
@@ -138,7 +138,7 @@ export default function DashboardCharts({ analytics }: DashboardChartsProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-8">
-      <div className="bg-white/90 dark:bg-slate-900 rounded-2xl shadow-xl p-6">
+      <div className="bg-[#0e2239] border border-[#18324f] rounded-2xl shadow-xl p-6">
         <Chart
           type="bar"
           data={trendData}
@@ -147,7 +147,7 @@ export default function DashboardCharts({ analytics }: DashboardChartsProps) {
           role="img"
         />
       </div>
-      <div className="bg-white/90 dark:bg-slate-900 rounded-2xl shadow-xl p-6 flex items-center justify-center">
+      <div className="bg-[#0e2239] border border-[#18324f] rounded-2xl shadow-xl p-6 flex items-center justify-center">
         <Doughnut
           data={categoryData}
           options={categoryOptions}

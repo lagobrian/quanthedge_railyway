@@ -23,7 +23,7 @@ export default function Pricing() {
         { name: 'Priority support', included: false },
       ],
       ctaText: 'Sign Up Free',
-      ctaLink: '/signup',
+      ctaLink: '/register',
       highlighted: false,
     },
     {
@@ -42,7 +42,7 @@ export default function Pricing() {
         { name: 'Priority support', included: true },
       ],
       ctaText: 'Get Premium',
-      ctaLink: '/signup?plan=premium',
+      ctaLink: '/register?plan=premium',
       highlighted: true,
     },
     {
@@ -61,7 +61,7 @@ export default function Pricing() {
         { name: 'Priority support', included: false },
       ],
       ctaText: 'Get Standard',
-      ctaLink: '/signup?plan=standard',
+      ctaLink: '/register?plan=standard',
       highlighted: false,
     },
   ];
@@ -235,12 +235,12 @@ export default function Pricing() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
-                href="/contact"
+                href="mailto:lagobrian@outlook.com"
                 className="bg-transparent border border-blue text-blue hover:bg-blue/10 transition-colors px-6 py-3 rounded-md"
               >
                 Contact Us
               </Link>
-              <Link href="/signup" className="btn-primary px-6 py-3">
+              <Link href="/register" className="btn-primary px-6 py-3">
                 Get Started
               </Link>
             </div>

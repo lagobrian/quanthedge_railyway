@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { useRef } from "react";
 
+import { API_BASE } from '@/lib/api';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -40,7 +41,7 @@ export default function CryptoBreadthPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://127.0.0.1:8000/api/models/crypto-breadth/")
+    fetch(`${API_BASE}/api/models/crypto-breadth/`)
       .then(res => { if (!res.ok) throw new Error("Failed to fetch"); return res.json(); })
       .then(setData)
       .catch((e) => setError(e.message))
@@ -238,7 +239,7 @@ export default function CryptoBreadthPage() {
   return (
     <div className="max-w-7xl mx-auto py-10 px-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Crypto Breadth Model</h1>
-      <p className="mb-8 text-center text-lg text-gray-500">
+      <p className="mb-8 text-center text-lg text-grey">
         This chart shows the percentage of cryptocurrencies trading above their 50, 100, and 200-day moving averages.
       </p>
       <form className="flex flex-wrap gap-3 items-end mb-4 bg-[#0e2239]/60 rounded-xl px-4 py-3 shadow-inner border border-[#18324f]">

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { API_BASE } from '@/lib/api';
 
 export default function Register() {
   const router = useRouter();
@@ -73,7 +74,7 @@ export default function Register() {
     
     try {
       // Register the user
-      const registerResponse = await fetch('http://127.0.0.1:8000/api/register/', {
+      const registerResponse = await fetch(API_BASE + '/api/register/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_BASE } from '@/lib/api';
 
 interface Post {
   id: number;
@@ -49,7 +50,7 @@ export default function PostActions({ post }: PostActionsProps) {
   
   const fetchPostStatus = async (token: string) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${post.slug}/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${post.slug}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
@@ -82,7 +83,7 @@ export default function PostActions({ post }: PostActionsProps) {
         throw new Error('Please log in to like posts');
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${post.slug}/like/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${post.slug}/like/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -126,7 +127,7 @@ export default function PostActions({ post }: PostActionsProps) {
         throw new Error('Please log in to bookmark posts');
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${post.slug}/bookmark/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${post.slug}/bookmark/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

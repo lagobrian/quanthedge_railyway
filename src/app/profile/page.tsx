@@ -5,6 +5,7 @@ import Cropper from 'react-easy-crop';
 import type { Area } from 'react-easy-crop';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { API_BASE } from '@/lib/api';
 
 interface Profile {
   id: number;
@@ -22,7 +23,7 @@ interface Profile {
 function getProfileImageUrl(image: string): string {
   if (!image) return '/default-user.jpg';
   if (image.startsWith('http')) return image;
-  return `http://127.0.0.1:8000/media/${image}`;
+  return `${API_BASE}/media/${image}`;
 }
 
 // Utility to crop and convert to File
@@ -102,7 +103,7 @@ const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
         return;
       }
 
-      const response = await fetch('http://127.0.0.1:8000/api/profile/', {
+      const response = await fetch(API_BASE + '/api/profile/', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -164,7 +165,7 @@ const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
         form.append('image', croppedImage);
       }
       setIsSaving(true);
-      const response = await fetch('http://127.0.0.1:8000/api/profile/update/', {
+      const response = await fetch(API_BASE + '/api/profile/update/', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -196,17 +197,17 @@ const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
   if (isLoading) {
     return (
       <div className="max-w-3xl mx-auto py-8">
-        <div className="bg-white/90 dark:bg-slate-900 rounded-2xl shadow-xl p-8 animate-pulse">
+        <div className="bg-darkBlue/30 rounded-2xl shadow-xl p-8 animate-pulse border border-blue/20">
           <div className="flex items-center space-x-6 mb-8">
-            <div className="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-700" />
+            <div className="w-24 h-24 rounded-full bg-blue/20" />
             <div className="flex-1 space-y-3">
-              <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/2" />
-              <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/3" />
+              <div className="h-6 bg-blue/20 rounded w-1/2" />
+              <div className="h-4 bg-blue/10 rounded w-1/3" />
             </div>
           </div>
           <div className="space-y-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-2/3" />
+              <div key={i} className="h-5 bg-blue/10 rounded w-2/3" />
             ))}
           </div>
         </div>
@@ -217,7 +218,7 @@ const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
   if (errorMsg) {
     return (
       <div className="max-w-3xl mx-auto py-8">
-        <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-2xl shadow-xl p-8 text-center">
+        <div className="bg-red/10 text-red rounded-2xl shadow-xl p-8 text-center border border-red/20">
           <p className="text-lg font-semibold mb-2">{errorMsg}</p>
           <button
             className="btn-secondary mt-4"
@@ -314,9 +315,9 @@ const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
                 {/* Cropper Modal */}
                 {cropModalOpen && rawImageUrl && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-                    <div className="bg-white rounded-lg shadow-lg p-6 relative w-[90vw] max-w-md">
+                    <div className="bg-background border border-blue/20 rounded-lg shadow-lg p-6 relative w-[90vw] max-w-md">
                       <h3 className="text-lg font-semibold mb-4">Crop your profile image</h3>
-                      <div className="relative w-full h-64 bg-gray-100 rounded overflow-hidden">
+                      <div className="relative w-full h-64 bg-darkBlue/30 rounded overflow-hidden">
                         <Cropper
                           image={rawImageUrl}
                           crop={crop}

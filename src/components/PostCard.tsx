@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { API_BASE } from '@/lib/api';
 
 interface Post {
   id: number;
@@ -38,7 +39,7 @@ export default function PostCard({ post, onDelete, onEdit }: PostCardProps) {
     setIsDeleting(true);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${post.slug}/delete/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${post.slug}/delete/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -59,7 +60,7 @@ export default function PostCard({ post, onDelete, onEdit }: PostCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-[#0a2438] border border-[#18324f] rounded-lg shadow-md overflow-hidden">
       <div className="relative h-48">
         <Image
           src={post.image || '/default-post.jpg'}
@@ -90,15 +91,15 @@ export default function PostCard({ post, onDelete, onEdit }: PostCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className={`px-2 py-1 rounded text-xs font-semibold ${
-              post.status === 'Published' ? 'bg-green-100 text-green-800' :
-              post.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
-              'bg-red-100 text-red-800'
+              post.status === 'Published' ? 'bg-green-900/40 text-green-300' :
+              post.status === 'Draft' ? 'bg-gray-700/40 text-gray-300' :
+              'bg-red-900/40 text-red-300'
             }`}>
               {post.status}
             </span>
             {post.send_as_email && (
               <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                post.email_sent ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'
+                post.email_sent ? 'bg-blue-900/40 text-blue-300' : 'bg-yellow-900/40 text-yellow-300'
               }`}>
                 {post.email_sent ? 'Email Sent' : 'Email Pending'}
               </span>

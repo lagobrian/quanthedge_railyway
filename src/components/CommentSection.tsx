@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { Heart } from 'lucide-react';
+import { API_BASE } from '@/lib/api';
 
 interface User {
   id: number;
@@ -50,7 +51,7 @@ export default function CommentSection({ postSlug, initialComments }: CommentSec
   const fetchComments = async () => {
     try {
       console.log(`Fetching comments from: http://127.0.0.1:8000/api/posts/${postSlug}/comments/`);
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${postSlug}/comments/`);
+      const response = await fetch(`${API_BASE}/api/posts/${postSlug}/comments/`);
       
       // Log response status and headers for debugging
       console.log('Comments API response status:', response.status);
@@ -118,7 +119,7 @@ export default function CommentSection({ postSlug, initialComments }: CommentSec
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://127.0.0.1:8000/api/posts/${postSlug}/comment/`, {
+      const response = await fetch(`${API_BASE}/api/posts/${postSlug}/comment/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -190,7 +191,7 @@ export default function CommentSection({ postSlug, initialComments }: CommentSec
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://127.0.0.1:8000/api/comments/${commentId}/like/`, {
+      const response = await fetch(`${API_BASE}/api/comments/${commentId}/like/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -269,7 +270,7 @@ export default function CommentSection({ postSlug, initialComments }: CommentSec
                 setReplyTo(null);
                 setLocalReplyText('');
               }}
-              className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-3 py-1 border border-blue/20 rounded-md hover:bg-blue/10 text-grey"
             >
               Cancel
             </button>

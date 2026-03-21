@@ -362,7 +362,7 @@ export default function Backtests() {
                 View Pricing
               </Link>
               <Link
-                href="/contact"
+                href="mailto:lagobrian@outlook.com"
                 className="bg-transparent border border-blue text-blue hover:bg-blue/10 transition-colors px-4 py-2 rounded-md"
               >
                 Request Custom Backtest

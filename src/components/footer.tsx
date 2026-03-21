@@ -11,7 +11,7 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Quant (h)Edge</h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-grey">
               Advanced financial models and market insights for data-driven investors.
             </p>
             <div className="flex space-x-4">
@@ -19,7 +19,7 @@ export function Footer() {
                 href="https://twitter.com/quanthedge"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue transition-colors"
+                className="text-grey hover:text-blue transition-colors"
               >
                 <span className="sr-only">Twitter</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@ export function Footer() {
                 href="https://linkedin.com/company/quanthedge"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue transition-colors"
+                className="text-grey hover:text-blue transition-colors"
               >
                 <span className="sr-only">LinkedIn</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -41,7 +41,7 @@ export function Footer() {
                 href="https://github.com/quanthedge"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue transition-colors"
+                className="text-grey hover:text-blue transition-colors"
               >
                 <span className="sr-only">GitHub</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -56,22 +56,22 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-foreground mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/models" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <Link href="/models" className="text-sm text-grey hover:text-blue transition-colors">
                   Models
                 </Link>
               </li>
               <li>
-                <Link href="/backtests" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <Link href="/backtests" className="text-sm text-grey hover:text-blue transition-colors">
                   Backtests
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <Link href="/blog" className="text-sm text-grey hover:text-blue transition-colors">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <Link href="/pricing" className="text-sm text-grey hover:text-blue transition-colors">
                   Pricing
                 </Link>
               </li>
@@ -83,22 +83,22 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-foreground mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/documentation" className="text-sm text-gray-600 hover:text-blue transition-colors">
-                  Documentation
+                <Link href="/blog" className="text-sm text-grey hover:text-blue transition-colors">
+                  Newsletter Archive
                 </Link>
               </li>
               <li>
-                <Link href="/api" className="text-sm text-gray-600 hover:text-blue transition-colors">
-                  API Reference
+                <Link href="/models" className="text-sm text-grey hover:text-blue transition-colors">
+                  Market Models
                 </Link>
               </li>
               <li>
-                <Link href="/tutorials" className="text-sm text-gray-600 hover:text-blue transition-colors">
-                  Tutorials
+                <Link href="/backtests" className="text-sm text-grey hover:text-blue transition-colors">
+                  Backtests
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <Link href="/pricing" className="text-sm text-grey hover:text-blue transition-colors">
                   FAQ
                 </Link>
               </li>
@@ -110,31 +110,31 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-foreground mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <span className="text-sm text-grey/50 cursor-default">
                   Privacy Policy
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/terms" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <span className="text-sm text-grey/50 cursor-default">
                   Terms of Service
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/disclaimer" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <span className="text-sm text-grey/50 cursor-default">
                   Disclaimer
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/contact" className="text-sm text-gray-600 hover:text-blue transition-colors">
+                <a href="mailto:lagobrian@outlook.com" className="text-sm text-grey hover:text-blue transition-colors">
                   Contact Us
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-blue/10">
-          <p className="text-sm text-center text-gray-600">
+          <p className="text-sm text-center text-grey">
             &copy; {new Date().getFullYear()} Quant (h)Edge. All rights reserved.
           </p>
         </div>

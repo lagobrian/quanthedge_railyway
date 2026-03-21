@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { Line } from "react-chartjs-2";
+import { API_BASE } from '@/lib/api';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -34,7 +35,7 @@ export default function GlobalMetricsPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://127.0.0.1:8000/api/models/crypto-global/")
+    fetch(`${API_BASE}/api/models/crypto-global/`)
       .then(res => { if (!res.ok) throw new Error("Failed to fetch"); return res.json(); })
       .then(setData)
       .catch((e) => setError(e.message))
@@ -189,7 +190,7 @@ export default function GlobalMetricsPage() {
   return (
     <div className="max-w-7xl mx-auto py-10 px-4">
       <h1 className="text-3xl font-bold mb-2 text-center">Global Crypto Metrics</h1>
-      <p className="mb-4 text-center text-lg text-gray-500">
+      <p className="mb-4 text-center text-lg text-grey">
         Bitcoin dominance, Ethereum dominance, and total crypto market capitalization over time.
       </p>
 
