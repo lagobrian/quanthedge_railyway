@@ -1,0 +1,62 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription,country,city,region,device_type,client_os,client_type,user_agent
+148784956,2024-09-11T21:25:07.956Z,lagobrian93@gmail.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 OneOutlook/1.2024.903.200"
+148784956,2024-09-11T21:25:10.526Z,lagobrian93@gmail.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 OneOutlook/1.2024.903.200"
+148784956,2024-09-11T21:25:35.403Z,jstruble3131@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-11T21:29:12.194Z,christian.armstrong25@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-11T21:32:52.848Z,dlefebvre@drwholdings.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/4.0 (compatible; ms-office; MSOffice 16)
+148784956,2024-09-11T21:33:07.104Z,archiehall@economist.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 [SuperhumanProxy]/1.0 (email hello AT superhuman.com)
+148784956,2024-09-11T21:33:13.744Z,dlefebvre@drwholdings.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/4.0 (compatible; ms-office; MSOffice 16)
+148784956,2024-09-11T21:33:52.521Z,yagiz.ozk@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-11T21:34:20.386Z,yagiz.ozk@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-11T21:48:20.051Z,salehzaidi@gmail.com,adhoc_email,only_paid,true,AT,,,,,,Mozilla/5.0
+148784956,2024-09-11T21:54:42.453Z,diego-barca50@hotmail.com,adhoc_email,only_paid,true,CH,,,,,,Mozilla/5.0
+148784956,2024-09-11T22:09:07.824Z,yagiz.ozk@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-11T22:09:46.521Z,phauswald@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-11T22:39:48.911Z,tahirsaif100@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-11T22:43:48.001Z,w8i8pmlsz@mozmail.com,adhoc_email,only_paid,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Thunderbird/128.1.1
+148784956,2024-09-11T22:58:44.607Z,yongfenchao@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-11T23:13:50.506Z,yongfenchao@gmail.com,adhoc_email,only_paid,true,SG,,,,,,Mozilla/5.0
+148784956,2024-09-11T23:40:13.961Z,raneatharva1510@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T00:00:03.283Z,jstruble3131@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T01:15:47.306Z,quantmusenet@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T01:16:01.381Z,quantmusenet@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T01:23:25.704Z,elandau@torkcapital.com.br,adhoc_email,only_paid,true,BR,,,,,,Mozilla/5.0
+148784956,2024-09-12T01:58:50.816Z,abhisalecha@gmail.com,adhoc_email,only_paid,true,DE,,,,,,Mozilla/5.0
+148784956,2024-09-12T02:08:22.362Z,jmmaloney4@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-12T03:17:05.413Z,johnmac240@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-12T03:23:36.077Z,adugar01@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T03:42:13.047Z,jay.lincoln.moody@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-12T03:44:34.613Z,jstruble3131@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T04:55:23.723Z,witches-hoofed0a@icloud.com,adhoc_email,only_paid,true,DK,,,,,,Mozilla/5.0
+148784956,2024-09-12T05:16:50.693Z,cortokaltenbachkb@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T05:33:44.582Z,tahirsaif100@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-12T05:43:34.090Z,arjunb1@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T06:25:51.122Z,artemskbv@gmail.com,adhoc_email,only_paid,true,TR,,,,,,Mozilla/5.0
+148784956,2024-09-12T06:40:54.521Z,william.thompson@wilsonassetmanagement.com.au,adhoc_email,only_paid,true,FR,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+148784956,2024-09-12T06:40:54.521Z,william.thompson@wilsonassetmanagement.com.au,adhoc_email,only_paid,true,FR,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+148784956,2024-09-12T08:36:19.861Z,raneatharva1510@gmail.com,adhoc_email,only_paid,true,IS,,,,,,Mozilla/5.0
+148784956,2024-09-12T08:56:22.544Z,witches-hoofed0a@icloud.com,adhoc_email,only_paid,true,DK,,,,,,Mozilla/5.0
+148784956,2024-09-12T10:53:26.179Z,arjunb1@gmail.com,adhoc_email,only_paid,true,CH,,,,,,Mozilla/5.0
+148784956,2024-09-12T12:06:54.206Z,yongfenchao@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-12T12:29:31.187Z,drew.resendes@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-12T12:51:10.637Z,yagiz.ozk@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-12T13:53:16.902Z,andrewclements8@icloud.com,adhoc_email,only_paid,true,MT,,,,,,Mozilla/5.0
+148784956,2024-09-12T14:10:44.684Z,yongfenchao@gmail.com,adhoc_email,only_paid,true,SG,,,,,,Mozilla/5.0
+148784956,2024-09-12T17:17:58.018Z,lagobrian93@gmail.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 OneOutlook/1.2024.903.200"
+148784956,2024-09-12T17:44:06.983Z,lagobrian93@gmail.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 OneOutlook/1.2024.903.200"
+148784956,2024-09-12T17:51:43.928Z,lagobrian@outlook.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 OneOutlook/1.2024.903.200"
+148784956,2024-09-13T00:06:15.488Z,rodolfo.iannoni75@gmail.com,adhoc_email,only_paid,true,IT,,,,,,Mozilla/5.0
+148784956,2024-09-13T03:42:02.789Z,drew.resendes@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-14T04:43:30.997Z,mahaleshantanu3@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+148784956,2024-09-14T13:46:21.755Z,yongfenchao@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-15T15:07:29.172Z,abhisalecha@gmail.com,adhoc_email,only_paid,true,AE,,,,,,Mozilla/5.0
+148784956,2024-09-15T23:03:37.672Z,abhisalecha@gmail.com,adhoc_email,only_paid,true,AE,,,,,,Mozilla/5.0
+148784956,2024-09-16T19:47:57.201Z,abhisalecha@gmail.com,adhoc_email,only_paid,true,AE,,,,,,Mozilla/5.0
+148784956,2024-09-16T20:57:21.398Z,lagobrian@outlook.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 OneOutlook/1.2024.903.200"
+148784956,2024-09-20T08:04:57.742Z,stephen.kirchner@icloud.com,adhoc_email,only_paid,true,AU,,,,,,Mozilla/5.0
+148784956,2024-09-21T06:07:42.993Z,jmmaloney4@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-21T07:48:03.178Z,yongfenchao@gmail.com,adhoc_email,only_paid,true,SG,,,,,,Mozilla/5.0
+148784956,2024-09-21T08:05:28.795Z,jmmaloney4@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-09-28T10:36:28.572Z,yongfenchao@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-10-02T17:24:56.774Z,jmmaloney4@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+148784956,2024-10-10T16:56:30.942Z,lagobrian93@gmail.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0 OneOutlook/1.2024.1002.100"

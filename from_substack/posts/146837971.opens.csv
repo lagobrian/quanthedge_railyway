@@ -1,0 +1,14 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription,country,city,region,device_type,client_os,client_type,user_agent
+146837971,2024-07-21T03:49:14.230Z,collinsjo21@students.ecu.edu,adhoc_email,only_paid,false,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146837971,2024-07-21T03:49:14.262Z,collinsjo21@students.ecu.edu,adhoc_email,only_paid,false,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146837971,2024-07-21T03:52:04.616Z,vili.heinio@gmail.com,adhoc_email,only_paid,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146837971,2024-07-21T03:57:14.244Z,vili.heinio@gmail.com,adhoc_email,only_paid,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146837971,2024-07-21T04:58:56.244Z,arjunb1@gmail.com,adhoc_email,only_paid,false,FI,,,,,,Mozilla/5.0
+146837971,2024-07-21T07:58:05.551Z,collinsjo21@students.ecu.edu,adhoc_email,only_paid,false,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146837971,2024-07-21T07:58:05.658Z,collinsjo21@students.ecu.edu,adhoc_email,only_paid,false,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146837971,2024-07-21T08:33:07.771Z,lagobrian@outlook.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0 OneOutlook/1.2024.708.200"
+146837971,2024-07-21T08:34:40.469Z,lagobrian@outlook.com,adhoc_email,only_paid,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0 OneOutlook/1.2024.708.200"
+146837971,2024-07-21T14:39:58.140Z,w8i8pmlsz@mozmail.com,adhoc_email,only_paid,false,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146837971,2024-07-21T14:39:58.346Z,w8i8pmlsz@mozmail.com,adhoc_email,only_paid,false,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146837971,2024-07-22T10:10:03.792Z,yagiz.ozk@gmail.com,adhoc_email,only_paid,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146837971,2024-07-22T11:52:13.478Z,andrewclements8@icloud.com,adhoc_email,only_paid,false,MT,,,,,,Mozilla/5.0

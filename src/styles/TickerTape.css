@@ -1,0 +1,39 @@
+.ticker-tape {
+    width: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    white-space: nowrap;
+    padding: 10px 0;
+}
+
+.ticker-content {
+    display: inline-block;
+    animation: scroll 20s linear infinite;
+}
+
+.ticker-item {
+    margin-right: 30px;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.positive {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.ticker-tape:hover .ticker-content {
+    animation-play-state: paused;
+}

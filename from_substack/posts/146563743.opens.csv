@@ -1,0 +1,68 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription,country,city,region,device_type,client_os,client_type,user_agent
+146563743,2024-07-13T00:42:22.330Z,lagobrian93@gmail.com,newsletter,everyone,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0 OneOutlook/1.2024.625.600"
+146563743,2024-07-13T00:43:00.425Z,jonathan63@gmx.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0
+146563743,2024-07-13T00:43:22.418Z,vili.heinio@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T00:44:11.955Z,yongfenchao@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T00:44:31.143Z,phauswald@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T00:44:44.112Z,phauswald@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T00:54:55.650Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T00:55:56.039Z,lagobrian@outlook.com,newsletter,everyone,true,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0 OneOutlook/1.2024.625.600"
+146563743,2024-07-13T00:57:40.085Z,drew.resendes@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0
+146563743,2024-07-13T01:04:39.688Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T01:04:40.659Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T01:04:40.684Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T01:37:57.331Z,jstruble3131@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T01:38:05.580Z,jstruble3131@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T01:40:07.664Z,yongfenchao@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0
+146563743,2024-07-13T02:02:21.405Z,thoughts.sticky@gmail.com,newsletter,everyone,true,GB,,,,,,Mozilla/5.0
+146563743,2024-07-13T02:02:54.001Z,lagobrian93@gmail.com,newsletter,everyone,false,KE,,,,,,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0 OneOutlook/1.2024.625.600"
+146563743,2024-07-13T02:22:14.479Z,bgjwilliams@googlemail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T02:22:25.495Z,bgjwilliams@googlemail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T02:56:58.855Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T02:56:58.898Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T03:02:47.040Z,elandau@torkcapital.com.br,newsletter,everyone,true,BR,,,,,,Mozilla/5.0
+146563743,2024-07-13T03:05:46.596Z,salehzaidi@gmail.com,newsletter,everyone,true,CA,,,,,,Mozilla/5.0
+146563743,2024-07-13T03:20:01.628Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T03:20:01.891Z,collinsjo21@students.ecu.edu,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T03:31:47.349Z,artemskbv@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T04:02:19.461Z,patrykpiotrkozak@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T04:37:30.869Z,5seibels@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T04:50:09.821Z,arjunb1@gmail.com,newsletter,everyone,true,CH,,,,,,Mozilla/5.0
+146563743,2024-07-13T05:12:21.461Z,jmmaloney4@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0
+146563743,2024-07-13T05:28:55.081Z,artemskbv@gmail.com,newsletter,everyone,true,CA,,,,,,Mozilla/5.0
+146563743,2024-07-13T06:16:57.390Z,rider@members.fsf.org,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T08:46:55.427Z,saurabh.singh.2908@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T09:21:26.739Z,dhaval.dalal@gmail.com,newsletter,everyone,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T09:21:39.159Z,dhaval.dalal@gmail.com,newsletter,everyone,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T09:21:53.863Z,dhaval.dalal@gmail.com,newsletter,everyone,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T09:26:35.482Z,yagiz.ozk@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T09:30:44.465Z,yagiz.ozk@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T09:30:44.614Z,yagiz.ozk@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T11:14:15.255Z,dhaval.dalal@gmail.com,newsletter,everyone,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T11:21:33.769Z,dhaval.dalal@gmail.com,newsletter,everyone,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T11:25:19.641Z,dhaval.dalal@gmail.com,newsletter,everyone,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-13T12:31:15.929Z,bdonnelly@spectramarkets.com,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T12:31:16.060Z,bdonnelly@spectramarkets.com,newsletter,everyone,true,US,,,,,,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+146563743,2024-07-13T12:58:39.586Z,ff2017@yahoo.com,newsletter,everyone,true,US,,,,,,YahooMailProxy; https://help.yahoo.com/kb/yahoo-mail-proxy-SLN28749.html
+146563743,2024-07-13T12:58:56.976Z,ff2017@yahoo.com,newsletter,everyone,true,US,,,,,,YahooMailProxy; https://help.yahoo.com/kb/yahoo-mail-proxy-SLN28749.html
+146563743,2024-07-13T13:13:12.641Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:13:12.831Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:17:43.902Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:20:20.145Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:21:04.275Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:21:07.663Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:21:21.259Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:21:29.514Z,w8i8pmlsz@mozmail.com,newsletter,everyone,true,DE,,,,,,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.12.2
+146563743,2024-07-13T13:26:43.383Z,andrewclements8@icloud.com,newsletter,everyone,true,MT,,,,,,Mozilla/5.0
+146563743,2024-07-13T20:47:07.384Z,stephen.kirchner@icloud.com,newsletter,everyone,true,AU,,,,,,Mozilla/5.0
+146563743,2024-07-13T21:56:58.507Z,jmmaloney4@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0
+146563743,2024-07-14T08:25:56.099Z,shonofear@gmail.com,newsletter,everyone,false,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+146563743,2024-07-14T12:28:01.225Z,arjunb1@gmail.com,newsletter,everyone,true,CH,,,,,,Mozilla/5.0
+146563743,2024-07-14T20:52:03.622Z,nancyxin99@gmail.com,newsletter,everyone,true,AU,,,,,,Mozilla/5.0
+146563743,2024-07-14T23:58:15.576Z,tom.keegan@macquarie.com,newsletter,everyone,true,AU,,,,,,Mozilla/4.0 (compatible; ms-office; MSOffice 16)
+146563743,2024-07-15T11:44:32.203Z,dlefebvre@drwholdings.com,newsletter,everyone,true,US,,,,,,Mozilla/4.0 (compatible; ms-office; MSOffice 16)
+146563743,2024-07-15T15:30:03.461Z,abhisalecha@gmail.com,newsletter,everyone,true,AE,,,,,,Mozilla/5.0
+146563743,2024-07-15T21:31:54.076Z,rodolfo.iannoni75@gmail.com,newsletter,everyone,true,IT,,,,,,Mozilla/5.0
+146563743,2024-07-16T14:17:52.596Z,dlefebvre@drwholdings.com,newsletter,everyone,true,US,,,,,,Mozilla/4.0 (compatible; ms-office; MSOffice 16)
+146563743,2024-07-17T00:12:27.968Z,drew.resendes@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0
+146563743,2024-08-06T18:36:08.257Z,biakoloe@gmail.com,newsletter,everyone,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)

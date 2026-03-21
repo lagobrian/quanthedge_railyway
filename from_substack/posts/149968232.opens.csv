@@ -1,0 +1,8 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription,country,city,region,device_type,client_os,client_type,user_agent
+149968232,2024-10-08T15:48:37.879Z,xquantifyofficial@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+149968232,2024-10-08T16:19:53.882Z,jaacobl@g.ucla.edu,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+149968232,2024-10-08T16:23:42.180Z,tringhiatri@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+149968232,2024-10-08T20:25:16.365Z,tringhiatri@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+149968232,2024-10-08T21:58:38.504Z,jaacobl@g.ucla.edu,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0
+149968232,2024-10-09T01:53:19.222Z,xquantifyofficial@gmail.com,adhoc_email,only_paid,true,US,,,,,,Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)
+149968232,2024-10-09T10:48:56.904Z,filippos.sterg@gmail.com,adhoc_email,only_paid,true,GB,,,,,,Mozilla/5.0

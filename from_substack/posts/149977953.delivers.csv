@@ -1,0 +1,3 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription
+149977953,2024-10-08T18:39:04.017Z,mtthwl@yahoo.com,adhoc_email,only_paid,true
+149977953,2024-10-08T18:39:04.464Z,joakimkonig@gmail.com,adhoc_email,only_paid,true

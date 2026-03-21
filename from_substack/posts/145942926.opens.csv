@@ -1,0 +1,7 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription,country,city,region,device_type,client_os,client_type,user_agent
+145942926,2024-06-24T11:21:01.654Z,arjunb1@gmail.com,adhoc_email,only_paid,false,CH,,,,,,Mozilla/5.0
+145942926,2024-06-24T11:42:52.705Z,jieqinglin@hotmail.com,adhoc_email,only_paid,false,US,,,,,,"Mozilla/5.0 (Linux; Android 14; Pixel 6a Build/AP2A.240605.024; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/125.0.6422.165 Mobile Safari/537.36"
+145942926,2024-06-24T11:54:12.074Z,vijay.mod@hotmail.co.uk,adhoc_email,only_paid,false,SG,,,,,,"Mozilla/5.0 (Linux; Android 14; motorola edge 40 Build/U1TLS34.115-13-1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/126.0.6478.71 Mobile Safari/537.36"
+145942926,2024-06-24T11:54:31.531Z,vijay.mod@hotmail.co.uk,adhoc_email,only_paid,false,SG,,,,,,"Mozilla/5.0 (Linux; Android 14; motorola edge 40 Build/U1TLS34.115-13-1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/126.0.6478.71 Mobile Safari/537.36"
+145942926,2024-06-24T15:24:02.501Z,vijay.mod@hotmail.co.uk,adhoc_email,only_paid,false,SG,,,,,,"Mozilla/5.0 (Linux; Android 14; motorola edge 40 Build/U1TLS34.115-13-1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/126.0.6478.71 Mobile Safari/537.36"
+145942926,2024-06-24T16:29:19.402Z,arjunb1@gmail.com,adhoc_email,only_paid,false,CH,,,,,,Mozilla/5.0

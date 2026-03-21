@@ -1,0 +1,4 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription
+149970787,2024-10-08T15:52:38.041Z,jhernandez1621@gmail.com,adhoc_email,only_paid,true
+149970787,2024-10-08T15:52:40.994Z,cliu@vikingglobal.com,adhoc_email,only_paid,true
+149970787,2024-10-08T15:52:43.764Z,cdflaherty99@hotmail.com,adhoc_email,only_paid,true

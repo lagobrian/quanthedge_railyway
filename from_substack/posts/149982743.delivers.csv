@@ -1,0 +1,4 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription
+149982743,2024-10-08T20:46:12.264Z,gregzanotti1@gmail.com,adhoc_email,only_paid,true
+149982743,2024-10-08T20:46:12.451Z,tunglinh.pham94@gmail.com,adhoc_email,only_paid,true
+149982743,2024-10-08T20:46:14.939Z,mingzheyi@hotmail.com,adhoc_email,only_paid,true
