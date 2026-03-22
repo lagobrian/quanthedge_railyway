@@ -12,9 +12,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { API_BASE } from '@/lib/api';
 
 interface ViewPostProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
 export default function ViewPost({ params }: ViewPostProps) {
