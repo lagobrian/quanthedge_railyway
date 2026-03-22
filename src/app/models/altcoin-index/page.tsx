@@ -100,8 +100,8 @@ export default function AltcoinIndexPage() {
         },
       },
       zoom: {
-        pan: { enabled: true, mode: "xy" },
-        zoom: { drag: true, wheel: { enabled: true }, pinch: { enabled: true }, mode: "xy" },
+        pan: { enabled: true, mode: "xy" as const },
+        zoom: { drag: { enabled: true }, wheel: { enabled: true }, pinch: { enabled: true }, mode: "xy" as const },
       },
     },
     scales: {

@@ -142,13 +142,13 @@ export default function CryptoBreadthPage() {
       zoom: {
         pan: {
           enabled: true,
-          mode: 'xy',
+          mode: 'xy' as const,
         },
         zoom: {
-          drag: true,
+          drag: { enabled: true },
           wheel: { enabled: true },
           pinch: { enabled: true },
-          mode: 'xy',
+          mode: 'xy' as const,
         },
         limits: {
           x: { minRange: 5 },
