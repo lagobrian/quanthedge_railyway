@@ -1,285 +1,185 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
-import { Line } from "react-chartjs-2";
-import { API_BASE } from '@/lib/api';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import { API_BASE } from "@/lib/api";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Title, Tooltip, Legend);
+const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export default function GlobalMetricsPage() {
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      import("chartjs-plugin-zoom").then((mod) => {
-        if (mod?.default) ChartJS.register(mod.default);
-      });
-    }
-  }, []);
-
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [visible, setVisible] = useState({ btc: true, eth: true, mcap: false });
-  const chartRef = useRef<any>(null);
-  const [startDate, setStartDate] = useState<string | undefined>(undefined);
-  const [endDate, setEndDate] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     setLoading(true);
     fetch(`${API_BASE}/api/models/crypto-global/`)
-      .then(res => { if (!res.ok) throw new Error("Failed to fetch"); return res.json(); })
+      .then((res) => { if (!res.ok) throw new Error("Failed to fetch"); return res.json(); })
       .then(setData)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
 
-  const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
-
-  useEffect(() => {
-    if (sorted.length && (!startDate || !endDate)) {
-      setStartDate(sorted[0].date);
-      setEndDate(sorted[sorted.length - 1].date);
-    }
-  }, [sorted.length]);
-
   if (loading) return <div className="text-center py-20">Loading...</div>;
   if (error) return <div className="text-center py-20 text-red-500">Error: {error}</div>;
-  if (!sorted.length) return <div className="text-center py-20">No global metrics data available yet. Run the data pipeline first.</div>;
-  if (!startDate || !endDate) return <div className="text-center py-20">Loading chart...</div>;
 
-  const filteredData = sorted.filter((d) => d.date >= startDate && d.date <= endDate);
-  const latest = filteredData[filteredData.length - 1] || sorted[sorted.length - 1];
+  const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
+  if (!sorted.length) return <div className="text-center py-20">No global metrics data available yet.</div>;
 
-  const allDatasets = [
+  const latest = sorted[sorted.length - 1];
+  const dates = sorted.map((d) => d.date);
+
+  const traces: any[] = [
     {
-      key: "btc" as const,
-      label: "BTC Dominance (%)",
-      data: filteredData.map((d) => d.btc_dominance),
-      borderColor: "#FF8C00",
-      backgroundColor: "rgba(255,140,0,0.08)",
-      borderWidth: 2,
-      tension: 0.3,
-      pointRadius: 0,
-      pointHoverRadius: 4,
-      fill: true,
+      x: dates,
+      y: sorted.map((d) => d.btc_dominance),
+      mode: "lines",
+      name: "BTC Dominance",
+      line: { width: 2, color: "#FF8C00" },
+      yaxis: "y",
     },
     {
-      key: "eth" as const,
-      label: "ETH Dominance (%)",
-      data: filteredData.map((d) => d.eth_dominance),
-      borderColor: "#00ced1",
-      backgroundColor: "rgba(0,206,209,0.08)",
-      borderWidth: 2,
-      tension: 0.3,
-      pointRadius: 0,
-      pointHoverRadius: 4,
-      fill: true,
-    },
-    {
-      key: "mcap" as const,
-      label: "Total Market Cap ($T)",
-      data: filteredData.map((d) => d.total_market_cap ? d.total_market_cap / 1e12 : null),
-      borderColor: "#b091cc",
-      backgroundColor: "rgba(176,145,204,0.08)",
-      borderWidth: 2,
-      tension: 0.3,
-      pointRadius: 0,
-      pointHoverRadius: 4,
-      fill: true,
-      yAxisID: "y1",
+      x: dates,
+      y: sorted.map((d) => d.eth_dominance),
+      mode: "lines",
+      name: "ETH Dominance",
+      line: { width: 2, color: "#00ced1" },
+      yaxis: "y",
     },
   ];
 
-  const chartData = {
-    labels: filteredData.map((d) => d.date),
-    datasets: allDatasets.filter((ds) => visible[ds.key]),
-  };
+  // Add total market cap on secondary axis if available
+  if (sorted.some((d) => d.total_market_cap)) {
+    traces.push({
+      x: dates,
+      y: sorted.map((d) => d.total_market_cap),
+      mode: "lines",
+      name: "Total Market Cap",
+      line: { width: 1.5, color: "#00FF9D" },
+      yaxis: "y2",
+    });
+  }
 
-  const showY1 = visible.mcap;
-
-  const options: any = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: "Crypto Global Market Metrics",
-        color: "#ffffff",
-        font: { family: "'Segoe UI', sans-serif", size: 18, weight: "bold" },
-        padding: { bottom: 16 },
-      },
-      tooltip: {
-        mode: "index",
-        intersect: false,
-        backgroundColor: "rgba(6,24,41,0.95)",
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
-        borderColor: "#413510",
-        borderWidth: 1,
-      },
-      zoom: {
-        pan: { enabled: true, mode: "xy" as const },
-        zoom: { drag: { enabled: true }, wheel: { enabled: true }, pinch: { enabled: true }, mode: "xy" as const },
+  const layout: any = {
+    title: {
+      text: "BTC Dominance & Global Crypto Metrics",
+      font: { family: "Segoe UI, sans-serif", size: 18, color: "#ffffff" },
+    },
+    height: 650,
+    paper_bgcolor: "#061829",
+    plot_bgcolor: "#061829",
+    font: { family: "Segoe UI, sans-serif", size: 12, color: "#ffffff" },
+    xaxis: {
+      title: "",
+      showgrid: true,
+      gridcolor: "#413510",
+      showline: true,
+      linecolor: "#413510",
+      tickangle: -45,
+      rangeslider: { visible: true, bgcolor: "#0a2438", bordercolor: "#413510" },
+      rangeselector: {
+        buttons: [
+          { count: 1, label: "1M", step: "month", stepmode: "backward" },
+          { count: 3, label: "3M", step: "month", stepmode: "backward" },
+          { count: 6, label: "6M", step: "month", stepmode: "backward" },
+          { count: 1, label: "1Y", step: "year", stepmode: "backward" },
+          { step: "all", label: "All" },
+        ],
+        bgcolor: "#0a2438",
+        activecolor: "#00ced1",
+        bordercolor: "#413510",
+        font: { color: "#ffffff" },
       },
     },
-    scales: {
-      y: {
-        title: { display: true, text: "Dominance (%)", color: "#ffffff", font: { size: 13 } },
-        grid: { color: "#413510", lineWidth: 0.7 },
-        ticks: { color: "#ffffff", font: { size: 11 }, callback: (v: any) => `${v}%` },
-        border: { color: "#413510" },
-      },
-      ...(showY1
-        ? {
-            y1: {
-              position: "right",
-              title: { display: true, text: "Total Market Cap ($T)", color: "#b091cc", font: { size: 13 } },
-              grid: { drawOnChartArea: false },
-              ticks: { color: "#b091cc", font: { size: 11 }, callback: (v: any) => `$${v.toFixed(1)}T` },
-              border: { color: "#413510" },
-            },
-          }
-        : {}),
-      x: {
-        ticks: { maxTicksLimit: 18, maxRotation: 45, color: "#ffffff", font: { size: 11 } },
-        grid: { color: "#413510", lineWidth: 0.7 },
-        border: { color: "#413510" },
-      },
+    yaxis: {
+      title: { text: "Dominance %", font: { size: 13 } },
+      showgrid: true,
+      gridcolor: "#413510",
+      showline: true,
+      linecolor: "#413510",
+      ticksuffix: "%",
     },
-    layout: { padding: { top: 4, right: 16, bottom: 4, left: 8 } },
+    yaxis2: {
+      title: { text: "Total Market Cap", font: { size: 13 } },
+      overlaying: "y",
+      side: "right",
+      showgrid: false,
+      tickprefix: "$",
+    },
+    legend: {
+      orientation: "h",
+      yanchor: "bottom",
+      y: 1.02,
+      xanchor: "right",
+      x: 1,
+    },
+    margin: { l: 60, r: 70, t: 60, b: 40 },
+    hovermode: "x unified",
   };
 
-  const handleDownload = () => {
-    const chartInstance = chartRef.current?.chart || chartRef.current?.ctx?.canvas;
-    const canvas = chartInstance?.canvas || chartInstance;
-    if (!canvas) return;
-    const tempCanvas = document.createElement("canvas");
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext("2d");
-    if (!tempCtx) return;
-    tempCtx.fillStyle = "#061829";
-    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-    tempCtx.drawImage(canvas, 0, 0);
-    tempCtx.save();
-    tempCtx.font = "bold 44px sans-serif";
-    tempCtx.globalAlpha = 0.18;
-    tempCtx.fillStyle = "#00ced1";
-    tempCtx.textAlign = "center";
-    tempCtx.textBaseline = "middle";
-    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-    tempCtx.rotate(-Math.PI / 6);
-    tempCtx.fillText("Quant (h)Edge", 0, 0);
-    tempCtx.restore();
-    const link = document.createElement("a");
-    link.download = "global-crypto-metrics.png";
-    link.href = tempCanvas.toDataURL("image/png", 1.0);
-    link.click();
+  const config = {
+    displayModeBar: true,
+    displaylogo: false,
+    modeBarButtonsToRemove: ["lasso2d", "select2d", "autoScale2d"] as any[],
+    toImageButtonOptions: {
+      format: "png" as const,
+      filename: "global-crypto-metrics",
+      height: 800,
+      width: 1200,
+      scale: 3,
+    },
+  };
+
+  const formatNum = (n: number | null) => {
+    if (!n) return "N/A";
+    if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
+    if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
+    return `$${n.toLocaleString()}`;
   };
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-2 text-center">Global Crypto Metrics</h1>
+      <h1 className="text-3xl font-bold mb-2 text-center">BTC Dominance & Global Metrics</h1>
       <p className="mb-4 text-center text-lg text-grey">
-        Bitcoin dominance, Ethereum dominance, and total crypto market capitalization over time.
+        Track Bitcoin dominance, total market cap, and global crypto market metrics over time.
       </p>
 
       {/* Stats bar */}
       <div className="flex flex-wrap gap-6 justify-center mb-8">
-        {latest.btc_dominance && (
+        {latest.btc_dominance != null && (
           <div className="bg-[#0e2239]/60 rounded-xl px-6 py-3 border border-[#18324f] text-center">
             <div className="text-xs text-gray-400">BTC Dominance</div>
             <div className="text-2xl font-bold text-[#FF8C00]">{latest.btc_dominance.toFixed(1)}%</div>
           </div>
         )}
-        {latest.eth_dominance && (
+        {latest.eth_dominance != null && (
           <div className="bg-[#0e2239]/60 rounded-xl px-6 py-3 border border-[#18324f] text-center">
             <div className="text-xs text-gray-400">ETH Dominance</div>
             <div className="text-2xl font-bold text-[#00ced1]">{latest.eth_dominance.toFixed(1)}%</div>
           </div>
         )}
-        {latest.total_market_cap && (
+        {latest.total_market_cap != null && (
           <div className="bg-[#0e2239]/60 rounded-xl px-6 py-3 border border-[#18324f] text-center">
             <div className="text-xs text-gray-400">Total Market Cap</div>
-            <div className="text-2xl font-bold text-[#b091cc]">${(latest.total_market_cap / 1e12).toFixed(2)}T</div>
+            <div className="text-2xl font-bold text-[#00FF9D]">{formatNum(latest.total_market_cap)}</div>
           </div>
         )}
-        {latest.active_cryptocurrencies && (
+        {latest.active_cryptocurrencies != null && (
           <div className="bg-[#0e2239]/60 rounded-xl px-6 py-3 border border-[#18324f] text-center">
-            <div className="text-xs text-gray-400">Active Cryptos</div>
+            <div className="text-xs text-gray-400">Active Coins</div>
             <div className="text-2xl font-bold text-white">{latest.active_cryptocurrencies.toLocaleString()}</div>
           </div>
         )}
       </div>
 
-      {/* Toolbar: date pickers + toggles + download */}
-      <form className="flex flex-wrap gap-3 items-end mb-4 bg-[#0e2239]/60 rounded-xl px-4 py-3 shadow-inner border border-[#18324f]">
-        <div className="flex flex-col min-w-[140px]">
-          <label htmlFor="start-date" className="text-xs text-gray-300 mb-1 flex items-center gap-1">
-            <svg className="w-4 h-4 text-[#00ced1]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            Start Date
-          </label>
-          <input id="start-date" type="date" min={sorted[0]?.date} max={endDate} value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="rounded-lg bg-[#18324f]/80 text-white border border-[#00ced1] px-3 py-2 shadow-inner focus:outline-none focus:ring-2 focus:ring-[#00ced1] transition-all duration-150"
-          />
-        </div>
-        <div className="flex flex-col min-w-[140px]">
-          <label htmlFor="end-date" className="text-xs text-gray-300 mb-1 flex items-center gap-1">
-            <svg className="w-4 h-4 text-[#00ced1]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            End Date
-          </label>
-          <input id="end-date" type="date" min={startDate} max={sorted[sorted.length - 1]?.date} value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="rounded-lg bg-[#18324f]/80 text-white border border-[#00ced1] px-3 py-2 shadow-inner focus:outline-none focus:ring-2 focus:ring-[#00ced1] transition-all duration-150"
-          />
-        </div>
-        <div className="flex items-end gap-2 ml-auto">
-          {([
-            { key: "btc" as const, label: "BTC Dominance", color: "#FF8C00" },
-            { key: "eth" as const, label: "ETH Dominance", color: "#00ced1" },
-            { key: "mcap" as const, label: "Total Market Cap", color: "#b091cc" },
-          ]).map(({ key, label, color }) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setVisible((v) => ({ ...v, [key]: !v[key] }))}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 border"
-              style={{
-                borderColor: color,
-                backgroundColor: visible[key] ? color : "transparent",
-                color: visible[key] ? "#061829" : color,
-                opacity: visible[key] ? 1 : 0.5,
-              }}
-            >
-              <span className="inline-block w-3 h-0.5 rounded-full" style={{ backgroundColor: visible[key] ? "#061829" : color }} />
-              {label}
-            </button>
-          ))}
-          <button type="button" aria-label="Download Chart"
-            className="p-2 rounded-full hover:bg-[#18324f] focus:outline-none focus:ring-2 focus:ring-[#00ced1] transition-all duration-150 border border-transparent text-[#00ced1] hover:text-[#b091cc] ml-2"
-            onClick={handleDownload}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/></svg>
-          </button>
-        </div>
-      </form>
-
-      <div className="rounded-xl shadow p-6" style={{ background: "#061829" }}>
-        <div style={{ height: "600px" }} onDoubleClick={() => chartRef.current?.chart?.resetZoom?.()}>
-          <Line ref={chartRef} data={chartData} options={options} />
-        </div>
-        <div className="text-xs text-gray-400 mt-2">Tip: Scroll or drag to zoom/pan. Double-click to reset.</div>
+      {/* Chart */}
+      <div className="rounded-xl overflow-hidden" style={{ background: "#061829" }}>
+        <Plot
+          data={traces}
+          layout={layout}
+          config={config}
+          useResizeHandler
+          style={{ width: "100%", height: "650px" }}
+        />
       </div>
     </div>
   );
