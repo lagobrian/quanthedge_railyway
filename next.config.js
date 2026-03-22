@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', 'res.cloudinary.com', 'images.unsplash.com', '127.0.0.1'],
+    domains: ['localhost', 'res.cloudinary.com', 'images.unsplash.com', '127.0.0.1', 'substack-post-media.s3.amazonaws.com'],
+    remotePatterns: [
+      { protocol: 'https', hostname: '**.onrender.com' },
+      { protocol: 'https', hostname: 'substack-post-media.s3.amazonaws.com' },
+    ],
   },
   webpack: (config) => {
     config.resolve.fallback = {
@@ -14,11 +18,7 @@ const nextConfig = {
     };
     return config;
   },
-  experimental: {
-    serverActions: {
-      enabled: true
-    }
-  },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;
