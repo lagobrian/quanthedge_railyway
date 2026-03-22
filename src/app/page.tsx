@@ -27,7 +27,7 @@ export default function Home() {
               Advanced financial models, backtests, and market insights to help you make data-driven investment decisions.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/register">
+              <Link href="/blog">
                 <Button size="lg" className="w-full sm:w-auto">Get Started</Button>
               </Link>
               <Link href="/models">
@@ -131,7 +131,7 @@ export default function Home() {
               Join thousands of traders and investors who use Quant (h)Edge to make data-driven decisions in the financial markets.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/register">
+              <Link href="/pricing">
                 <Button size="lg" className="w-full sm:w-auto">Get Started Now</Button>
               </Link>
               <Link href="/pricing">
