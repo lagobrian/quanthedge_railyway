@@ -230,10 +230,20 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
   }
+  .form-input::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.4;
+  }
   .form-input:focus {
     outline: none;
     box-shadow: 0 0 0 2px var(--primary);
     border-color: transparent;
+  }
+
+  /* Global placeholder opacity */
+  input::placeholder,
+  textarea::placeholder {
+    opacity: 0.4;
   }
 
   .form-label {

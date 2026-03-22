@@ -703,3 +703,96 @@ def send_newsletter_view(request, slug):
         'sent': sent,
         'failed': failed,
     })
+
+
+# ─── Bulk Data Sync (Admin only) ────────────────────────────────────────────
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def bulk_data_upload_view(request):
+    """Accept bulk JSON data to populate models. Superuser only."""
+    if not request.user.is_superuser:
+        return Response({'error': 'Superuser access required.'}, status=status.HTTP_403_FORBIDDEN)
+
+    from models.models import CryptoBreadth, CryptoPrice, CryptoIndex, CryptoGlobalQuote
+
+    data = request.data
+    model_type = data.get('model')
+    records = data.get('records', [])
+
+    if not model_type or not records:
+        return Response({'error': 'model and records are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    created = 0
+
+    if model_type == 'crypto_breadth':
+        for r in records:
+            _, was_created = CryptoBreadth.objects.update_or_create(
+                date=r['date'],
+                defaults={
+                    'pct_above_50dma': r['pct_above_50dma'],
+                    'pct_above_100dma': r['pct_above_100dma'],
+                    'pct_above_200dma': r['pct_above_200dma'],
+                }
+            )
+            if was_created:
+                created += 1
+
+    elif model_type == 'crypto_index':
+        for r in records:
+            _, was_created = CryptoIndex.objects.update_or_create(
+                index_name=r['index_name'], date=r['date'],
+                defaults={
+                    'value': r['value'],
+                    'daily_return': r.get('daily_return'),
+                    'num_constituents': r.get('num_constituents'),
+                }
+            )
+            if was_created:
+                created += 1
+
+    elif model_type == 'crypto_global_quote':
+        for r in records:
+            _, was_created = CryptoGlobalQuote.objects.update_or_create(
+                date=r['date'],
+                defaults={k: v for k, v in r.items() if k != 'date'}
+            )
+            if was_created:
+                created += 1
+
+    elif model_type == 'posts':
+        from django.utils.text import slugify
+        for r in records:
+            cat = None
+            if r.get('category_slug'):
+                cat = Category.objects.filter(slug=r['category_slug']).first()
+
+            base_slug = slugify(r['title'])[:80] or 'post'
+            slug = base_slug
+            counter = 1
+            while Post.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            Post.objects.create(
+                user=request.user,
+                title=r['title'],
+                slug=slug,
+                description=r.get('description', ''),
+                excerpt=r.get('excerpt', '')[:500],
+                image_url=r.get('image_url', ''),
+                status='published',
+                category=cat,
+                is_premium=r.get('is_premium', False),
+                tags=r.get('tags', ''),
+                publishing_method='website',
+            )
+            created += 1
+    else:
+        return Response({'error': f'Unknown model: {model_type}'}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({
+        'message': f'Uploaded {len(records)} records for {model_type}. {created} new.',
+        'total': len(records),
+        'created': created,
+    })

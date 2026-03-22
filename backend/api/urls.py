@@ -49,4 +49,7 @@ urlpatterns = [
     # Newsletter sending
     path('dashboard/send-newsletter/<slug:slug>/', views.send_newsletter_view, name='send-newsletter'),
     path('dashboard/send-test-email/', views.send_test_email_view, name='send-test-email'),
+
+    # Bulk data sync (admin only)
+    path('sync/bulk-upload/', views.bulk_data_upload_view, name='bulk-upload'),
 ]

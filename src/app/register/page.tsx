@@ -175,7 +175,7 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 className={`form-input ${errors.password ? 'border-destructive' : ''}`}
-                placeholder="u2022u2022u2022u2022u2022u2022u2022u2022"
+                placeholder="••••••••"
               />
               {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password}</p>}
             </div>
@@ -191,7 +191,7 @@ export default function Register() {
                 value={formData.password2}
                 onChange={handleChange}
                 className={`form-input ${errors.password2 ? 'border-destructive' : ''}`}
-                placeholder="u2022u2022u2022u2022u2022u2022u2022u2022"
+                placeholder="••••••••"
               />
               {errors.password2 && <p className="mt-1 text-sm text-destructive">{errors.password2}</p>}
             </div>
