@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Lock, Heart, Bookmark, Search, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
+import { Heart, Bookmark, Search, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
 import { API_BASE } from '@/lib/api';
 
 interface Profile {
@@ -39,6 +38,7 @@ interface Post {
   bookmarks_count: number;
   is_liked: boolean;
   is_bookmarked: boolean;
+  is_pinned: boolean;
   user: User;
   profile: Profile;
   category?: { id: number; title: string; slug: string; };
@@ -337,7 +337,7 @@ export default function Blog() {
     }
   };
 
-  const getCategoryTitle = (slug: string) => {
+  const _getCategoryTitle = (slug: string) => {
     if (slug === 'all') return 'All Newsletters';
     const category = categories.find(c => c.slug === slug);
     return category ? category.title : 'Unknown Newsletter';
