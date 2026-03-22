@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -9,6 +9,14 @@ import { refreshUser } from '@/store/slices/authSlice';
 import { API_BASE } from '@/lib/api';
 
 export default function Login() {
+  return (
+    <Suspense fallback={<div className="min-h-screen py-12 flex justify-center items-center">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();

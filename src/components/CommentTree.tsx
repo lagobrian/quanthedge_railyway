@@ -127,7 +127,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({
         {/* Render replies if expanded and not at max depth */}
         {hasReplies && depth < maxDepth && isExpanded && (
           <div className="replies">
-            {comment.replies.map(reply => renderComment(reply, depth + 1))}
+            {comment.replies?.map(reply => renderComment(reply, depth + 1))}
           </div>
         )}
         
@@ -138,7 +138,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({
             className="text-xs text-blue-500 hover:underline ml-10 mt-1"
             style={{ marginLeft: `${indent + 40}px` }}
           >
-            {isExpanded ? 'Hide replies' : `Show ${comment.replies.length} replies`}
+            {isExpanded ? 'Hide replies' : `Show ${comment.replies?.length ?? 0} replies`}
           </button>
         )}
       </div>
