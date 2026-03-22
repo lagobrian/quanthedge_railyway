@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Footer } from '../components/footer';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { ChartBar, LineChart, BarChart3, ArrowRight, Globe, Zap } from 'lucide-react';
+import { LineChart, BarChart3, ArrowRight, Globe, Zap } from 'lucide-react';
 // import TickerTape from '../components/TickerTape';
 
 export default function Home() {

@@ -78,3 +78,4 @@ export default function LikeButton({ postSlug, initialLikes, isLiked }: LikeButt
       )}
     </div>
   );
+}
