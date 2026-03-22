@@ -1,17 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { API_BASE } from '@/lib/api';
 
 interface ResetPasswordProps {
-  params: {
-    uid: string;
-    token: string;
-  };
+  params: Promise<{ uid: string; token: string }>;
 }
 
 export default function ResetPassword({ params }: ResetPasswordProps) {
+  const { uid, token: resetToken } = use(params);
   const router = useRouter();
   const [formData, setFormData] = useState({
     password: '',
@@ -49,8 +47,8 @@ export default function ResetPassword({ params }: ResetPasswordProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          uid: params.uid,
-          token: params.token,
+          uid: uid,
+          token: resetToken,
           new_password: formData.password,
         }),
       });
