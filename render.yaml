@@ -10,9 +10,8 @@ services:
     name: quanthedge-api
     runtime: python
     plan: free
-    rootDir: backend
     buildCommand: chmod +x build.sh && ./build.sh
-    startCommand: gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: cd backend && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: SECRET_KEY
         generateValue: true
