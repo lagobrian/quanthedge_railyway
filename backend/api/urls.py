@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import stripe_views
 
 urlpatterns = [
     # Auth
@@ -52,4 +53,10 @@ urlpatterns = [
 
     # Bulk data sync (admin only)
     path('sync/bulk-upload/', views.bulk_data_upload_view, name='bulk-upload'),
+
+    # Stripe payments
+    path('stripe/create-checkout/', stripe_views.create_checkout_view, name='stripe-checkout'),
+    path('stripe/create-portal/', stripe_views.create_portal_view, name='stripe-portal'),
+    path('stripe/subscription-status/', stripe_views.subscription_status_view, name='stripe-status'),
+    path('stripe/webhook/', stripe_views.stripe_webhook_view, name='stripe-webhook'),
 ]
