@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { API_BASE } from '@/lib/api';
 
@@ -26,9 +25,10 @@ interface PostCardProps {
   post: Post;
   onDelete?: (slug: string) => void;
   onEdit?: (slug: string) => void;
+  isPremiumUser?: boolean;
 }
 
-export default function PostCard({ post, onDelete, onEdit }: PostCardProps) {
+export default function PostCard({ post, onDelete, onEdit, isPremiumUser }: PostCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -68,9 +68,10 @@ export default function PostCard({ post, onDelete, onEdit }: PostCardProps) {
           fill
           className="object-cover"
         />
-        {post.is_premium && (
-          <div className="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">
-            Premium
+        {post.is_premium && !isPremiumUser && (
+          <div className="absolute top-2 right-2 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+            PREMIUM
           </div>
         )}
       </div>

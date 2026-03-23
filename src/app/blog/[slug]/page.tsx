@@ -209,8 +209,8 @@ export default function BlogPost({ params }: BlogPostProps) {
           <header className="mb-8">
             <div className="flex items-center gap-3 mb-4">
               <h1 className="text-4xl font-bold">{post.title}</h1>
-              {post.is_premium && (
-                <span className="shrink-0 px-2 py-1 text-xs font-semibold bg-[#00ced1]/20 text-[#00ced1] rounded border border-[#00ced1]/30">
+              {post.is_premium && !isPaidUser && (
+                <span className="shrink-0 px-2 py-1 text-xs font-semibold bg-primary/20 text-primary rounded border border-primary/30">
                   Premium
                 </span>
               )}

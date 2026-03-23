@@ -474,9 +474,9 @@ export default function Blog() {
                         )}
                         {/* Gradient overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                        {/* Premium badge */}
-                        {fp.is_premium && (
-                          <div className="absolute top-4 right-4 bg-[#00ced1]/90 text-[#061829] text-xs font-bold px-2 py-1 rounded flex items-center gap-1 z-10">
+                        {/* Premium badge - hidden for premium users */}
+                        {fp.is_premium && !isPremium && (
+                          <div className="absolute top-4 right-4 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1 z-10">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                             PREMIUM
                           </div>
@@ -535,8 +535,8 @@ export default function Blog() {
         </svg>
       </div>
     )}
-    {post.is_premium && (
-      <div className="absolute top-4 right-4 bg-[#00ced1]/90 text-[#061829] text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+    {post.is_premium && !isPremium && (
+      <div className="absolute top-4 right-4 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
         <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
         PREMIUM
       </div>
@@ -687,7 +687,7 @@ export default function Blog() {
           </div>
         )}
 
-        {showNewsletter && !hasSubscribed && (
+        {showNewsletter && !hasSubscribed && !isPremium && (
           <div className="relative mt-20 bg-darkBlue/30 rounded-xl p-8 text-center">
             <button
               aria-label="Dismiss newsletter banner"
