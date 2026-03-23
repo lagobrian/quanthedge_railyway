@@ -1,12 +1,19 @@
 # Quant (h)Edge — Website Dev Backlog
-> Last updated: 23rd March 2026  
-> Stack: Django, PostgreSQL, Python  
+> Last updated: 23rd March 2026
+> Stack: Next.js (frontend), Django REST Framework (backend), PostgreSQL, Python, R
 > Ordered by priority: Foundation → Core UX → Content & Models → Growth & Monetisation → Advanced Infrastructure
 
 ---
 
-## 🔴 Phase 1 — Foundation & Stability
+## 🔴 Phase 1 — Foundation & Stability ✅ COMPLETE
 > Must be done first. Everything else breaks or is pointless without these.
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Email Verification on Signup | ✅ Done |
+| 2 | Fix Newsletter Subscribe Button UX | ✅ Done |
+| 3 | Never Show Subscribe/Padlock to Premium Members | ✅ Done |
+| 4 | Health Check Endpoint + Error Handling | ✅ Done |
 
 ---
 
@@ -642,6 +649,20 @@
 
 ## 🔵 Phase 5 — Advanced Infrastructure
 > Post-launch. Do these after the site has subscribers and traction.
+
+---
+
+### 5. Local Development Environment Matches Production (Docker)
+> Moved from Phase 1 — not blocking, do when PostgreSQL is set up locally.
+
+*(Implementation details unchanged — see original item 5 above)*
+
+---
+
+### 6. Two-Factor Authentication (2FA)
+> Moved from Phase 1 — important but not blocking launch.
+
+*(Implementation details unchanged — see original item 6 above)*
 
 ---
 
