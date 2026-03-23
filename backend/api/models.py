@@ -72,6 +72,7 @@ class Post(models.Model):
     send_as_email = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
     view = models.IntegerField(default=0)
+    reading_time = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -79,6 +80,14 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        # Compute reading time from description (strip HTML tags)
+        import math, re
+        text = re.sub(r'<[^>]+>', '', self.description or '')
+        word_count = len(text.split())
+        self.reading_time = max(1, math.ceil(word_count / 200))
+        super().save(*args, **kwargs)
 
     @property
     def likes_count(self):

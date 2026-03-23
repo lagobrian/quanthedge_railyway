@@ -105,7 +105,7 @@ class PostListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'slug', 'excerpt', 'image', 'image_url', 'thumbnail',
-                  'status', 'view', 'date', 'likes_count', 'comments_count',
+                  'status', 'view', 'date', 'reading_time', 'likes_count', 'comments_count',
                   'bookmarks_count', 'is_premium', 'send_as_email', 'email_sent',
                   'category', 'user', 'is_pinned', 'tags']
 
@@ -134,9 +134,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'slug', 'description', 'excerpt', 'image', 'image_url',
-                  'thumbnail', 'status', 'view', 'date', 'likes_count', 'comments_count',
-                  'bookmarks_count', 'is_premium', 'send_as_email', 'email_sent',
-                  'publishing_method', 'category', 'user', 'comments', 'tags', 'is_pinned']
+                  'thumbnail', 'status', 'view', 'date', 'reading_time', 'likes_count',
+                  'comments_count', 'bookmarks_count', 'is_premium', 'send_as_email',
+                  'email_sent', 'publishing_method', 'category', 'user', 'comments',
+                  'tags', 'is_pinned']
 
     def get_thumbnail(self, obj):
         if obj.image:

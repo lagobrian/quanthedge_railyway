@@ -300,6 +300,68 @@
     background-color: rgba(0, 227, 188, 0.1);
     color: var(--turquoise);
   }
+
+  .post-body {
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 720px;
+    margin: 0 auto;
+    color: var(--foreground);
+  }
+  .post-body p {
+    margin-bottom: 1.25em;
+  }
+  .post-body h1, .post-body h2, .post-body h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .post-body h1 { font-size: 1.75em; }
+  .post-body h2 { font-size: 1.4em; }
+  .post-body h3 { font-size: 1.2em; }
+  .post-body blockquote {
+    border-left: 3px solid var(--primary);
+    padding-left: 1em;
+    margin: 1.5em 0;
+    font-style: italic;
+    color: var(--muted-foreground);
+  }
+  .post-body img {
+    max-width: 100%;
+    border-radius: 0.5rem;
+    margin: 1.5em auto;
+    display: block;
+  }
+  .post-body a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .post-body a:hover {
+    color: var(--turquoise);
+  }
+  .post-body pre {
+    background: var(--muted);
+    padding: 1em;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    font-size: 0.9em;
+    margin: 1.5em 0;
+  }
+  .post-body code {
+    background: var(--muted);
+    padding: 0.15em 0.3em;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+  }
+
+  @media (max-width: 640px) {
+    .post-body {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+  }
 }
 
 @layer utilities {

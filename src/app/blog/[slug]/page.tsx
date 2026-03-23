@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect, use, useRef } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import PostActions from './PostActions';
 import CommentSection from '@/components/CommentSection';
 import React from 'react';
-import { Share2 } from 'lucide-react';
 import BlogShareMenu from './BlogShareMenu';
 import { API_BASE } from '@/lib/api';
 
@@ -26,6 +25,7 @@ interface Post {
   slug: string;
   status: string;
   view: number;
+  reading_time: number;
   date: string;
   likes_count: number;
   comments_count: number;
@@ -229,7 +229,8 @@ export default function BlogPost({ params }: BlogPostProps) {
                 <div>
                   <p className="font-medium">{post.user?.username || 'Anonymous'}</p>
                   <p className="text-sm text-grey">
-                    {post.date ? new Date(post.date).toLocaleDateString() : 'Unknown date'}
+                    {post.reading_time ? `${post.reading_time} min read  ·  ` : ''}
+                    {post.date ? new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Unknown date'}
                   </p>
                 </div>
               </div>
@@ -259,7 +260,7 @@ export default function BlogPost({ params }: BlogPostProps) {
           )}
 
           <div
-            className="prose prose-invert max-w-none"
+            className="post-body prose prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: post.description }}
           />
 

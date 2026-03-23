@@ -27,6 +27,7 @@ interface Post {
   thumbnail: string;
   status: 'Draft' | 'Published' | 'Disabled';
   view: number;
+  reading_time: number;
   slug: string;
   date: string;
   tags: string;
@@ -579,6 +580,9 @@ export default function Blog() {
         month: 'short',
         day: 'numeric'
       })}</span>
+      {post.reading_time > 0 && (
+        <><span className="mx-2">•</span><span>{post.reading_time} min read</span></>
+      )}
       <span className="mx-2">•</span>
       <span>{post.view} views</span>
     </div>
