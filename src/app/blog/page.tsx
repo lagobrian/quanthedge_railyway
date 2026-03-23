@@ -60,7 +60,8 @@ interface BlogApiResponse {
 }
 
 export default function Blog() {
-  const [showNewsletter, setShowNewsletter] = useState(true);
+  const [showNewsletter, setShowNewsletter] = useState(false);
+  const [hasSubscribed, setHasSubscribed] = useState(false);
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -87,6 +88,14 @@ export default function Blog() {
         console.error('Error parsing user data:', error);
         setIsPremium(false);
       }
+    }
+    // Check if already subscribed to newsletter
+    const subscribed = localStorage.getItem('newsletter_subscribed');
+    if (subscribed) {
+      setHasSubscribed(true);
+      setShowNewsletter(false);
+    } else {
+      setShowNewsletter(true);
     }
   }, []);
 
@@ -205,6 +214,8 @@ export default function Blog() {
 
       toast.success('Successfully subscribed to the newsletter!');
       setEmail('');
+      setHasSubscribed(true);
+      localStorage.setItem('newsletter_subscribed', 'true');
     } catch (error) {
       console.error('Error subscribing:', error);
       toast.error('Failed to subscribe. Please try again.');
@@ -337,11 +348,6 @@ export default function Blog() {
     }
   };
 
-  const _getCategoryTitle = (slug: string) => {
-    if (slug === 'all') return 'All Newsletters';
-    const category = categories.find(c => c.slug === slug);
-    return category ? category.title : 'Unknown Newsletter';
-  };
 
   return (
     <div className="min-h-screen">
@@ -674,7 +680,14 @@ export default function Blog() {
         )}
 
         {/* Newsletter Subscription */}
-        {showNewsletter && (
+        {hasSubscribed && (
+          <div className="mt-16 mb-8 text-center py-8 bg-card rounded-xl border border-border">
+            <p className="text-lg text-accent font-medium">Thanks for subscribing! You&apos;re on the list.</p>
+            <p className="text-muted-foreground text-sm mt-1">We&apos;ll send you our best content weekly.</p>
+          </div>
+        )}
+
+        {showNewsletter && !hasSubscribed && (
           <div className="relative mt-20 bg-darkBlue/30 rounded-xl p-8 text-center">
             <button
               aria-label="Dismiss newsletter banner"
