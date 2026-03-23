@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { API_BASE } from '@/lib/api';
+import { useAppSelector } from '@/store/hooks';
 
 // Mock data for demonstration
 const mockModels = [
@@ -24,7 +25,7 @@ const mockModels = [
     category: 'market-indicators',
     dataSource: 'CoinMarketCap',
     updateFrequency: 'Hourly',
-    isPremium: false,
+    isPremium: true,
     image: API_BASE + '/api/models/chart-thumbnail/altcoin-index/',
     link: '/models/altcoin-index',
   },
@@ -35,7 +36,7 @@ const mockModels = [
     category: 'market-indicators',
     dataSource: 'CoinMarketCap',
     updateFrequency: 'Hourly',
-    isPremium: false,
+    isPremium: true,
     image: API_BASE + '/api/models/chart-thumbnail/global-metrics/',
     link: '/models/global-metrics',
   },
@@ -122,10 +123,10 @@ const mockModels = [
 ];
 
 export default function Models() {
+  const { user } = useAppSelector((state) => state.auth);
+  const isPaidUser = user?.is_premium || false;
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isPaidUser, setIsPaidUser] = useState(false);
   const [showUpgradeCard, setShowUpgradeCard] = useState(true);
 
   // Filter models based on category and search query
