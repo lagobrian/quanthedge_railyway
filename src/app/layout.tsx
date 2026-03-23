@@ -4,8 +4,9 @@ import { Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
 import Navbar from '@/components/Navbar';
 import StoreProvider from '@/providers/StoreProvider';
+import ThemeProvider from '@/providers/ThemeProvider';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
 });
@@ -22,15 +23,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans antialiased">
-        <StoreProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-          </div>
-          <Toaster position="bottom-right" />
-        </StoreProvider>
+    <html lang="en" className={`${inter.className} dark`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var theme = localStorage.getItem('theme') || 'dark';
+              document.documentElement.classList.toggle('dark', theme === 'dark');
+            } catch(e) {}
+          })();
+        `}} />
+      </head>
+      <body className="min-h-screen bg-background font-sans antialiased transition-colors duration-300">
+        <ThemeProvider>
+          <StoreProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+            </div>
+            <Toaster position="bottom-right" />
+          </StoreProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

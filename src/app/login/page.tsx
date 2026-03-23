@@ -20,6 +20,7 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
+  // Check for password reset success
   const resetSuccess = searchParams.get('reset') === 'success';
   const [formData, setFormData] = useState({
     email: '',
@@ -29,19 +30,44 @@ function LoginContent() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showVerifyMessage, setShowVerifyMessage] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSent, setResendSent] = useState(false);
 
   useEffect(() => {
-    // Check if user just registered
     const registered = searchParams.get('registered');
+    const verify = searchParams.get('verify');
     if (registered === 'true') {
-      setShowSuccess(true);
-      // Hide success message after 5 seconds
-      const timer = setTimeout(() => {
-        setShowSuccess(false);
-      }, 5000);
-      return () => clearTimeout(timer);
+      if (verify === 'true') {
+        setShowVerifyMessage(true);
+      } else {
+        setShowSuccess(true);
+        const timer = setTimeout(() => setShowSuccess(false), 5000);
+        return () => clearTimeout(timer);
+      }
     }
   }, [searchParams]);
+
+  const handleResendVerification = async () => {
+    if (!formData.email) {
+      setErrors({ email: 'Enter your email to resend verification.' });
+      return;
+    }
+    setResendLoading(true);
+    try {
+      await fetch(`${API_BASE}/api/resend-verification/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email }),
+      });
+      setResendSent(true);
+      toast.success('Verification email sent! Check your inbox.');
+    } catch {
+      toast.error('Failed to resend. Try again.');
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -101,7 +127,13 @@ function LoginContent() {
 
       if (!loginResponse.ok) {
         const errorData = await loginResponse.json();
-        throw new Error(errorData.detail || 'Invalid email or password');
+        const detail = errorData.detail || '';
+        // Django returns "No active account" when is_active=False
+        if (detail.toLowerCase().includes('no active account') || detail.toLowerCase().includes('not active')) {
+          setShowVerifyMessage(true);
+          throw new Error('Please verify your email before logging in.');
+        }
+        throw new Error(detail || 'Invalid email or password');
       }
 
       const data = await loginResponse.json();
@@ -142,11 +174,39 @@ function LoginContent() {
             </p>
           </div>
 
-          {showSuccess && (
-            <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
-              <p className="text-green-700 dark:text-green-300">
+          {resetSuccess && (
+            <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 mb-6">
+              <p className="text-accent">Password reset successfully! You can now log in with your new password.</p>
+            </div>
+          )}
+
+          {showSuccess && !showVerifyMessage && (
+            <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 mb-6">
+              <p className="text-accent">
                 Account created successfully! You can now log in.
               </p>
+            </div>
+          )}
+
+          {showVerifyMessage && (
+            <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 mb-6">
+              <p className="text-primary font-medium mb-2">
+                Please verify your email before logging in.
+              </p>
+              <p className="text-muted-foreground text-sm mb-3">
+                Check your inbox for a verification link. It may be in your spam folder.
+              </p>
+              {!resendSent ? (
+                <button
+                  onClick={handleResendVerification}
+                  disabled={resendLoading}
+                  className="text-sm text-primary hover:underline disabled:opacity-50"
+                >
+                  {resendLoading ? 'Sending...' : 'Resend verification email'}
+                </button>
+              ) : (
+                <p className="text-sm text-accent">Verification email sent!</p>
+              )}
             </div>
           )}
 

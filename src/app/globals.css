@@ -3,84 +3,91 @@
 @tailwind utilities;
 
 @layer base {
+  /* Light mode - clean, professional with our color palette */
   :root {
-    --background: #061829;
-    --foreground: #ffffff;
-    
-    --card: #0a2438;
-    --card-foreground: #ffffff;
- 
-    --popover: #081f30;
-    --popover-foreground: #ffffff;
- 
-    --primary: #00ced1;
-    --primary-foreground: #061829;
- 
-    --secondary: #ccb091;
-    --secondary-foreground: #061829;
- 
-    --muted: #0c2c42;
-    --muted-foreground: #ababab;
- 
-    --accent: #adcc91;
-    --accent-foreground: #061829;
- 
-    --destructive: #ff2400;
-    --destructive-foreground: #ffffff;
- 
-    --border: #0e3553;
-    --input: #0e3553;
-    --ring: #00ced1;
+    --background: #f8f9fc;
+    --foreground: #1a2332;
 
-    /* Custom colors */
-    --blue: #00ced1;
-    --grey: #ababab;
-    --brown: #ccb091;
-    --pink: #cc91ad;
-    --green: #adcc91;
-    --purple: #b091cc;
-    --red: #ff2400;
-    --light-red: #e83311;
+    --card: #ffffff;
+    --card-foreground: #1a2332;
+
+    --popover: #ffffff;
+    --popover-foreground: #1a2332;
+
+    --primary: #0097a7;
+    --primary-foreground: #ffffff;
+
+    --secondary: #a3836b;
+    --secondary-foreground: #ffffff;
+
+    --muted: #eef1f6;
+    --muted-foreground: #5a6577;
+
+    --accent: #6b8f4e;
+    --accent-foreground: #ffffff;
+
+    --destructive: #d32f2f;
+    --destructive-foreground: #ffffff;
+
+    --border: #dce1e8;
+    --input: #eef1f6;
+    --ring: #0097a7;
+
+    /* Custom colors - light mode variants */
+    --blue: #0097a7;
+    --grey: #5a6577;
+    --brown: #a3836b;
+    --pink: #b5718a;
+    --green: #6b8f4e;
+    --purple: #7e5fa8;
+    --red: #d32f2f;
+    --light-red: #e53935;
     --red-orange: #d14422;
-    --orange: #ba5533;
+    --orange: #e67e22;
     --brown-orange: #a36744;
-    --dark-brown: #8c7a55;
-    --light-green: #758d66;
-    --bright-green: #00FF9D;
-    --green-cyan: #5ea078;
-    --cyan: #46b389;
-    --dark-cyan: #2fc69a;
-    --dark-turquoise: #18d9ab;
-    --turquoise: #00e3bc;
- 
+    --dark-brown: #6d5c44;
+    --light-green: #4caf50;
+    --bright-green: #00c853;
+    --green-cyan: #009688;
+    --cyan: #00acc1;
+    --dark-cyan: #00838f;
+    --dark-turquoise: #00695c;
+    --turquoise: #009688;
+
+    /* Chart colors for light mode */
+    --chart-bg: #ffffff;
+    --chart-grid: #e0e4ea;
+    --chart-text: #1a2332;
+
     --radius: 0.5rem;
   }
- 
+
+  /* Dark mode - existing theme */
   .dark {
     --background: #061829;
     --foreground: #ffffff;
-    
+
     --card: #0a2438;
     --card-foreground: #ffffff;
- 
+
     --popover: #081f30;
     --popover-foreground: #ffffff;
- 
+
     --primary: #00ced1;
     --primary-foreground: #061829;
- 
+
     --secondary: #ccb091;
     --secondary-foreground: #061829;
- 
+
     --muted: #0c2c42;
     --muted-foreground: #ababab;
- 
+
     --accent: #adcc91;
     --accent-foreground: #061829;
- 
+
     --destructive: #ff2400;
     --destructive-foreground: #ffffff;
- 
+
     --border: #0e3553;
     --input: #0e3553;
     --ring: #00ced1;
@@ -105,6 +112,11 @@
     --dark-cyan: #2fc69a;
     --dark-turquoise: #18d9ab;
     --turquoise: #00e3bc;
+
+    /* Chart colors for dark mode */
+    --chart-bg: #061829;
+    --chart-grid: #413510;
+    --chart-text: #ffffff;
   }
 }
 

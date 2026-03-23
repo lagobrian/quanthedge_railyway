@@ -34,12 +34,87 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        # Send verification email
+        from django.core.signing import TimestampSigner
+        signer = TimestampSigner()
+        token = signer.sign(user.pk)
+        verify_url = f"{settings.SITE_URL}/verify-email?token={token}"
+        try:
+            send_mail(
+                'Verify your email - Quant (h)Edge',
+                f'Hi {user.full_name},\n\nPlease verify your email by clicking this link:\n\n{verify_url}\n\nThis link expires in 24 hours.\n\nThanks,\nQuant (h)Edge',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
+
         return Response({
             'id': user.id,
             'email': user.email,
             'username': user.username,
             'full_name': user.full_name,
+            'message': 'Account created. Please check your email to verify your account.',
         }, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def verify_email_view(request):
+    """Verify a user's email using the signed token."""
+    from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
+    token = request.data.get('token', '')
+    if not token:
+        return Response({'error': 'Token is required.'}, status=400)
+    signer = TimestampSigner()
+    try:
+        user_pk = signer.unsign(token, max_age=86400)  # 24 hours
+    except SignatureExpired:
+        return Response({'error': 'Verification link has expired. Please request a new one.'}, status=400)
+    except BadSignature:
+        return Response({'error': 'Invalid verification link.'}, status=400)
+    try:
+        user = User.objects.get(pk=user_pk)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found.'}, status=404)
+    if user.is_active:
+        return Response({'message': 'Email already verified.'})
+    user.is_active = True
+    user.save()
+    return Response({'message': 'Email verified successfully! You can now log in.'})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def resend_verification_view(request):
+    """Resend verification email."""
+    from django.core.signing import TimestampSigner
+    email = request.data.get('email', '')
+    if not email:
+        return Response({'error': 'Email is required.'}, status=400)
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        # Don't reveal if email exists
+        return Response({'message': 'If an account with that email exists, a verification link has been sent.'})
+    if user.is_active:
+        return Response({'message': 'Email is already verified.'})
+    signer = TimestampSigner()
+    token = signer.sign(user.pk)
+    verify_url = f"{settings.SITE_URL}/verify-email?token={token}"
+    try:
+        send_mail(
+            'Verify your email - Quant (h)Edge',
+            f'Hi {user.full_name},\n\nPlease verify your email by clicking this link:\n\n{verify_url}\n\nThis link expires in 24 hours.\n\nThanks,\nQuant (h)Edge',
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=True,
+        )
+    except Exception:
+        pass
+    return Response({'message': 'If an account with that email exists, a verification link has been sent.'})
 
 
 @api_view(['GET', 'PUT'])

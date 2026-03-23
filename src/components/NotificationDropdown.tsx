@@ -104,8 +104,8 @@ export default function NotificationDropdown() {
         )}
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-80 max-h-96 bg-[#0e2239] shadow-xl rounded-lg z-50 overflow-y-auto border border-[#18324f]">
-          <div className="px-4 py-3 border-b border-[#18324f] font-semibold text-white text-sm">Notifications</div>
+        <div className="absolute right-0 mt-2 w-80 max-h-96 bg-card shadow-xl rounded-lg z-50 overflow-y-auto border border-border">
+          <div className="px-4 py-3 border-b border-border font-semibold text-foreground text-sm">Notifications</div>
           {loading ? (
             <div className="p-4 text-center text-sm text-gray-400">Loading...</div>
           ) : notifications.length === 0 ? (
@@ -118,13 +118,13 @@ export default function NotificationDropdown() {
               {notifications.map((notif) => (
                 <li
                   key={notif.id}
-                  className={`px-4 py-3 border-b border-[#18324f] text-sm cursor-pointer transition-colors ${
+                  className={`px-4 py-3 border-b border-border text-sm cursor-pointer transition-colors ${
                     !notif.seen
-                      ? "bg-[#00ced1]/5 hover:bg-[#00ced1]/10"
-                      : "hover:bg-[#18324f]/50"
+                      ? "bg-primary/5 hover:bg-primary/10"
+                      : "hover:bg-muted"
                   }`}
                 >
-                  <div className="text-gray-200 leading-snug">
+                  <div className="text-foreground leading-snug">
                     {notif.message || `${notif.type || 'Notification'}`}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">{new Date(notif.date).toLocaleString()}</div>

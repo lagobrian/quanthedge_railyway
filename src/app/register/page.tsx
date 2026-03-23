@@ -98,10 +98,10 @@ export default function Register() {
       }
 
       // Show success message
-      toast.success('Account created successfully!');
-      
-      // Redirect to login page with success parameter
-      router.push('/login?registered=true');
+      toast.success('Account created! Please check your email to verify your account.');
+
+      // Redirect to login page with verification message
+      router.push('/login?registered=true&verify=true');
     } catch (error) {
       console.error('Registration error:', error);
       if (Object.keys(errors).length === 0) {

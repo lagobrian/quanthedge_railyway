@@ -5,6 +5,8 @@ from . import stripe_views
 urlpatterns = [
     # Auth
     path('register/', views.RegisterView.as_view(), name='register'),
+    path('verify-email/', views.verify_email_view, name='verify-email'),
+    path('resend-verification/', views.resend_verification_view, name='resend-verification'),
     path('profile/', views.profile_view, name='profile'),
     path('profile/update/', views.profile_update_view, name='profile-update'),
     path('password/reset/', views.password_reset_view, name='password-reset'),
