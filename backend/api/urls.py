@@ -41,6 +41,7 @@ urlpatterns = [
 
     # Newsletter
     path('newsletter/subscribe/', views.newsletter_subscribe_view, name='newsletter-subscribe'),
+    path('newsletter/unsubscribe/', views.newsletter_unsubscribe_view, name='newsletter-unsubscribe'),
 
     # Bulk import
     path('dashboard/import-posts/', views.import_posts_view, name='import-posts'),

@@ -208,11 +208,18 @@ export default function Blog() {
         body: JSON.stringify({ email }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to subscribe');
-      }
+      const data = await response.json();
 
-      toast.success('Successfully subscribed to the newsletter!');
+      if (!response.ok && response.status !== 200) {
+        // Treat "already exists" as success
+        if (data?.email?.[0]?.toLowerCase().includes('already exists')) {
+          toast.success("You're already subscribed!");
+        } else {
+          throw new Error(data?.email?.[0] || data?.message || 'Failed to subscribe');
+        }
+      } else {
+        toast.success(data.message || 'Successfully subscribed to the newsletter!');
+      }
       setEmail('');
       setHasSubscribed(true);
       localStorage.setItem('newsletter_subscribed', 'true');

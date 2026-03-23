@@ -497,11 +497,51 @@ def notification_mark_seen_view(request):
 def newsletter_subscribe_view(request):
     serializer = NewsletterSubscriberSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        subscriber = serializer.save()
+        # Send confirmation email
+        from django.core.signing import TimestampSigner
+        signer = TimestampSigner(salt='newsletter-unsubscribe')
+        token = signer.sign(subscriber.email)
+        unsubscribe_url = f"{settings.SITE_URL}/unsubscribe?token={token}"
+        try:
+            send_mail(
+                'Welcome to Quant (h)Edge Newsletter!',
+                f'Hi there!\n\n'
+                f'Thanks for subscribing to the Quant (h)Edge newsletter. '
+                f'You\'ll receive our latest insights, analysis, and market research.\n\n'
+                f'If you didn\'t subscribe or wish to unsubscribe, click here:\n'
+                f'{unsubscribe_url}\n\n'
+                f'You can also unsubscribe anytime from your profile settings.\n\n'
+                f'Best,\nThe Quant (h)Edge Team',
+                settings.DEFAULT_FROM_EMAIL,
+                [subscriber.email],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
         return Response({'message': 'Subscribed successfully.'}, status=status.HTTP_201_CREATED)
     if 'email' in serializer.errors and any('unique' in str(e) for e in serializer.errors['email']):
         return Response({'message': 'Already subscribed.'}, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST', 'GET'])
+@permission_classes([AllowAny])
+def newsletter_unsubscribe_view(request):
+    """Unsubscribe from newsletter via signed token."""
+    from django.core.signing import TimestampSigner, BadSignature
+    token = request.query_params.get('token') or request.data.get('token', '')
+    if not token:
+        return Response({'error': 'Token is required.'}, status=400)
+    signer = TimestampSigner(salt='newsletter-unsubscribe')
+    try:
+        email = signer.unsign(token)  # No expiry for unsubscribe links
+    except BadSignature:
+        return Response({'error': 'Invalid unsubscribe link.'}, status=400)
+    deleted, _ = NewsletterSubscriber.objects.filter(email=email).delete()
+    if deleted:
+        return Response({'message': f'{email} has been unsubscribed.'})
+    return Response({'message': 'Email not found in subscriber list.'})
 
 
 # ─── Bulk Import ─────────────────────────────────────────────────────────────
