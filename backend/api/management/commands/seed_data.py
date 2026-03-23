@@ -20,7 +20,7 @@ class Command(BaseCommand):
             ('Trading', 'trading'),
             ('Weekly (h)Edge', 'weekly-hedge'),
             ('Resources', 'resources'),
-            ('O.R.D.A.M', 'ordam'),
+            ('O.R.\u0186.A.M', 'ordam'),
             ('Bad Market Comics', 'bad-market-comics'),
         ]
         for title, slug in categories:

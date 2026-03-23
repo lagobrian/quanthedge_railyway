@@ -367,44 +367,48 @@ export default function Blog() {
           </p>
         </div>
 
-        {/* Navigation Filters - Substack style */}
+        {/* Navigation Filters */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 space-y-4 md:space-y-0">
-          <nav className="flex items-center space-x-1 overflow-x-auto pb-1 w-full md:w-auto border-b border-[#18324f]">
+          <nav className="flex items-center gap-2 flex-wrap w-full md:w-auto">
             <button
               onClick={() => setActiveCategory('all')}
-              className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors relative ${
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
                 activeCategory === 'all'
-                  ? 'text-white'
-                  : 'text-gray-400 hover:text-gray-200'
+                  ? 'bg-gradient-to-r from-[#00ced1] to-[#00e3bc] text-[#061829] shadow-lg shadow-[#00ced1]/20'
+                  : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-[#00ced1]/40'
               }`}
             >
               Home
-              {activeCategory === 'all' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00ced1]" />
-              )}
             </button>
 
             {isLoadingCategories ? (
               <div className="flex items-center px-4">
-                <div className="animate-spin h-4 w-4 border-t-2 border-[#00ced1] rounded-full mr-2"></div>
+                <div className="animate-spin h-4 w-4 border-t-2 border-[#00ced1] rounded-full"></div>
               </div>
             ) : (
-              categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.slug)}
-                  className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors relative ${
-                    activeCategory === category.slug
-                      ? 'text-white'
-                      : 'text-gray-400 hover:text-gray-200'
-                  }`}
-                >
-                  {category.title}
-                  {activeCategory === category.slug && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00ced1]" />
-                  )}
-                </button>
-              ))
+              categories.map((category, i) => {
+                const colors = ['#00FF9D', '#FF8C00', '#00ced1', '#b091cc', '#ba5533', '#46b389', '#cc91ad', '#adcc91'];
+                const color = colors[i % colors.length];
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setActiveCategory(category.slug)}
+                    className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
+                      activeCategory === category.slug
+                        ? 'text-[#061829] font-semibold'
+                        : 'text-foreground hover:text-foreground'
+                    }`}
+                    style={activeCategory === category.slug
+                      ? { background: color, boxShadow: `0 4px 14px ${color}44, 0 1px 3px rgba(0,0,0,0.2)` }
+                      : { background: `${color}15`, border: `1px solid ${color}40`, boxShadow: `0 1px 4px rgba(0,0,0,0.1)` }
+                    }
+                    onMouseEnter={(e) => { if (activeCategory !== category.slug) { (e.target as HTMLElement).style.background = color + '30'; (e.target as HTMLElement).style.borderColor = color + '80'; }}}
+                    onMouseLeave={(e) => { if (activeCategory !== category.slug) { (e.target as HTMLElement).style.background = color + '15'; (e.target as HTMLElement).style.borderColor = color + '40'; }}}
+                  >
+                    {category.title}
+                  </button>
+                );
+              })
             )}
           </nav>
           <div className="w-full md:w-auto">
@@ -430,8 +434,8 @@ export default function Blog() {
           </div>
         ) : posts && posts.length > 0 ? (
           <>
-            {/* Featured Posts Carousel */}
-            {(() => {
+            {/* Featured Posts Carousel - hide when searching */}
+            {!searchQuery && (() => {
               const sorted = [...posts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
               const pinned = posts.filter(p => p.is_pinned);
               const featuredPosts = pinned.length >= 2 ? pinned.slice(0, 4) : sorted.slice(0, 4);
@@ -462,50 +466,61 @@ export default function Blog() {
                   </button>
 
                   <div id="featured-carousel" className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2" style={{ scrollbarWidth: 'none' }}>
-                    {featuredPosts.map((fp) => (
-                      <Link
-                        key={fp.id}
-                        href={`/blog/${fp.slug}`}
-                        onClick={(e) => handlePostClick(e, fp)}
-                        className="flex-none w-full md:w-[calc(50%-12px)] snap-start rounded-xl overflow-hidden relative shadow-lg group/card min-h-[320px] md:min-h-[380px]"
-                      >
-                        {/* Background image */}
-                        {(fp.thumbnail || fp.image || fp.image_url) ? (
-                          <img
-                            src={fp.thumbnail || fp.image || fp.image_url}
-                            alt={fp.title}
-                            className="absolute inset-0 w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-[#0e2239] to-[#061829]" />
-                        )}
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                        {/* Premium badge - hidden for premium users */}
-                        {fp.is_premium && !isPremium && (
-                          <div className="absolute top-4 right-4 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1 z-10">
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
-                            PREMIUM
-                          </div>
-                        )}
-                        {/* Content */}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
-                          <div className="mb-2 text-[#00ced1] text-xs font-semibold uppercase tracking-wide">
-                            {typeof fp.category === 'string' ? fp.category : 'Blog'}
-                          </div>
-                          <h2 className="text-2xl md:text-3xl font-bold mb-3 text-white drop-shadow-lg leading-tight">
-                            {fp.title}
-                          </h2>
-                          <p className="text-sm md:text-base text-gray-300 line-clamp-2 mb-4">
-                            {fp.excerpt}
-                          </p>
-                          <span className="inline-flex items-center text-[#00ced1] font-semibold text-sm group-hover/card:gap-2 transition-all">
-                            Read More
-                            <svg className="w-4 h-4 ml-1 group-hover/card:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                          </span>
-                        </div>
-                      </Link>
-                    ))}
+                    {featuredPosts.map((fp) => {
+                        // Only use image if it's a valid URL (not HTML content)
+                        const imgSrc = [fp.image, fp.image_url, fp.thumbnail].find(
+                          (src) => src && (src.startsWith('http') || src.startsWith('/'))
+                        );
+                        const colors = ['from-[#00ced1]/30 to-[#061829]', 'from-[#b091cc]/30 to-[#061829]', 'from-[#FF8C00]/30 to-[#061829]', 'from-[#00FF9D]/30 to-[#061829]'];
+                        const accentColors = ['#00ced1', '#b091cc', '#FF8C00', '#00FF9D'];
+                        const idx = featuredPosts.indexOf(fp);
+                        return (
+                          <Link
+                            key={fp.id}
+                            href={`/blog/${fp.slug}`}
+                            onClick={(e) => handlePostClick(e, fp)}
+                            className="flex-none w-full md:w-[calc(50%-12px)] snap-start rounded-xl overflow-hidden relative shadow-lg group/card min-h-[320px] md:min-h-[380px] border border-border/50 hover:border-primary/30 transition-all hover:shadow-xl"
+                          >
+                            {/* Background */}
+                            {imgSrc ? (
+                              <img src={imgSrc} alt={fp.title} className="absolute inset-0 w-full h-full object-cover" />
+                            ) : (
+                              <div className={`absolute inset-0 bg-gradient-to-br ${colors[idx % colors.length]}`} />
+                            )}
+                            {/* Gradient overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
+                            {/* Premium badge */}
+                            {fp.is_premium && !isPremium && (
+                              <div className="absolute top-4 right-4 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1 z-10">
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                                PREMIUM
+                              </div>
+                            )}
+                            {/* Date badge */}
+                            <div className="absolute top-4 left-4 text-xs text-white/70 font-medium z-10">
+                              {fp.date ? new Date(fp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                            </div>
+                            {/* Content */}
+                            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
+                              <div className="mb-2 text-xs font-bold uppercase tracking-widest" style={{ color: accentColors[idx % accentColors.length] }}>
+                                {typeof fp.category === 'object' && fp.category ? (fp.category as any).title : (typeof fp.category === 'string' ? fp.category : 'Blog')}
+                              </div>
+                              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-white drop-shadow-lg leading-tight">
+                                {fp.title}
+                              </h2>
+                              {fp.excerpt && (
+                                <p className="text-sm md:text-base text-gray-300 line-clamp-2 mb-4">
+                                  {fp.excerpt}
+                                </p>
+                              )}
+                              <span className="inline-flex items-center font-semibold text-sm group-hover/card:gap-2 transition-all" style={{ color: accentColors[idx % accentColors.length] }}>
+                                Read More
+                                <svg className="w-4 h-4 ml-1 group-hover/card:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                    })}
                   </div>
                 </div>
               );
