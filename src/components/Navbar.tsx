@@ -53,13 +53,13 @@ export default function Navbar() {
             >
               Backtests
             </Link>
-            <Link 
-              href="/blog" 
+            <Link
+              href="/blog"
               className={`text-sm hover:text-blue transition-colors ${
-                pathname === '/blog' ? 'text-blue' : 'text-foreground'
+                pathname === '/blog' || pathname?.startsWith('/blog/') ? 'text-blue' : 'text-foreground'
               }`}
             >
-              Blog
+              Newsletters
             </Link>
             <Link 
               href="/pricing" 
@@ -181,13 +181,13 @@ export default function Navbar() {
               >
                 Backtests
               </Link>
-              <Link 
-                href="/blog" 
+              <Link
+                href="/blog"
                 className={`text-sm hover:text-blue transition-colors ${
-                  pathname === '/blog' ? 'text-blue' : 'text-foreground'
+                  pathname === '/blog' || pathname?.startsWith('/blog/') ? 'text-blue' : 'text-foreground'
                 }`}
               >
-                Blog
+                Newsletters
               </Link>
               <Link 
                 href="/pricing" 

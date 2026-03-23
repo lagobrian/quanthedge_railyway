@@ -67,7 +67,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/blog" className="text-sm text-grey hover:text-blue transition-colors">
-                  Blog
+                  Newsletters
                 </Link>
               </li>
               <li>

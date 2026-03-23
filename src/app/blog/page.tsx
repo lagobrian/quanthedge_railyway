@@ -361,7 +361,7 @@ export default function Blog() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Quant (h)Edge Blog</h1>
+          <h1 className="text-4xl font-bold mb-4">Quant (h)Edge Newsletters</h1>
           <p className="text-xl text-grey max-w-3xl mx-auto">
             Insights, analysis, and market research from our team of financial experts
           </p>
@@ -503,7 +503,7 @@ export default function Blog() {
                             {/* Content */}
                             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
                               <div className="mb-2 text-xs font-bold uppercase tracking-widest" style={{ color: accentColors[idx % accentColors.length] }}>
-                                {typeof fp.category === 'object' && fp.category ? (fp.category as any).title : (typeof fp.category === 'string' ? fp.category : 'Blog')}
+                                {typeof fp.category === 'object' && fp.category ? (fp.category as any).title : (typeof fp.category === 'string' ? fp.category : 'Newsletter')}
                               </div>
                               <h2 className="text-2xl md:text-3xl font-bold mb-3 text-white drop-shadow-lg leading-tight">
                                 {fp.title}

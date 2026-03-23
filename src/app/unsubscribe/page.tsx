@@ -57,7 +57,7 @@ function UnsubscribeContent() {
               <p className="text-muted-foreground mb-6">{message}</p>
               <p className="text-sm text-muted-foreground mb-6">We&apos;re sorry to see you go. You can resubscribe anytime from our blog page.</p>
               <Link href="/blog" className="btn-primary px-6 py-3 inline-block">
-                Back to Blog
+                Back to Newsletters
               </Link>
             </>
           )}
