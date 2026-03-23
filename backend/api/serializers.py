@@ -6,19 +6,34 @@ User = get_user_model()
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    avatar_url = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = ['id', 'email', 'username', 'full_name', 'bio', 'about', 'country',
-                  'image', 'twitter', 'linkedin', 'is_premium', 'is_author', 'is_analyst']
+                  'image', 'avatar_url', 'twitter', 'linkedin', 'is_premium', 'is_author', 'is_analyst']
         read_only_fields = ['id', 'email', 'is_premium']
+
+    def get_avatar_url(self, obj):
+        if obj.image:
+            return obj.image.url
+        from .constants.usernames import get_avatar_url
+        return get_avatar_url(obj.username)
 
 
 class UserMiniSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'full_name', 'profile']
+        fields = ['id', 'username', 'full_name', 'profile', 'avatar_url']
+
+    def get_avatar_url(self, obj):
+        if obj.image:
+            return obj.image.url
+        from .constants.usernames import get_avatar_url
+        return get_avatar_url(obj.username)
 
     def get_profile(self, obj):
         return {'image': obj.image.url if obj.image else None}
@@ -37,14 +52,19 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data['password'] != data['password2']:
             raise serializers.ValidationError({'password': 'Passwords do not match.'})
-        # Auto-generate username from email if not provided
+        # Auto-generate funny financial username if not provided
         if not data.get('username'):
-            base = data['email'].split('@')[0]
-            username = base
-            counter = 1
-            while User.objects.filter(username=username).exists():
-                username = f"{base}{counter}"
-                counter += 1
+            import random
+            from .constants.usernames import FUNNY_USERNAMES
+            random.shuffle(FUNNY_USERNAMES)
+            username = None
+            for name in FUNNY_USERNAMES:
+                if not User.objects.filter(username=name).exists():
+                    username = name
+                    break
+            if not username:
+                base = random.choice(FUNNY_USERNAMES)
+                username = f"{base}_{random.randint(100, 999)}"
             data['username'] = username
         return data
 

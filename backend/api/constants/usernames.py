@@ -1,0 +1,41 @@
+FUNNY_USERNAMES = [
+    "oil_buffet", "druckenmillers_nemesis", "vol_surface_enjoyer",
+    "carry_trade_survivor", "long_only_larry", "gamma_scalper_99",
+    "fed_watching_karen", "yield_curve_watcher", "basis_trader_bob",
+    "dark_pool_denise", "macro_tourist_mike", "vix_whisperer",
+    "delta_neutral_dave", "theta_gang_leader", "short_squeeze_sam",
+    "diamond_hands_diana", "paper_hands_pete", "whale_watcher_wendy",
+    "degen_trader_dan", "quant_queen", "alpha_seeker_alex",
+    "risk_parity_rachel", "mean_reversion_max", "momentum_mary",
+    "sharpe_ratio_steve", "drawdown_danny", "backtest_betty",
+    "correlation_carl", "implied_vol_ivan", "skew_trader_sarah",
+    "put_spread_pat", "iron_condor_irene", "straddle_stan",
+    "margin_call_matt", "stop_loss_sally", "trailing_stop_tom",
+    "orderbook_oscar", "liquidity_provider_liz", "market_maker_mitch",
+    "arbitrage_andy", "stat_arb_sophie", "pairs_trader_paul",
+    "breakout_billy", "fibonacci_fiona", "bollinger_brad",
+    "rsi_randy", "macd_mandy", "ichimoku_ian",
+    "elliott_wave_emma", "candlestick_chris", "support_level_sue",
+    "resistance_rita", "gap_trader_greg", "pivot_point_pam",
+    "volume_profile_vic", "tick_chart_tina", "scalper_scott",
+    "swing_trader_simon", "position_size_penny", "risk_reward_rick",
+    "hodl_harry", "btc_maxi_brian", "altcoin_alice",
+    "defi_degen_derek", "nft_nancy", "gas_fee_gary",
+    "impermanent_loss_ida", "rug_pull_ralph", "airdrop_annie",
+    "yield_farmer_yara", "liquidity_mining_leo", "governance_token_gina",
+    "flash_loan_frank", "mev_bot_mel", "smart_contract_stan",
+    "tokenomics_tara", "whale_alert_wade", "pump_detector_piper",
+    "onchain_analyst_omar", "funding_rate_fred", "perp_trader_petra",
+    "basis_trade_bart", "contango_carmen", "backwardation_bruce",
+    "black_scholes_bertha", "monte_carlo_mona", "brownian_motion_ben",
+    "fat_tail_felix", "kurtosis_kate", "regression_ray",
+    "heteroskedastic_hank", "cointegration_cora", "granger_cause_gabe",
+    "random_walk_ruth", "efficient_market_ed", "behavioral_bias_bea",
+    "noise_trader_nick", "informed_trader_iris", "market_microstructure_mike",
+    "central_limit_cleo", "bayesian_bob", "kalman_filter_kay",
+]
+
+
+def get_avatar_url(username: str) -> str:
+    """Generate a deterministic avatar URL using DiceBear API."""
+    return f"https://api.dicebear.com/7.x/bottts/svg?seed={username}"
