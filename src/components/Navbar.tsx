@@ -120,7 +120,7 @@ export default function Navbar() {
       )}
       {isAnalyst && (
         <Link href="/dashboard/models" className="block px-4 py-2.5 text-sm hover:bg-muted transition-colors">
-          Analyst Dashboard
+          Models Dashboard
         </Link>
       )}
     </div>
@@ -248,7 +248,7 @@ export default function Navbar() {
                       href="/dashboard/models"
                       className="text-sm px-4 py-2 rounded-md border border-primary/20 hover:bg-primary/10 transition-colors w-fit"
                     >
-                      Analyst Dashboard
+                      Models Dashboard
                     </Link>
                   )}
                   <button

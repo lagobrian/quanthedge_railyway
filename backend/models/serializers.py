@@ -88,8 +88,13 @@ class BacktestDetailSerializer(serializers.ModelSerializer):
         model = Backtest
         fields = ['id', 'name', 'slug', 'description', 'instrument', 'model_name',
                   'start_date', 'end_date', 'parameters',
-                  'total_return_pct', 'sharpe_ratio', 'max_drawdown_pct', 'win_rate_pct',
-                  'total_trades', 'avg_trade_duration_days', 'profit_factor', 'expectancy',
+                  'total_return_pct', 'benchmark_return_pct', 'sharpe_ratio',
+                  'max_drawdown_pct', 'max_drawdown_duration_days',
+                  'win_rate_pct', 'total_trades', 'avg_trade_duration_days',
+                  'avg_winning_trade_pct', 'avg_losing_trade_pct',
+                  'best_trade_pct', 'worst_trade_pct',
+                  'profit_factor', 'expectancy', 'start_value', 'end_value',
+                  'heatmap_data', 'heatmap_x_label', 'heatmap_y_label',
                   'is_premium', 'is_published', 'created_at',
                   'equity_curve', 'drawdown_curve', 'trades']
 

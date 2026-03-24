@@ -109,13 +109,27 @@ class Backtest(models.Model):
 
     # Key stats
     total_return_pct = models.FloatField(null=True, blank=True)
+    benchmark_return_pct = models.FloatField(null=True, blank=True)
     sharpe_ratio = models.FloatField(null=True, blank=True)
     max_drawdown_pct = models.FloatField(null=True, blank=True)
+    max_drawdown_duration_days = models.FloatField(null=True, blank=True)
     win_rate_pct = models.FloatField(null=True, blank=True)
     total_trades = models.IntegerField(null=True, blank=True)
     avg_trade_duration_days = models.FloatField(null=True, blank=True)
+    avg_winning_trade_pct = models.FloatField(null=True, blank=True)
+    avg_losing_trade_pct = models.FloatField(null=True, blank=True)
+    best_trade_pct = models.FloatField(null=True, blank=True)
+    worst_trade_pct = models.FloatField(null=True, blank=True)
     profit_factor = models.FloatField(null=True, blank=True)
     expectancy = models.FloatField(null=True, blank=True)
+    start_value = models.FloatField(null=True, blank=True, default=100)
+    end_value = models.FloatField(null=True, blank=True)
+
+    # Heatmap data: threshold optimization grid
+    # Format: {"x_labels": [10,15,20,...], "y_labels": [70,75,80,...], "values": [[...],[...],...]}
+    heatmap_data = models.JSONField(null=True, blank=True, help_text='Threshold optimization heatmap')
+    heatmap_x_label = models.CharField(max_length=100, blank=True, default='Long Threshold')
+    heatmap_y_label = models.CharField(max_length=100, blank=True, default='Short Threshold')
 
     is_published = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)

@@ -17,13 +17,24 @@ interface Backtest {
   end_date: string;
   parameters: Record<string, any>;
   total_return_pct: number | null;
+  benchmark_return_pct: number | null;
   sharpe_ratio: number | null;
   max_drawdown_pct: number | null;
+  max_drawdown_duration_days: number | null;
   win_rate_pct: number | null;
   total_trades: number | null;
   avg_trade_duration_days: number | null;
+  avg_winning_trade_pct: number | null;
+  avg_losing_trade_pct: number | null;
+  best_trade_pct: number | null;
+  worst_trade_pct: number | null;
   profit_factor: number | null;
   expectancy: number | null;
+  start_value: number | null;
+  end_value: number | null;
+  heatmap_data: { x_labels: number[]; y_labels: number[]; values: number[][] } | null;
+  heatmap_x_label: string;
+  heatmap_y_label: string;
   equity_curve: [string, number][];
   drawdown_curve: [string, number][];
   trades: Trade[];
@@ -81,16 +92,69 @@ export default function BacktestPage({ params }: { params: Promise<{ slug: strin
         {bt.description && <p className="text-muted-foreground mt-3">{bt.description}</p>}
       </div>
 
+      {/* Key stats headline */}
+      {bt.start_value != null && bt.end_value != null && (
+        <div className="card mb-8 text-center py-6">
+          <p className="text-lg text-muted-foreground">
+            <strong className="text-foreground">${bt.start_value.toFixed(0)}</strong> invested on {bt.start_date} would be worth{' '}
+            <strong className={bt.end_value >= bt.start_value ? 'text-green-400' : 'text-red-400'}>
+              ${bt.end_value.toFixed(2)}
+            </strong>{' '}
+            by {bt.end_date}
+          </p>
+        </div>
+      )}
+
       {/* Stats cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
         {statCard('Total Return', bt.total_return_pct != null ? `${bt.total_return_pct >= 0 ? '+' : ''}${bt.total_return_pct.toFixed(1)}%` : null,
           bt.total_return_pct != null ? (bt.total_return_pct >= 0 ? 'text-green-400' : 'text-red-400') : undefined)}
+        {statCard('Benchmark', bt.benchmark_return_pct != null ? `${bt.benchmark_return_pct.toFixed(1)}%` : null)}
         {statCard('Sharpe Ratio', bt.sharpe_ratio?.toFixed(2) ?? null)}
         {statCard('Max Drawdown', bt.max_drawdown_pct != null ? `${bt.max_drawdown_pct.toFixed(1)}%` : null, 'text-red-400')}
         {statCard('Win Rate', bt.win_rate_pct != null ? `${bt.win_rate_pct.toFixed(1)}%` : null)}
-        {statCard('Total Trades', bt.total_trades)}
         {statCard('Profit Factor', bt.profit_factor?.toFixed(2) ?? null)}
       </div>
+
+      {/* Detailed stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+        {statCard('Total Trades', bt.total_trades)}
+        {statCard('Avg Duration', bt.avg_trade_duration_days != null ? `${bt.avg_trade_duration_days.toFixed(0)}d` : null)}
+        {statCard('Best Trade', bt.best_trade_pct != null ? `+${bt.best_trade_pct.toFixed(1)}%` : null, 'text-green-400')}
+        {statCard('Worst Trade', bt.worst_trade_pct != null ? `${bt.worst_trade_pct.toFixed(1)}%` : null, 'text-red-400')}
+        {statCard('Avg Winner', bt.avg_winning_trade_pct != null ? `+${bt.avg_winning_trade_pct.toFixed(1)}%` : null, 'text-green-400')}
+        {statCard('Avg Loser', bt.avg_losing_trade_pct != null ? `${bt.avg_losing_trade_pct.toFixed(1)}%` : null, 'text-red-400')}
+      </div>
+
+      {/* Threshold Optimization Heatmap */}
+      {bt.heatmap_data && (
+        <div className="rounded-xl overflow-hidden mb-8" style={{ background: 'var(--chart-bg, #061829)' }}>
+          <Plot
+            data={[{
+              x: bt.heatmap_data.x_labels,
+              y: bt.heatmap_data.y_labels,
+              z: bt.heatmap_data.values,
+              type: 'heatmap',
+              colorscale: 'RdBu',
+              text: bt.heatmap_data.values.map(row => row.map(v => `${v.toFixed(1)}%`)),
+              texttemplate: '%{text}',
+              hovertemplate: `${bt.heatmap_x_label || 'Long'}: %{x}<br>${bt.heatmap_y_label || 'Short'}: %{y}<br>Return: %{z:.1f}%<extra></extra>`,
+            } as any]}
+            layout={{
+              title: { text: 'Threshold Optimization: Returns by Entry/Exit Levels', font: { size: 16, color: 'var(--chart-text, #fff)' } },
+              autosize: true,
+              paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+              font: { color: 'var(--chart-text, #fff)', size: 11 },
+              xaxis: { title: bt.heatmap_x_label || 'Long Threshold', gridcolor: 'var(--chart-grid, #413510)' },
+              yaxis: { title: bt.heatmap_y_label || 'Short Threshold', gridcolor: 'var(--chart-grid, #413510)' },
+              margin: { l: 80, r: 30, t: 50, b: 60 },
+            }}
+            config={{ displayModeBar: false }}
+            useResizeHandler
+            style={{ width: '100%', height: 'min(500px, 60vh)' }}
+          />
+        </div>
+      )}
 
       {/* Equity Curve */}
       {bt.equity_curve.length > 0 && (

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { API_BASE } from '@/lib/api';
 import { toast } from 'sonner';
 
+type Tab = 'models' | 'backtests';
+
 interface QuantModel {
   id: number;
   name: string;
@@ -21,20 +23,43 @@ interface QuantModel {
   page_url: string;
 }
 
+interface BacktestItem {
+  id: number;
+  name: string;
+  slug: string;
+  instrument: string;
+  model_name: string | null;
+  start_date: string;
+  end_date: string;
+  total_return_pct: number | null;
+  sharpe_ratio: number | null;
+  max_drawdown_pct: number | null;
+  win_rate_pct: number | null;
+  total_trades: number | null;
+  is_premium: boolean;
+  created_at: string;
+}
+
 const signalEmoji: Record<string, string> = { bullish: '🟢', bearish: '🔴', neutral: '⚪' };
 
 export default function ModelsDashboard() {
+  const [tab, setTab] = useState<Tab>('models');
   const [models, setModels] = useState<QuantModel[]>([]);
+  const [backtests, setBacktests] = useState<BacktestItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
-    fetch(`${API_BASE}/api/models/registry/`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-      .then(res => res.json())
-      .then(data => setModels(Array.isArray(data) ? data : []))
-      .catch(() => toast.error('Failed to load models'))
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    Promise.all([
+      fetch(`${API_BASE}/api/models/registry/`, { headers }).then(r => r.json()),
+      fetch(`${API_BASE}/api/models/backtests/`, { headers }).then(r => r.json()),
+    ])
+      .then(([modelsData, backtestsData]) => {
+        setModels(Array.isArray(modelsData) ? modelsData : []);
+        setBacktests(Array.isArray(backtestsData) ? backtestsData : []);
+      })
+      .catch(() => toast.error('Failed to load data'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -86,8 +111,24 @@ export default function ModelsDashboard() {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="flex gap-1 mb-6 bg-muted rounded-lg p-1 w-fit">
+        <button
+          onClick={() => setTab('models')}
+          className={`px-5 py-2 text-sm rounded-md transition-colors ${tab === 'models' ? 'bg-card text-foreground shadow-sm font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+        >
+          Models ({models.length})
+        </button>
+        <button
+          onClick={() => setTab('backtests')}
+          className={`px-5 py-2 text-sm rounded-md transition-colors ${tab === 'backtests' ? 'bg-card text-foreground shadow-sm font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+        >
+          Backtests ({backtests.length})
+        </button>
+      </div>
+
       {/* Models table */}
-      <div className="card overflow-x-auto">
+      {tab === 'models' && <div className="card overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-muted-foreground">
@@ -164,7 +205,57 @@ export default function ModelsDashboard() {
             No models registered yet.
           </div>
         )}
-      </div>
+      </div>}
+
+      {/* Backtests table */}
+      {tab === 'backtests' && (
+        <div className="card overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border text-muted-foreground">
+                <th className="text-left py-3 px-4">Backtest</th>
+                <th className="text-left py-3 px-4">Instrument</th>
+                <th className="text-left py-3 px-4">Period</th>
+                <th className="text-right py-3 px-4">Return</th>
+                <th className="text-right py-3 px-4">Sharpe</th>
+                <th className="text-right py-3 px-4">Max DD</th>
+                <th className="text-right py-3 px-4">Win Rate</th>
+                <th className="text-right py-3 px-4">Trades</th>
+                <th className="text-right py-3 px-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {backtests.map((bt) => (
+                <tr key={bt.id} className="border-b border-border/50 hover:bg-muted/50 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="font-medium">{bt.name}</div>
+                    {bt.model_name && <div className="text-xs text-muted-foreground">{bt.model_name}</div>}
+                  </td>
+                  <td className="py-3 px-4 font-mono text-xs">{bt.instrument}</td>
+                  <td className="py-3 px-4 text-xs text-muted-foreground">{bt.start_date} → {bt.end_date}</td>
+                  <td className={`py-3 px-4 text-right font-mono font-medium ${(bt.total_return_pct ?? 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    {bt.total_return_pct != null ? `${bt.total_return_pct >= 0 ? '+' : ''}${bt.total_return_pct.toFixed(1)}%` : '—'}
+                  </td>
+                  <td className="py-3 px-4 text-right font-mono">{bt.sharpe_ratio?.toFixed(2) ?? '—'}</td>
+                  <td className="py-3 px-4 text-right font-mono text-red-400">{bt.max_drawdown_pct != null ? `${bt.max_drawdown_pct.toFixed(1)}%` : '—'}</td>
+                  <td className="py-3 px-4 text-right font-mono">{bt.win_rate_pct != null ? `${bt.win_rate_pct.toFixed(0)}%` : '—'}</td>
+                  <td className="py-3 px-4 text-right">{bt.total_trades ?? '—'}</td>
+                  <td className="py-3 px-4 text-right">
+                    <Link href={`/backtests/${bt.slug}`} className="text-xs text-primary hover:underline">
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {backtests.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              No backtests uploaded yet. Use the upload API to push results from your Jupyter notebooks.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
