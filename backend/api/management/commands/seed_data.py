@@ -14,14 +14,12 @@ class Command(BaseCommand):
 
         # Create categories
         categories = [
-            ('Crypto', 'crypto'),
-            ('Markets', 'markets'),
-            ('Quantitative Finance', 'quant-finance'),
-            ('Trading', 'trading'),
             ('Weekly (h)Edge', 'weekly-hedge'),
+            ('Quantitative Finance', 'quant-finance'),
             ('Resources', 'resources'),
             ('O.R.\u0186.A.M', 'ordam'),
             ('Bad Market Comics', 'bad-market-comics'),
+            ('Admin', 'admin'),
         ]
         for title, slug in categories:
             cat, created = Category.objects.get_or_create(slug=slug, defaults={'title': title})
