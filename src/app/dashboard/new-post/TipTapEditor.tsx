@@ -21,8 +21,8 @@ function ToolbarButton({ onClick, active, children, title }: {
       title={title}
       className={`p-2 rounded text-sm transition-colors ${
         active
-          ? 'bg-[#00ced1]/20 text-[#00ced1]'
-          : 'text-gray-400 hover:text-white hover:bg-[#18324f]'
+          ? 'bg-primary/20 text-primary'
+          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
       }`}
     >
       {children}
@@ -31,7 +31,7 @@ function ToolbarButton({ onClick, active, children, title }: {
 }
 
 function Divider() {
-  return <div className="w-px h-6 bg-[#18324f] mx-1" />;
+  return <div className="w-px h-6 bg-border mx-1" />;
 }
 
 export default function TipTapEditor({ value, onChange }: { value: string; onChange: (val: string) => void }) {
@@ -82,9 +82,9 @@ export default function TipTapEditor({ value, onChange }: { value: string; onCha
   if (!editor) return null;
 
   return (
-    <div className="border border-[#18324f] rounded-lg overflow-hidden bg-[#061829]">
+    <div className="border border-border rounded-lg overflow-hidden bg-background">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-[#18324f] bg-[#0e2239]/60">
+      <div className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-border bg-card/60">
         {/* Text style */}
         <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive('bold')} title="Bold (Ctrl+B)">
           <strong>B</strong>
@@ -170,12 +170,12 @@ export default function TipTapEditor({ value, onChange }: { value: string; onCha
 
       {/* Bubble menu for quick formatting on selection */}
       <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
-        <div className="flex gap-1 bg-[#0e2239] border border-[#18324f] p-1.5 rounded-lg shadow-xl">
-          <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('bold') ? 'bg-[#00ced1]/20 text-[#00ced1]' : 'text-gray-300 hover:bg-[#18324f]'}`}><strong>B</strong></button>
-          <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('italic') ? 'bg-[#00ced1]/20 text-[#00ced1]' : 'text-gray-300 hover:bg-[#18324f]'}`}><em>I</em></button>
-          <button type="button" onClick={() => editor.chain().focus().toggleUnderline().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('underline') ? 'bg-[#00ced1]/20 text-[#00ced1]' : 'text-gray-300 hover:bg-[#18324f]'}`}><span className="underline">U</span></button>
-          <button type="button" onClick={addLink} className={`px-2 py-1 rounded text-xs ${editor.isActive('link') ? 'bg-[#00ced1]/20 text-[#00ced1]' : 'text-gray-300 hover:bg-[#18324f]'}`}>Link</button>
-          <button type="button" onClick={() => editor.chain().focus().toggleHighlight().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('highlight') ? 'bg-[#00ced1]/20 text-[#00ced1]' : 'text-gray-300 hover:bg-[#18324f]'}`}>Highlight</button>
+        <div className="flex gap-1 bg-card border border-border p-1.5 rounded-lg shadow-xl">
+          <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('bold') ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}><strong>B</strong></button>
+          <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('italic') ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}><em>I</em></button>
+          <button type="button" onClick={() => editor.chain().focus().toggleUnderline().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('underline') ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}><span className="underline">U</span></button>
+          <button type="button" onClick={addLink} className={`px-2 py-1 rounded text-xs ${editor.isActive('link') ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}>Link</button>
+          <button type="button" onClick={() => editor.chain().focus().toggleHighlight().run()} className={`px-2 py-1 rounded text-xs ${editor.isActive('highlight') ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-muted'}`}>Highlight</button>
         </div>
       </BubbleMenu>
 
@@ -183,7 +183,7 @@ export default function TipTapEditor({ value, onChange }: { value: string; onCha
       <EditorContent editor={editor} />
 
       {/* Word count */}
-      <div className="flex justify-end px-4 py-2 border-t border-[#18324f] text-xs text-gray-500">
+      <div className="flex justify-end px-4 py-2 border-t border-border text-xs text-muted-foreground">
         {editor.storage.characterCount?.words?.() ?? editor.getText().split(/\s+/).filter(Boolean).length} words
       </div>
     </div>
