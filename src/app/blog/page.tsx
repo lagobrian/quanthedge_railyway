@@ -615,7 +615,7 @@ export default function Blog() {
                   <button 
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-2 rounded-md bg-card border border-border text-foreground hover:bg-muted transition-colors disabled:opacity-30"
+                    className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-muted transition-all disabled:opacity-30"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -636,7 +636,7 @@ export default function Blog() {
                       <button
                         key={i}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-2 rounded-md font-medium ${currentPage === pageNum ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-foreground hover:bg-muted'} transition-colors`}
+                        className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-sm ${currentPage === pageNum ? 'bg-primary text-primary-foreground shadow-md shadow-primary/30' : 'text-foreground hover:bg-muted'} transition-all`}
                       >
                         {pageNum}
                       </button>
@@ -646,7 +646,7 @@ export default function Blog() {
                   <button 
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-2 rounded-md bg-card border border-border text-foreground hover:bg-muted transition-colors disabled:opacity-30"
+                    className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-muted transition-all disabled:opacity-30"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
