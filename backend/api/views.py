@@ -229,7 +229,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         return [AllowAny()]
 
     def get_queryset(self):
-        qs = Post.objects.filter(status='published')
+        qs = Post.objects.filter(status='published').select_related('user', 'category')
         # Hide admin category from non-authors
         if not (self.request.user.is_authenticated and getattr(self.request.user, 'is_author', False)):
             qs = qs.exclude(category__slug='admin')
@@ -240,7 +240,7 @@ class PostListCreateView(generics.ListCreateAPIView):
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.select_related('user', 'category').prefetch_related('comments__user', 'likes', 'bookmarks')
     lookup_field = 'slug'
 
     def get_serializer_class(self):

@@ -114,6 +114,15 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+# Cache (in-memory, upgrade to Redis when available)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'quanthedge-cache',
+        'TIMEOUT': 300,  # 5 minutes default
+    }
+}
+
 # Simple JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),

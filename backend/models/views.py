@@ -2,6 +2,8 @@ from rest_framework import generics, filters, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes as perm_classes
 from rest_framework.response import Response
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from .models import (
     CryptoBreadth, CryptoPrice, CryptoIndex, CryptoGlobalQuote,
     QuantModel, ModelDataPoint, ModelSignalResult,
@@ -22,6 +24,7 @@ class NoPagination:
     pass
 
 
+@method_decorator(cache_page(60 * 5), name='list')  # Cache 5 min
 class CryptoBreadthListCreateView(generics.ListCreateAPIView):
     queryset = CryptoBreadth.objects.all()
     serializer_class = CryptoBreadthSerializer
@@ -34,6 +37,7 @@ class CryptoBreadthRetrieveView(generics.RetrieveAPIView):
     lookup_field = 'date'
 
 
+@method_decorator(cache_page(60 * 5), name='list')  # Cache 5 min
 class CryptoIndexListView(generics.ListAPIView):
     serializer_class = CryptoIndexSerializer
     permission_classes = [AllowAny]
@@ -47,6 +51,7 @@ class CryptoIndexListView(generics.ListAPIView):
         return qs
 
 
+@method_decorator(cache_page(60 * 5), name='list')  # Cache 5 min
 class CryptoGlobalQuoteListView(generics.ListAPIView):
     queryset = CryptoGlobalQuote.objects.all()
     serializer_class = CryptoGlobalQuoteSerializer
