@@ -8,6 +8,7 @@ interface User {
   full_name?: string;
   is_premium?: boolean;
   is_author?: boolean;
+  is_analyst?: boolean;
   image?: string;
   avatar_url?: string;
   bio?: string;

@@ -24,6 +24,7 @@ export default function Navbar() {
 
   const isPremium = user?.is_premium;
   const isAuthor = user?.is_author;
+  const isAnalyst = user?.is_analyst;
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -106,11 +107,19 @@ export default function Navbar() {
   Profile
 </Link>
 {isAuthor && (
-  <Link 
-    href="/dashboard" 
+  <Link
+    href="/dashboard"
     className="text-sm px-4 py-2 rounded-md border border-blue/20 hover:bg-blue/10 transition-colors"
   >
     Dashboard
+  </Link>
+)}
+{isAnalyst && (
+  <Link
+    href="/dashboard/models"
+    className="text-sm px-4 py-2 rounded-md border border-primary/20 hover:bg-primary/10 transition-colors"
+  >
+    Models
   </Link>
 )}
 <button
@@ -223,11 +232,19 @@ export default function Navbar() {
                     Profile
                   </Link>
                   {isAuthor && (
-                    <Link 
-                      href="/dashboard" 
+                    <Link
+                      href="/dashboard"
                       className="text-sm px-4 py-2 rounded-md border border-blue/20 hover:bg-blue/10 transition-colors w-fit"
                     >
                       Dashboard
+                    </Link>
+                  )}
+                  {isAnalyst && (
+                    <Link
+                      href="/dashboard/models"
+                      className="text-sm px-4 py-2 rounded-md border border-primary/20 hover:bg-primary/10 transition-colors w-fit"
+                    >
+                      Models
                     </Link>
                   )}
                   <button
