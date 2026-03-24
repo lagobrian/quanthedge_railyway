@@ -442,16 +442,19 @@ export default function Blog() {
               const featuredPosts = pinned.length >= 2 ? pinned.slice(0, 4) : sorted.slice(0, 4);
               if (featuredPosts.length === 0) return null;
 
+              // Duplicate posts for infinite scroll illusion
+              const loopPosts = [...featuredPosts, ...featuredPosts, ...featuredPosts];
+
               return (
-                <div className="relative mb-12 group/carousel">
+                <div className="relative mb-12 group/carousel overflow-hidden">
                   {/* Arrows */}
                   <button
                     type="button"
                     onClick={() => {
                       const el = document.getElementById('featured-carousel');
-                      if (el) el.scrollBy({ left: -(el.offsetWidth * 0.85), behavior: 'smooth' });
+                      if (el) el.scrollBy({ left: -(el.offsetWidth * 0.55), behavior: 'smooth' });
                     }}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-[#061829]/80 hover:bg-[#0e2239] border border-[#18324f] text-white rounded-full p-2 opacity-0 group-hover/carousel:opacity-100 transition-opacity -ml-4"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-card/80 backdrop-blur-sm hover:bg-card border border-border text-foreground rounded-full p-2.5 opacity-0 group-hover/carousel:opacity-100 transition-opacity shadow-lg"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
                   </button>
@@ -459,25 +462,45 @@ export default function Blog() {
                     type="button"
                     onClick={() => {
                       const el = document.getElementById('featured-carousel');
-                      if (el) el.scrollBy({ left: el.offsetWidth * 0.85, behavior: 'smooth' });
+                      if (el) el.scrollBy({ left: el.offsetWidth * 0.55, behavior: 'smooth' });
                     }}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-[#061829]/80 hover:bg-[#0e2239] border border-[#18324f] text-white rounded-full p-2 opacity-0 group-hover/carousel:opacity-100 transition-opacity -mr-4"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-card/80 backdrop-blur-sm hover:bg-card border border-border text-foreground rounded-full p-2.5 opacity-0 group-hover/carousel:opacity-100 transition-opacity shadow-lg"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
                   </button>
 
-                  <div id="featured-carousel" className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2" style={{ scrollbarWidth: 'none' }}>
-                    {featuredPosts.map((fp) => {
-                        // Only use image if it's a valid URL (not HTML content)
+                  <div
+                    id="featured-carousel"
+                    className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-2"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+                    ref={(el) => {
+                      if (el && featuredPosts.length > 0) {
+                        // Start in the middle set so user can scroll both directions
+                        const cardWidth = el.scrollWidth / 3;
+                        if (el.scrollLeft < 10) el.scrollLeft = cardWidth;
+                        // Reset to middle when reaching edges
+                        const handleScroll = () => {
+                          const third = el.scrollWidth / 3;
+                          if (el.scrollLeft <= 5) {
+                            el.scrollLeft = third;
+                          } else if (el.scrollLeft >= third * 2 - 5) {
+                            el.scrollLeft = third;
+                          }
+                        };
+                        el.addEventListener('scrollend', handleScroll);
+                      }
+                    }}
+                  >
+                    {loopPosts.map((fp, loopIdx) => {
                         const imgSrc = [fp.image, fp.image_url, fp.thumbnail].find(
                           (src) => src && (src.startsWith('http') || src.startsWith('/'))
                         );
                         const colors = ['from-[#00ced1]/30 to-[#061829]', 'from-[#b091cc]/30 to-[#061829]', 'from-[#FF8C00]/30 to-[#061829]', 'from-[#00FF9D]/30 to-[#061829]'];
                         const accentColors = ['#00ced1', '#b091cc', '#FF8C00', '#00FF9D'];
-                        const idx = featuredPosts.indexOf(fp);
+                        const idx = loopIdx % featuredPosts.length;
                         return (
                           <Link
-                            key={fp.id}
+                            key={`${fp.id}-${loopIdx}`}
                             href={`/blog/${fp.slug}`}
                             onClick={(e) => handlePostClick(e, fp)}
                             className="flex-none w-full md:w-[calc(50%-12px)] snap-start rounded-xl overflow-hidden relative shadow-lg group/card min-h-[320px] md:min-h-[380px] border border-border/50 hover:border-primary/30 transition-all hover:shadow-xl"
