@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { API_BASE } from '@/lib/api';
 import { useAppSelector } from '@/store/hooks';
 
 // Mock data for demonstration
@@ -15,7 +14,7 @@ const mockModels = [
     dataSource: 'Coin price history',
     updateFrequency: 'Daily',
     isPremium: false,
-    image: API_BASE + '/api/models/chart-thumbnail/crypto-breadth/',
+    image: '/api/models/thumbnail/crypto-breadth',
     link: '/models/crypto-breadth',
   },
   {
@@ -26,7 +25,7 @@ const mockModels = [
     dataSource: 'CoinMarketCap',
     updateFrequency: 'Hourly',
     isPremium: true,
-    image: API_BASE + '/api/models/chart-thumbnail/altcoin-index/',
+    image: '/api/models/thumbnail/altcoin-index',
     link: '/models/altcoin-index',
   },
   {
@@ -37,7 +36,7 @@ const mockModels = [
     dataSource: 'CoinMarketCap',
     updateFrequency: 'Hourly',
     isPremium: true,
-    image: API_BASE + '/api/models/chart-thumbnail/global-metrics/',
+    image: '/api/models/thumbnail/global-metrics',
     link: '/models/global-metrics',
   },
   {

@@ -116,10 +116,53 @@ export default function BlogPost({ params }: BlogPostProps) {
 
         if (!response.ok) {
           if (response.status === 401) {
+            // Token might be expired - try refreshing
+            const refreshToken = localStorage.getItem('refresh_token');
+            if (refreshToken) {
+              try {
+                const refreshRes = await fetch(`${API_BASE}/api/token/refresh/`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ refresh: refreshToken }),
+                });
+                if (refreshRes.ok) {
+                  const refreshData = await refreshRes.json();
+                  localStorage.setItem('access_token', refreshData.access);
+                  // Retry the original request with the new token
+                  const retryRes = await fetch(`${API_BASE}/api/posts/${slug}/`, {
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${refreshData.access}` },
+                  });
+                  if (retryRes.ok) {
+                    const data = await retryRes.json();
+                    setPost(data);
+                    return;
+                  }
+                }
+              } catch {}
+            }
             router.push('/login');
             return;
           }
           if (response.status === 403) {
+            // Check if user is actually premium before showing paywall
+            const profileToken = localStorage.getItem('access_token');
+            if (profileToken) {
+              try {
+                const profileRes = await fetch(`${API_BASE}/api/profile/`, {
+                  headers: { 'Authorization': `Bearer ${profileToken}` },
+                });
+                if (profileRes.ok) {
+                  const profile = await profileRes.json();
+                  if (profile.is_premium) {
+                    // User IS premium but got 403 - likely a backend sync issue
+                    // Try fetching again or show a helpful message
+                    throw new Error('Access error. Your premium status may need to sync. Please try refreshing the page or logging out and back in.');
+                  }
+                }
+              } catch (profileErr) {
+                // Profile check failed, fall through to default message
+              }
+            }
             throw new Error('This is premium content. Please upgrade your account to view.');
           }
           const errorData = await response.json();

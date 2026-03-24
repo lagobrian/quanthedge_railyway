@@ -2,9 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { API_BASE } from '@/lib/api';
 import { useAppSelector } from '@/store/hooks';
 import { Footer } from '@/components/footer';
+
+const CryptoChart = dynamic(() => import('@/components/CryptoChart'), { ssr: false });
 
 interface Model {
   id: number;
@@ -36,22 +39,10 @@ const signalConfig: Record<string, { emoji: string; color: string; bg: string }>
 
 export default function Dashboard() {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const [symbol, setSymbol] = useState('BINANCE:BTCUSDT');
+  const [symbol, setSymbol] = useState('BTCUSDT');
   const [symbolInput, setSymbolInput] = useState('');
   const [models, setModels] = useState<Model[]>([]);
   const [posts, setPosts] = useState<RecentPost[]>([]);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    setTheme(isDark ? 'dark' : 'light');
-    const observer = new MutationObserver(() => {
-      setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-
   useEffect(() => {
     fetch(`${API_BASE}/api/models/registry/`)
       .then(r => r.json())
@@ -72,8 +63,8 @@ export default function Dashboard() {
     }
   };
 
-  const quickSymbols = ['BINANCE:BTCUSDT', 'BINANCE:ETHUSDT', 'NASDAQ:AAPL', 'SP:SPX', 'TVC:DXY', 'TVC:GOLD', 'NYMEX:CL1!'];
-  const quickLabels = ['BTC', 'ETH', 'AAPL', 'SPX', 'DXY', 'GOLD', 'OIL'];
+  const quickSymbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT', 'ADAUSDT', 'DOGEUSDT'];
+  const quickLabels = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'ADA', 'DOGE'];
 
   const withSignal = models.filter(m => m.current_signal);
   const bullish = withSignal.filter(m => m.current_signal === 'bullish').length;
@@ -126,20 +117,13 @@ export default function Dashboard() {
       <div className="max-w-[1800px] mx-auto px-4 py-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-          {/* TradingView Chart - 2 cols */}
-          <div className="lg:col-span-2 card p-0 overflow-hidden" style={{ minHeight: '500px' }}>
-            <div id="tradingview-widget" style={{ height: '100%', minHeight: '500px' }}>
-              <iframe
-                key={symbol + theme}
-                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_widget&symbol=${symbol}&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=${theme === 'dark' ? '1d2330' : 'f8f9fc'}&studies=[]&theme=${theme === 'dark' ? 'dark' : 'light'}&style=1&timezone=exchange&withdateranges=1&showpopupbutton=0&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en&utm_source=quanthedge.com`}
-                style={{ width: '100%', height: '100%', minHeight: '500px', border: 'none' }}
-                allowFullScreen
-              />
-            </div>
+          {/* Binance Chart - 2 cols */}
+          <div className="lg:col-span-2">
+            <CryptoChart symbol={symbol} height={560} />
           </div>
 
           {/* Model Signals Panel - 1 col */}
-          <div className="card flex flex-col" style={{ minHeight: '500px' }}>
+          <div className="card flex flex-col" style={{ minHeight: '560px' }}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">Model Signals</h2>
               <Link href="/confluence" className="text-xs text-primary hover:underline">View All</Link>
@@ -205,7 +189,7 @@ export default function Dashboard() {
               </div>
               <div className="h-32 bg-muted/30 rounded-lg overflow-hidden mb-3">
                 <img
-                  src={`${API_BASE}/api/models/chart-thumbnail/${m.slug}/`}
+                  src={`/api/models/thumbnail/${m.slug}`}
                   alt={m.name}
                   className="w-full h-full object-cover"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -215,7 +199,9 @@ export default function Dashboard() {
                 <span className="text-muted-foreground">{m.asset_class} · {m.short_description?.slice(0, 40)}...</span>
                 {m.current_signal && (
                   <span className={signalConfig[m.current_signal]?.color || 'text-gray-400'}>
-                    {signalConfig[m.current_signal]?.emoji} {m.current_signal}
+                    <span className={`live-pulse ${m.current_signal === 'bearish' ? 'bearish' : ''}`}>
+                      LIVE · {m.current_signal}
+                    </span>
                   </span>
                 )}
               </div>
