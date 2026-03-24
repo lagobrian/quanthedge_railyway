@@ -177,48 +177,32 @@ export default function Models() {
 
         {/* Filters and Search */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
-          <div className="flex space-x-4">
-            <button
-              onClick={() => setActiveCategory('all')}
-              className={`px-4 py-2 rounded-md ${
-                activeCategory === 'all'
-                  ? 'bg-[#00ced1] text-[#061829] font-semibold shadow-md'
-                  : 'bg-[#0e2239] text-gray-400 border border-[#18324f] hover:bg-[#18324f] hover:text-white'
-              } transition-colors`}
-            >
-              All Models
-            </button>
-            <button
-              onClick={() => setActiveCategory('market-indicators')}
-              className={`px-4 py-2 rounded-md ${
-                activeCategory === 'market-indicators'
-                  ? 'bg-[#00ced1] text-[#061829] font-semibold shadow-md'
-                  : 'bg-[#0e2239] text-gray-400 border border-[#18324f] hover:bg-[#18324f] hover:text-white'
-              } transition-colors`}
-            >
-              Market Indicators
-            </button>
-            <button
-              onClick={() => setActiveCategory('asset-correlations')}
-              className={`px-4 py-2 rounded-md ${
-                activeCategory === 'asset-correlations'
-                  ? 'bg-[#00ced1] text-[#061829] font-semibold shadow-md'
-                  : 'bg-[#0e2239] text-gray-400 border border-[#18324f] hover:bg-[#18324f] hover:text-white'
-              } transition-colors`}
-            >
-              Asset Correlations
-            </button>
-            <button
-              onClick={() => setActiveCategory('sentiment-analysis')}
-              className={`px-4 py-2 rounded-md ${
-                activeCategory === 'sentiment-analysis'
-                  ? 'bg-[#00ced1] text-[#061829] font-semibold shadow-md'
-                  : 'bg-[#0e2239] text-gray-400 border border-[#18324f] hover:bg-[#18324f] hover:text-white'
-              } transition-colors`}
-            >
-              Sentiment Analysis
-            </button>
-          </div>
+          <nav className="flex items-center gap-2 flex-wrap">
+            {[
+              { key: 'all', label: 'All Models', color: '#00ced1' },
+              { key: 'market-indicators', label: 'Market Indicators', color: '#FF8C00' },
+              { key: 'asset-correlations', label: 'Asset Correlations', color: '#b091cc' },
+              { key: 'sentiment-analysis', label: 'Sentiment Analysis', color: '#00FF9D' },
+            ].map((cat) => (
+              <button
+                key={cat.key}
+                onClick={() => setActiveCategory(cat.key)}
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
+                  activeCategory === cat.key
+                    ? 'text-[#061829] font-semibold'
+                    : 'text-foreground hover:text-foreground'
+                }`}
+                style={activeCategory === cat.key
+                  ? { background: cat.color, boxShadow: `0 4px 14px ${cat.color}44, 0 1px 3px rgba(0,0,0,0.2)` }
+                  : { background: `${cat.color}15`, border: `1px solid ${cat.color}40`, boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }
+                }
+                onMouseEnter={(e) => { if (activeCategory !== cat.key) { (e.target as HTMLElement).style.background = cat.color + '30'; (e.target as HTMLElement).style.borderColor = cat.color + '80'; }}}
+                onMouseLeave={(e) => { if (activeCategory !== cat.key) { (e.target as HTMLElement).style.background = cat.color + '15'; (e.target as HTMLElement).style.borderColor = cat.color + '40'; }}}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </nav>
           <div className="w-full md:w-auto">
             <div className="relative">
               <input
