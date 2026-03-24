@@ -35,6 +35,10 @@ export default function NotificationDropdown() {
       if (res.ok) {
         const data = await res.json();
         setNotifications(data.map((n: any) => ({ ...n, seen: n.is_seen ?? n.seen })));
+      } else if (res.status === 401) {
+        // Token expired - stop polling
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        return;
       }
     } catch (err) {
       // handle error
