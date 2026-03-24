@@ -106,21 +106,25 @@ export default function Navbar() {
 >
   Profile
 </Link>
-{isAuthor && (
-  <Link
-    href="/dashboard"
-    className="text-sm px-4 py-2 rounded-md border border-blue/20 hover:bg-blue/10 transition-colors"
-  >
-    Dashboard
-  </Link>
-)}
-{isAnalyst && (
-  <Link
-    href="/dashboard/models"
-    className="text-sm px-4 py-2 rounded-md border border-primary/20 hover:bg-primary/10 transition-colors"
-  >
-    Models
-  </Link>
+{(isAuthor || isAnalyst) && (
+  <div className="relative group">
+    <button className="text-sm px-4 py-2 rounded-md border border-blue/20 hover:bg-blue/10 transition-colors flex items-center gap-1">
+      Dashboard
+      <svg className="w-3 h-3 opacity-50" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
+    </button>
+    <div className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+      {isAuthor && (
+        <Link href="/dashboard" className="block px-4 py-2.5 text-sm hover:bg-muted transition-colors rounded-t-lg">
+          Author Dashboard
+        </Link>
+      )}
+      {isAnalyst && (
+        <Link href="/dashboard/models" className="block px-4 py-2.5 text-sm hover:bg-muted transition-colors">
+          Analyst Dashboard
+        </Link>
+      )}
+    </div>
+  </div>
 )}
 <button
   onClick={handleLogoutClick}
@@ -236,7 +240,7 @@ export default function Navbar() {
                       href="/dashboard"
                       className="text-sm px-4 py-2 rounded-md border border-blue/20 hover:bg-blue/10 transition-colors w-fit"
                     >
-                      Dashboard
+                      Author Dashboard
                     </Link>
                   )}
                   {isAnalyst && (
@@ -244,7 +248,7 @@ export default function Navbar() {
                       href="/dashboard/models"
                       className="text-sm px-4 py-2 rounded-md border border-primary/20 hover:bg-primary/10 transition-colors w-fit"
                     >
-                      Models
+                      Analyst Dashboard
                     </Link>
                   )}
                   <button
