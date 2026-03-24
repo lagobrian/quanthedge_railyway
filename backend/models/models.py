@@ -94,6 +94,80 @@ class ModelSignalResult(models.Model):
         return f"{self.model.name} {self.signal_type} {self.interval_label}: {self.avg_return_pct:+.1f}%"
 
 
+# ─── Backtest Framework ───────────────────────────────────────────────────────
+
+class Backtest(models.Model):
+    """A stored backtest result."""
+    name = models.CharField(max_length=300)
+    slug = models.SlugField(unique=True)
+    description = models.TextField(blank=True)
+    instrument = models.CharField(max_length=50, help_text='e.g. BTCUSDT, SPY')
+    model = models.ForeignKey(QuantModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='backtests')
+    start_date = models.DateField()
+    end_date = models.DateField()
+    parameters = models.JSONField(default=dict, blank=True)
+
+    # Key stats
+    total_return_pct = models.FloatField(null=True, blank=True)
+    sharpe_ratio = models.FloatField(null=True, blank=True)
+    max_drawdown_pct = models.FloatField(null=True, blank=True)
+    win_rate_pct = models.FloatField(null=True, blank=True)
+    total_trades = models.IntegerField(null=True, blank=True)
+    avg_trade_duration_days = models.FloatField(null=True, blank=True)
+    profit_factor = models.FloatField(null=True, blank=True)
+    expectancy = models.FloatField(null=True, blank=True)
+
+    is_published = models.BooleanField(default=False)
+    is_premium = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='backtests')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} ({self.instrument})"
+
+
+class EquityPoint(models.Model):
+    """Point on the equity curve for a backtest."""
+    backtest = models.ForeignKey(Backtest, on_delete=models.CASCADE, related_name='equity_curve')
+    timestamp = models.DateTimeField()
+    value = models.FloatField()
+
+    class Meta:
+        ordering = ['timestamp']
+        indexes = [models.Index(fields=['backtest', 'timestamp'])]
+
+
+class DrawdownPoint(models.Model):
+    """Point on the drawdown curve for a backtest."""
+    backtest = models.ForeignKey(Backtest, on_delete=models.CASCADE, related_name='drawdown_curve')
+    timestamp = models.DateTimeField()
+    drawdown_pct = models.FloatField()
+
+    class Meta:
+        ordering = ['timestamp']
+        indexes = [models.Index(fields=['backtest', 'timestamp'])]
+
+
+class BacktestTrade(models.Model):
+    """Individual trade from a backtest."""
+    backtest = models.ForeignKey(Backtest, on_delete=models.CASCADE, related_name='trades')
+    entry_date = models.DateTimeField()
+    exit_date = models.DateTimeField()
+    direction = models.CharField(max_length=10, choices=[('long', 'Long'), ('short', 'Short')], default='long')
+    return_pct = models.FloatField()
+    pnl = models.FloatField(null=True, blank=True)
+    duration_days = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['entry_date']
+
+    def __str__(self):
+        return f"{self.backtest.name} trade {self.entry_date.date()}: {self.return_pct:+.1f}%"
+
+
 # ─── Concrete Data Models ─────────────────────────────────────────────────────
 
 class CryptoBreadth(models.Model):

@@ -5,12 +5,14 @@ from rest_framework.response import Response
 from .models import (
     CryptoBreadth, CryptoPrice, CryptoIndex, CryptoGlobalQuote,
     QuantModel, ModelDataPoint, ModelSignalResult,
+    Backtest, EquityPoint, DrawdownPoint, BacktestTrade,
 )
 from .serializers import (
     CryptoBreadthSerializer, CryptoPriceSerializer,
     CryptoIndexSerializer, CryptoGlobalQuoteSerializer,
     QuantModelListSerializer, QuantModelDetailSerializer,
     ModelDataPointSerializer, ModelSignalResultSerializer,
+    BacktestListSerializer, BacktestDetailSerializer,
 )
 
 
@@ -189,3 +191,102 @@ def quant_model_update_description_view(request, slug):
     model.save()
     serializer = QuantModelDetailSerializer(model)
     return Response(serializer.data)
+
+
+# ─── Backtest API ─────────────────────────────────────────────────────────────
+
+class BacktestListView(generics.ListAPIView):
+    serializer_class = BacktestListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get_queryset(self):
+        return Backtest.objects.filter(is_published=True)
+
+
+class BacktestDetailView(generics.RetrieveAPIView):
+    serializer_class = BacktestDetailSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'slug'
+    queryset = Backtest.objects.filter(is_published=True)
+
+
+@api_view(['POST'])
+@perm_classes([IsAuthenticated])
+def backtest_upload_view(request):
+    """Upload a backtest result from a Jupyter notebook / VectorBT."""
+    data = request.data
+    if not data.get('name') or not data.get('slug'):
+        return Response({'error': 'name and slug are required'}, status=400)
+
+    from django.utils.text import slugify
+    slug = slugify(data.get('slug', data['name']))
+
+    backtest, created = Backtest.objects.update_or_create(
+        slug=slug,
+        defaults={
+            'name': data['name'],
+            'description': data.get('description', ''),
+            'instrument': data.get('instrument', ''),
+            'start_date': data.get('start_date'),
+            'end_date': data.get('end_date'),
+            'parameters': data.get('parameters', {}),
+            'total_return_pct': data.get('stats', {}).get('total_return_pct'),
+            'sharpe_ratio': data.get('stats', {}).get('sharpe_ratio'),
+            'max_drawdown_pct': data.get('stats', {}).get('max_drawdown_pct'),
+            'win_rate_pct': data.get('stats', {}).get('win_rate_pct'),
+            'total_trades': data.get('stats', {}).get('total_trades'),
+            'avg_trade_duration_days': data.get('stats', {}).get('avg_trade_duration_days'),
+            'profit_factor': data.get('stats', {}).get('profit_factor'),
+            'expectancy': data.get('stats', {}).get('expectancy'),
+            'is_published': data.get('is_published', False),
+            'is_premium': data.get('is_premium', False),
+            'created_by': request.user,
+        }
+    )
+
+    # Link to model if specified
+    model_slug = data.get('model_slug')
+    if model_slug:
+        try:
+            backtest.model = QuantModel.objects.get(slug=model_slug)
+            backtest.save()
+        except QuantModel.DoesNotExist:
+            pass
+
+    # Upload equity curve
+    equity = data.get('equity_curve', [])
+    if equity:
+        EquityPoint.objects.filter(backtest=backtest).delete()
+        points = [EquityPoint(backtest=backtest, timestamp=p[0], value=p[1]) for p in equity]
+        EquityPoint.objects.bulk_create(points)
+
+    # Upload drawdown curve
+    drawdown = data.get('drawdown_curve', [])
+    if drawdown:
+        DrawdownPoint.objects.filter(backtest=backtest).delete()
+        points = [DrawdownPoint(backtest=backtest, timestamp=p[0], drawdown_pct=p[1]) for p in drawdown]
+        DrawdownPoint.objects.bulk_create(points)
+
+    # Upload trades
+    trades = data.get('trades', [])
+    if trades:
+        BacktestTrade.objects.filter(backtest=backtest).delete()
+        trade_objs = [
+            BacktestTrade(
+                backtest=backtest,
+                entry_date=t['entry_date'],
+                exit_date=t['exit_date'],
+                direction=t.get('direction', 'long'),
+                return_pct=t['return_pct'],
+                pnl=t.get('pnl'),
+                duration_days=t.get('duration_days'),
+            ) for t in trades
+        ]
+        BacktestTrade.objects.bulk_create(trade_objs)
+
+    return Response({
+        'message': f'Backtest {"created" if created else "updated"}: {backtest.name}',
+        'slug': backtest.slug,
+        'id': backtest.id,
+    }, status=201 if created else 200)

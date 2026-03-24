@@ -5,6 +5,7 @@ from .views import (
     chart_thumbnail_view,
     QuantModelListView, QuantModelDetailView,
     quant_model_data_view, quant_model_update_description_view,
+    BacktestListView, BacktestDetailView, backtest_upload_view,
 )
 
 urlpatterns = [
@@ -21,4 +22,9 @@ urlpatterns = [
     path('registry/<slug:slug>/', QuantModelDetailView.as_view(), name='model-registry-detail'),
     path('registry/<slug:slug>/data/', quant_model_data_view, name='model-registry-data'),
     path('registry/<slug:slug>/update/', quant_model_update_description_view, name='model-registry-update'),
+
+    # Backtest endpoints
+    path('backtests/', BacktestListView.as_view(), name='backtest-list'),
+    path('backtests/<slug:slug>/', BacktestDetailView.as_view(), name='backtest-detail'),
+    path('backtests/upload/', backtest_upload_view, name='backtest-upload'),
 ]

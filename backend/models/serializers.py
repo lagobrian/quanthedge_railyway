@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import (
     CryptoBreadth, CryptoPrice, CryptoIndex, CryptoGlobalQuote,
     QuantModel, ModelDataPoint, ModelSignalResult,
+    Backtest, EquityPoint, DrawdownPoint, BacktestTrade,
 )
 
 
@@ -59,3 +60,43 @@ class ModelDataPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModelDataPoint
         fields = ['timestamp', 'value', 'signal', 'metadata']
+
+
+class BacktestTradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BacktestTrade
+        fields = ['entry_date', 'exit_date', 'direction', 'return_pct', 'pnl', 'duration_days']
+
+
+class BacktestListSerializer(serializers.ModelSerializer):
+    model_name = serializers.CharField(source='model.name', read_only=True, default=None)
+
+    class Meta:
+        model = Backtest
+        fields = ['id', 'name', 'slug', 'instrument', 'model_name', 'start_date', 'end_date',
+                  'total_return_pct', 'sharpe_ratio', 'max_drawdown_pct', 'win_rate_pct',
+                  'total_trades', 'is_premium', 'created_at']
+
+
+class BacktestDetailSerializer(serializers.ModelSerializer):
+    equity_curve = serializers.SerializerMethodField()
+    drawdown_curve = serializers.SerializerMethodField()
+    trades = BacktestTradeSerializer(many=True, read_only=True)
+    model_name = serializers.CharField(source='model.name', read_only=True, default=None)
+
+    class Meta:
+        model = Backtest
+        fields = ['id', 'name', 'slug', 'description', 'instrument', 'model_name',
+                  'start_date', 'end_date', 'parameters',
+                  'total_return_pct', 'sharpe_ratio', 'max_drawdown_pct', 'win_rate_pct',
+                  'total_trades', 'avg_trade_duration_days', 'profit_factor', 'expectancy',
+                  'is_premium', 'is_published', 'created_at',
+                  'equity_curve', 'drawdown_curve', 'trades']
+
+    def get_equity_curve(self, obj):
+        points = obj.equity_curve.all().values_list('timestamp', 'value')
+        return [[str(t), v] for t, v in points]
+
+    def get_drawdown_curve(self, obj):
+        points = obj.drawdown_curve.all().values_list('timestamp', 'drawdown_pct')
+        return [[str(t), v] for t, v in points]
