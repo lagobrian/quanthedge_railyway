@@ -230,6 +230,8 @@ class PostListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         qs = Post.objects.filter(status='published').select_related('user', 'category')
+        # Hide email-only posts from the web listing
+        qs = qs.exclude(publishing_method='email')
         # Hide admin category from non-authors
         if not (self.request.user.is_authenticated and getattr(self.request.user, 'is_author', False)):
             qs = qs.exclude(category__slug='admin')
@@ -493,6 +495,33 @@ def comment_moderate_view(request, comment_id):
         comment.delete()
         return Response({'message': 'Comment deleted.'}, status=status.HTTP_204_NO_CONTENT)
     return Response({'error': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def comment_edit_delete_view(request, comment_id):
+    """Edit or delete own comment."""
+    try:
+        comment = Comment.objects.get(id=comment_id)
+    except Comment.DoesNotExist:
+        return Response({'error': 'Comment not found.'}, status=404)
+
+    # Only the comment owner or post author can edit/delete
+    if comment.user != request.user and comment.post.user != request.user:
+        return Response({'error': 'Not authorized.'}, status=403)
+
+    if request.method == 'DELETE':
+        comment.delete()
+        return Response({'message': 'Comment deleted.'}, status=204)
+
+    # PUT - edit
+    content = request.data.get('content', '').strip()
+    if not content:
+        return Response({'error': 'Content is required.'}, status=400)
+    comment.content = content
+    comment.save(update_fields=['content'])
+    serializer = CommentSerializer(comment, context={'request': request})
+    return Response(serializer.data)
 
 
 @api_view(['POST'])

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { API_BASE } from '@/lib/api';
 import { toast } from 'sonner';
+import { useAppSelector } from '@/store/hooks';
 
 interface CommentUser {
   id: number;
@@ -32,10 +33,13 @@ interface CommentSectionProps {
 type SortMode = 'newest' | 'top';
 
 export default function CommentSection({ postSlug }: CommentSectionProps) {
+  const { user } = useAppSelector((state) => state.auth);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [replyText, setReplyText] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editText, setEditText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>('newest');
@@ -96,6 +100,56 @@ export default function CommentSection({ postSlug }: CommentSectionProps) {
     } catch {}
   };
 
+  const handleEditComment = async (commentId: number) => {
+    const token = localStorage.getItem('access_token');
+    if (!token || !editText.trim()) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/comments/${commentId}/edit/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ content: editText }),
+      });
+      if (res.ok) {
+        setEditingId(null);
+        setEditText('');
+        fetchComments();
+        toast.success('Comment updated');
+      } else {
+        toast.error('Failed to update');
+      }
+    } catch { toast.error('Failed to update'); }
+  };
+
+  const handleDeleteComment = async (commentId: number) => {
+    if (!confirm('Delete this comment?')) return;
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+    try {
+      await fetch(`${API_BASE}/api/comments/${commentId}/edit/`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchComments();
+      toast.success('Comment deleted');
+    } catch { toast.error('Failed to delete'); }
+  };
+
+  const handleReportComment = async (commentId: number) => {
+    const token = localStorage.getItem('access_token');
+    if (!token) { toast.error('Please log in to report'); return; }
+    const reason = prompt('Why are you reporting this comment?');
+    if (!reason) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/comments/${commentId}/report/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ reason }),
+      });
+      if (res.ok) toast.success('Comment reported');
+      else toast.error('Failed to report');
+    } catch { toast.error('Failed to report'); }
+  };
+
   const totalCount = comments.reduce((acc, c) => acc + 1 + (c.replies?.length || 0), 0);
 
   const sortedComments = [...comments].sort((a, b) => {
@@ -123,8 +177,24 @@ export default function CommentSection({ postSlug }: CommentSectionProps) {
             {formatDistanceToNow(new Date(comment.date), { addSuffix: true })}
           </span>
         </div>
-        <p className="text-sm text-foreground/90 whitespace-pre-wrap break-words">{getText(comment)}</p>
-        <div className="flex items-center gap-4 mt-2">
+        {/* Comment text or edit mode */}
+        {editingId === comment.id ? (
+          <div className="mt-1">
+            <textarea
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="input w-full text-sm min-h-[60px] resize-none"
+              autoFocus
+            />
+            <div className="flex gap-2 mt-2">
+              <button onClick={() => handleEditComment(comment.id)} className="btn-primary text-xs px-3 py-1">Save</button>
+              <button onClick={() => { setEditingId(null); setEditText(''); }} className="text-xs text-muted-foreground px-3 py-1">Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-foreground/90 whitespace-pre-wrap break-words">{getText(comment)}</p>
+        )}
+        <div className="flex items-center gap-3 mt-2">
           <button
             onClick={() => handleLike(comment.id)}
             className={`flex items-center gap-1 text-xs transition-colors ${
@@ -142,6 +212,32 @@ export default function CommentSection({ postSlug }: CommentSectionProps) {
               className="text-xs text-muted-foreground hover:text-primary transition-colors"
             >
               Reply
+            </button>
+          )}
+          {/* Owner actions: edit + delete */}
+          {user && comment.user.id === user.id && editingId !== comment.id && (
+            <>
+              <button
+                onClick={() => { setEditingId(comment.id); setEditText(getText(comment)); }}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDeleteComment(comment.id)}
+                className="text-xs text-muted-foreground hover:text-red-400 transition-colors"
+              >
+                Delete
+              </button>
+            </>
+          )}
+          {/* Report (for other users' comments) */}
+          {user && comment.user.id !== user.id && (
+            <button
+              onClick={() => handleReportComment(comment.id)}
+              className="text-xs text-muted-foreground hover:text-red-400 transition-colors"
+            >
+              Report
             </button>
           )}
         </div>
