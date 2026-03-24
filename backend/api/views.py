@@ -202,8 +202,10 @@ class CategoryListView(generics.ListAPIView):
 
     def get_queryset(self):
         qs = Category.objects.all()
-        # Hide admin category from non-authors
-        if not (self.request.user.is_authenticated and getattr(self.request.user, 'is_author', False)):
+        # Always hide admin category from public category list
+        # (authors can still assign it when creating posts via dashboard)
+        show_admin = self.request.query_params.get('include_admin', 'false').lower() == 'true'
+        if not show_admin:
             qs = qs.exclude(slug='admin')
         return qs
 

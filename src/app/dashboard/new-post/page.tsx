@@ -40,7 +40,7 @@ export default function NewPost() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(API_BASE + '/api/categories/');
+        const response = await fetch(API_BASE + '/api/categories/?include_admin=true');
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data = await response.json();
         console.log('Fetched categories:', data);
