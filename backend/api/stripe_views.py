@@ -85,11 +85,18 @@ def create_checkout_view(request):
             )
             customer_id = customer.id
 
+        # Trial period (7 days for new subscribers)
+        trial_days = 7 if not request.user.is_premium else 0
+
         session = stripe.checkout.Session.create(
             customer=customer_id,
             payment_method_types=['card'],
             line_items=[{'price': price.id, 'quantity': 1}],
             mode='subscription',
+            allow_promotion_codes=True,  # Enable discount codes at checkout
+            subscription_data={
+                'trial_period_days': trial_days,
+            } if trial_days > 0 else {},
             success_url=settings.SITE_URL + '/pricing?success=true&session_id={CHECKOUT_SESSION_ID}',
             cancel_url=settings.SITE_URL + '/pricing?canceled=true',
             metadata={

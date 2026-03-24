@@ -274,16 +274,21 @@ export default function BlogPost({ params }: BlogPostProps) {
 
           {(post as any).is_paywalled && (
             <div className="relative mt-8">
-              <div className="absolute inset-x-0 -top-32 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-              <div className="bg-[#0e2239] border border-[#00ced1]/30 rounded-xl p-8 text-center">
-                <svg className="w-10 h-10 mx-auto mb-4 text-[#00ced1]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                </svg>
-                <h3 className="text-xl font-bold mb-2">Premium Content</h3>
-                <p className="text-grey mb-6">This article is available exclusively to premium subscribers. Upgrade to continue reading.</p>
-                <a href="/pricing" className="inline-block px-6 py-3 bg-[#00ced1] text-[#061829] font-semibold rounded-lg hover:bg-[#00ced1]/80 transition-colors">
+              <div className="absolute inset-x-0 -top-40 h-40 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
+              <div className="bg-card border border-primary/30 rounded-xl p-10 text-center shadow-lg shadow-primary/5">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Continue Reading with Premium</h3>
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  This article is available exclusively to premium subscribers. Get full access to all premium content, real-time models, and more.
+                </p>
+                <a href="/pricing" className="inline-block px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-all shadow-lg shadow-primary/20">
                   Upgrade to Premium
                 </a>
+                <p className="text-xs text-muted-foreground mt-4">Starting at $9.99/month · Cancel anytime</p>
               </div>
             </div>
           )}
