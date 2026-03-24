@@ -61,7 +61,6 @@ export default function Pricing() {
       ctaAction: 'link',
       ctaLink: '/register',
       highlighted: false,
-      highlighted: false,
       iconColor: 'text-muted-foreground',
     },
     {
