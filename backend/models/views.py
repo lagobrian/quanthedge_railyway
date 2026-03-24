@@ -6,6 +6,7 @@ from .models import (
     CryptoBreadth, CryptoPrice, CryptoIndex, CryptoGlobalQuote,
     QuantModel, ModelDataPoint, ModelSignalResult,
     Backtest, EquityPoint, DrawdownPoint, BacktestTrade,
+    ModelAlert,
 )
 from .serializers import (
     CryptoBreadthSerializer, CryptoPriceSerializer,
@@ -333,4 +334,40 @@ def data_fetch_status_view(request):
         'records_fetched': l.records_fetched,
         'error_message': l.error_message[:200] if l.error_message else '',
     } for l in logs]
+    return Response(data)
+
+
+# ─── Model Alerts ─────────────────────────────────────────────────────────────
+
+@api_view(['POST'])
+@perm_classes([IsAuthenticated])
+def model_alert_toggle_view(request, slug):
+    """Subscribe/unsubscribe to alerts for a model."""
+    try:
+        model = QuantModel.objects.get(slug=slug)
+    except QuantModel.DoesNotExist:
+        return Response({'error': 'Model not found'}, status=404)
+
+    alert_type = request.data.get('alert_type', 'on_signal_change')
+    alert, created = ModelAlert.objects.get_or_create(
+        user=request.user, model=model,
+        defaults={'alert_type': alert_type}
+    )
+    if not created:
+        alert.delete()
+        return Response({'subscribed': False, 'message': 'Alert removed'})
+    return Response({'subscribed': True, 'message': f'Alert set: {alert.get_alert_type_display()}'})
+
+
+@api_view(['GET'])
+@perm_classes([IsAuthenticated])
+def model_alerts_list_view(request):
+    """List user's model alert subscriptions."""
+    alerts = ModelAlert.objects.filter(user=request.user, is_active=True).select_related('model')
+    data = [{
+        'model_name': a.model.name,
+        'model_slug': a.model.slug,
+        'alert_type': a.alert_type,
+        'last_notified': a.last_notified.isoformat() if a.last_notified else None,
+    } for a in alerts]
     return Response(data)

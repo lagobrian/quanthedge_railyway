@@ -7,6 +7,7 @@ from .views import (
     quant_model_data_view, quant_model_update_description_view,
     BacktestListView, BacktestDetailView, backtest_upload_view,
     trigger_data_fetch_view, data_fetch_status_view,
+    model_alert_toggle_view, model_alerts_list_view,
 )
 
 urlpatterns = [
@@ -32,4 +33,8 @@ urlpatterns = [
     # Data pipeline
     path('data/fetch/', trigger_data_fetch_view, name='data-fetch-trigger'),
     path('data/status/', data_fetch_status_view, name='data-fetch-status'),
+
+    # Model alerts
+    path('registry/<slug:slug>/alert/', model_alert_toggle_view, name='model-alert-toggle'),
+    path('alerts/', model_alerts_list_view, name='model-alerts-list'),
 ]

@@ -214,6 +214,64 @@ class StockPrice(models.Model):
         return f"{self.symbol} {self.date}: {self.close}"
 
 
+class ModelAlert(models.Model):
+    """User subscription to model update alerts."""
+    ALERT_TYPES = [
+        ('on_update', 'On every update'),
+        ('on_signal_change', 'When signal changes'),
+        ('daily_digest', 'Daily digest'),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='model_alerts')
+    model = models.ForeignKey('QuantModel', on_delete=models.CASCADE, related_name='alerts')
+    alert_type = models.CharField(max_length=20, choices=ALERT_TYPES, default='on_signal_change')
+    is_active = models.BooleanField(default=True)
+    last_notified = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'model')
+
+    def __str__(self):
+        return f"{self.user.email} → {self.model.name} ({self.alert_type})"
+
+
+class APIKey(models.Model):
+    """User API key for programmatic data access."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='api_keys')
+    prefix = models.CharField(max_length=8, db_index=True)
+    key_hash = models.CharField(max_length=64)
+    name = models.CharField(max_length=100, default='Default')
+    is_active = models.BooleanField(default=True)
+    last_used = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    requests_today = models.IntegerField(default=0)
+    last_reset = models.DateField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'API Key'
+
+    def __str__(self):
+        return f"{self.prefix}... ({self.user.email})"
+
+    def check_rate_limit(self):
+        """Check if the user has exceeded their daily rate limit."""
+        from datetime import date
+        if self.last_reset != date.today():
+            self.requests_today = 0
+            self.last_reset = date.today()
+            self.save(update_fields=['requests_today', 'last_reset'])
+
+        # Rate limits by tier
+        if self.user.is_premium:
+            limit = 10000
+        elif hasattr(self.user, 'is_premium') and not self.user.is_premium:
+            limit = 1000  # Basic subscriber
+        else:
+            limit = 100  # Free tier
+
+        return self.requests_today < limit, limit - self.requests_today
+
+
 class DataFetchLog(models.Model):
     """Log of data fetch operations for monitoring."""
     source = models.CharField(max_length=50)
