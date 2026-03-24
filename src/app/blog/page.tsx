@@ -90,10 +90,15 @@ export default function Blog() {
         setIsPremium(false);
       }
     }
-    // Check if already subscribed to newsletter
-    const subscribed = localStorage.getItem('newsletter_subscribed');
-    if (subscribed) {
+    // Check if already subscribed - use sessionStorage so thank-you only shows in current session
+    const subscribedSession = sessionStorage.getItem('newsletter_just_subscribed');
+    const subscribedPersist = localStorage.getItem('newsletter_subscribed');
+    if (subscribedSession) {
       setHasSubscribed(true);
+      setShowNewsletter(false);
+    } else if (subscribedPersist) {
+      // Previously subscribed - just hide the subscribe card, don't show thank-you
+      setHasSubscribed(false);
       setShowNewsletter(false);
     } else {
       setShowNewsletter(true);
@@ -224,6 +229,7 @@ export default function Blog() {
       setEmail('');
       setHasSubscribed(true);
       localStorage.setItem('newsletter_subscribed', 'true');
+      sessionStorage.setItem('newsletter_just_subscribed', 'true');
     } catch (error) {
       console.error('Error subscribing:', error);
       toast.error('Failed to subscribe. Please try again.');
