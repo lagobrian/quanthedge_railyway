@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Post, Category, Comment, Like, CommentLike, Bookmark, Notification, NewsletterSubscriber
+from .models import Post, Category, Comment, Like, CommentLike, Bookmark, Notification, NewsletterSubscriber, PostReaction
 from .serializers import (
     UserProfileSerializer, RegisterSerializer, CategorySerializer,
     PostListSerializer, PostDetailSerializer, PostCreateUpdateSerializer,
@@ -320,6 +320,71 @@ def post_bookmark_view(request, slug):
         bookmark.delete()
         return Response({'bookmarked': False, 'bookmarks_count': post.bookmarks_count})
     return Response({'bookmarked': True, 'bookmarks_count': post.bookmarks_count})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def post_reaction_view(request, slug):
+    """Toggle a reaction on a post. Body: {"reaction_type": "fire"}"""
+    try:
+        post = Post.objects.get(slug=slug)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found.'}, status=404)
+
+    reaction_type = request.data.get('reaction_type', '')
+    valid_types = [c[0] for c in PostReaction.REACTION_CHOICES]
+    if reaction_type not in valid_types:
+        return Response({'error': f'Invalid reaction. Choose from: {valid_types}'}, status=400)
+
+    reaction, created = PostReaction.objects.get_or_create(
+        user=request.user, post=post, reaction_type=reaction_type
+    )
+    if not created:
+        reaction.delete()
+
+    # Return all reaction counts for this post
+    from django.db.models import Count
+    counts = dict(
+        PostReaction.objects.filter(post=post)
+        .values_list('reaction_type')
+        .annotate(count=Count('id'))
+        .values_list('reaction_type', 'count')
+    )
+    user_reactions = list(
+        PostReaction.objects.filter(post=post, user=request.user)
+        .values_list('reaction_type', flat=True)
+    )
+    return Response({
+        'toggled': created,
+        'reaction_type': reaction_type,
+        'counts': counts,
+        'user_reactions': user_reactions,
+    })
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def post_reactions_view(request, slug):
+    """Get all reaction counts for a post."""
+    try:
+        post = Post.objects.get(slug=slug)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found.'}, status=404)
+
+    from django.db.models import Count
+    counts = dict(
+        PostReaction.objects.filter(post=post)
+        .values_list('reaction_type')
+        .annotate(count=Count('id'))
+        .values_list('reaction_type', 'count')
+    )
+    user_reactions = []
+    if request.user.is_authenticated:
+        user_reactions = list(
+            PostReaction.objects.filter(post=post, user=request.user)
+            .values_list('reaction_type', flat=True)
+        )
+    return Response({'counts': counts, 'user_reactions': user_reactions})
 
 
 @api_view(['POST'])

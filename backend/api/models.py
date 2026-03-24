@@ -81,14 +81,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        # Compute reading time from description (strip HTML tags)
-        import math, re
-        text = re.sub(r'<[^>]+>', '', self.description or '')
-        word_count = len(text.split())
-        self.reading_time = max(1, math.ceil(word_count / 200))
-        super().save(*args, **kwargs)
-
     @property
     def likes_count(self):
         return self.likes.count()
@@ -104,6 +96,11 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = shortuuid.uuid()[:10]
+        # Compute reading time from description (strip HTML tags)
+        import math, re
+        text = re.sub(r'<[^>]+>', '', self.description or '')
+        word_count = len(text.split())
+        self.reading_time = max(1, math.ceil(word_count / 200))
         super().save(*args, **kwargs)
 
 
@@ -182,3 +179,24 @@ class NewsletterSubscriber(models.Model):
 
     def __str__(self):
         return self.email
+
+
+class PostReaction(models.Model):
+    REACTION_CHOICES = [
+        ('fire', '🔥'),
+        ('lightbulb', '💡'),
+        ('chart', '📈'),
+        ('thinking', '🤔'),
+        ('diamond', '💎'),
+        ('pray', '🙏'),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reactions')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='reactions')
+    reaction_type = models.CharField(max_length=20, choices=REACTION_CHOICES)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post', 'reaction_type')
+
+    def __str__(self):
+        return f"{self.user.username} → {self.get_reaction_type_display()} on {self.post.title}"

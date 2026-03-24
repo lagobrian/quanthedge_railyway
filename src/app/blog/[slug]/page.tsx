@@ -7,6 +7,7 @@ import PostActions from './PostActions';
 import CommentSection from '@/components/CommentSection';
 import React from 'react';
 import BlogShareMenu from './BlogShareMenu';
+import PostReactions from '@/components/PostReactions';
 import { API_BASE } from '@/lib/api';
 
 interface BlogPostParams {
@@ -263,6 +264,13 @@ export default function BlogPost({ params }: BlogPostProps) {
             className="post-body prose prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: post.description }}
           />
+
+          {/* Post Reactions */}
+          {!(post as any).is_paywalled && (
+            <div className="mt-8 border-t border-border pt-6">
+              <PostReactions slug={post.slug} />
+            </div>
+          )}
 
           {(post as any).is_paywalled && (
             <div className="relative mt-8">

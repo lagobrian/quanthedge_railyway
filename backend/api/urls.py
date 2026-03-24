@@ -22,6 +22,8 @@ urlpatterns = [
     path('posts/<slug:slug>/like/', views.post_like_view, name='post-like'),
     path('posts/<slug:slug>/bookmark/', views.post_bookmark_view, name='post-bookmark'),
     path('posts/<slug:slug>/pin/', views.post_pin_view, name='post-pin'),
+    path('posts/<slug:slug>/reactions/', views.post_reactions_view, name='post-reactions'),
+    path('posts/<slug:slug>/react/', views.post_reaction_view, name='post-react'),
 
     # Comments
     path('posts/<slug:slug>/comments/', views.comment_list_view, name='comment-list'),
