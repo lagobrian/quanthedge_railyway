@@ -64,7 +64,7 @@ export default function GlobalMetricsPage() {
       text: "BTC Dominance & Global Crypto Metrics",
       font: { family: "Segoe UI, sans-serif", size: 18, color: "#ffffff" },
     },
-    height: 650,
+    autosize: true,
     paper_bgcolor: "#061829",
     plot_bgcolor: "#061829",
     font: { family: "Segoe UI, sans-serif", size: 12, color: "#ffffff" },
@@ -178,7 +178,7 @@ export default function GlobalMetricsPage() {
           layout={layout}
           config={config}
           useResizeHandler
-          style={{ width: "100%", height: "650px" }}
+          style={{ width: "100%", height: "min(650px, 80vh)" }}
         />
       </div>
     </div>
