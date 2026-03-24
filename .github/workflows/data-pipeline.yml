@@ -1,0 +1,25 @@
+name: Data Pipeline
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Data source to fetch'
+        required: false
+        default: 'all'
+        type: choice
+        options: ['all', 'crypto', 'fred', 'worldbank', 'alpaca']
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger data fetch on production
+        run: |
+          curl -X POST "${{ secrets.API_URL }}/api/models/data/fetch/" \
+            -H "Content-Type: application/json" \
+            -H "X-Fetch-Secret: ${{ secrets.DATA_FETCH_SECRET }}" \
+            -d '{"source": "${{ github.event.inputs.source || 'all' }}", "days": 30}'

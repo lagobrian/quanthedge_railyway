@@ -6,6 +6,7 @@ from .views import (
     QuantModelListView, QuantModelDetailView,
     quant_model_data_view, quant_model_update_description_view,
     BacktestListView, BacktestDetailView, backtest_upload_view,
+    trigger_data_fetch_view, data_fetch_status_view,
 )
 
 urlpatterns = [
@@ -27,4 +28,8 @@ urlpatterns = [
     path('backtests/', BacktestListView.as_view(), name='backtest-list'),
     path('backtests/<slug:slug>/', BacktestDetailView.as_view(), name='backtest-detail'),
     path('backtests/upload/', backtest_upload_view, name='backtest-upload'),
+
+    # Data pipeline
+    path('data/fetch/', trigger_data_fetch_view, name='data-fetch-trigger'),
+    path('data/status/', data_fetch_status_view, name='data-fetch-status'),
 ]

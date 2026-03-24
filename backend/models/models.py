@@ -168,6 +168,69 @@ class BacktestTrade(models.Model):
         return f"{self.backtest.name} trade {self.entry_date.date()}: {self.return_pct:+.1f}%"
 
 
+# ─── Multi-Source Market Data ──────────────────────────────────────────────────
+
+class MacroDataPoint(models.Model):
+    """Economic/macro data from FRED, World Bank, etc."""
+    SOURCES = [
+        ('fred', 'FRED'),
+        ('worldbank', 'World Bank'),
+        ('custom', 'Custom'),
+    ]
+    source = models.CharField(max_length=20, choices=SOURCES, db_index=True)
+    series_id = models.CharField(max_length=100, db_index=True, help_text='e.g. FRED: DGS10, WB: NY.GDP.MKTP.CD')
+    series_name = models.CharField(max_length=300, blank=True)
+    date = models.DateField(db_index=True)
+    value = models.FloatField()
+    unit = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=10, blank=True, default='US')
+
+    class Meta:
+        ordering = ['-date']
+        unique_together = ('source', 'series_id', 'date')
+        verbose_name = 'Macro Data Point'
+
+    def __str__(self):
+        return f"{self.source}:{self.series_id} {self.date}: {self.value}"
+
+
+class StockPrice(models.Model):
+    """Daily OHLCV for stocks/ETFs from Alpaca or yfinance."""
+    symbol = models.CharField(max_length=20, db_index=True)
+    date = models.DateField(db_index=True)
+    open = models.FloatField(null=True, blank=True)
+    high = models.FloatField(null=True, blank=True)
+    low = models.FloatField(null=True, blank=True)
+    close = models.FloatField(null=True, blank=True)
+    volume = models.FloatField(null=True, blank=True)
+    source = models.CharField(max_length=20, default='alpaca')
+
+    class Meta:
+        ordering = ['-date', 'symbol']
+        unique_together = ('symbol', 'date', 'source')
+        verbose_name = 'Stock Price'
+
+    def __str__(self):
+        return f"{self.symbol} {self.date}: {self.close}"
+
+
+class DataFetchLog(models.Model):
+    """Log of data fetch operations for monitoring."""
+    source = models.CharField(max_length=50)
+    command = models.CharField(max_length=200)
+    started_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=[('running', 'Running'), ('success', 'Success'), ('failed', 'Failed')])
+    records_fetched = models.IntegerField(default=0)
+    error_message = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-started_at']
+
+    def __str__(self):
+        return f"{self.source} {self.started_at}: {self.status}"
+
+
 # ─── Concrete Data Models ─────────────────────────────────────────────────────
 
 class CryptoBreadth(models.Model):

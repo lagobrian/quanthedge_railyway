@@ -290,3 +290,47 @@ def backtest_upload_view(request):
         'slug': backtest.slug,
         'id': backtest.id,
     }, status=201 if created else 200)
+
+
+# ─── Data Pipeline Trigger ────────────────────────────────────────────────────
+
+@api_view(['POST'])
+@perm_classes([AllowAny])
+def trigger_data_fetch_view(request):
+    """Trigger data fetch. Protected by a secret token in header."""
+    import os
+    from django.core.management import call_command
+    from io import StringIO
+
+    secret = os.environ.get('DATA_FETCH_SECRET', '')
+    provided = request.headers.get('X-Fetch-Secret', '') or request.data.get('secret', '')
+    if not secret or provided != secret:
+        return Response({'error': 'Unauthorized'}, status=403)
+
+    source = request.data.get('source', 'all')
+    days = request.data.get('days', 30)
+
+    out = StringIO()
+    try:
+        call_command('fetch_all_data', source=source, days=days, stdout=out, stderr=out)
+        return Response({'status': 'ok', 'output': out.getvalue()})
+    except Exception as e:
+        return Response({'status': 'error', 'error': str(e), 'output': out.getvalue()}, status=500)
+
+
+@api_view(['GET'])
+@perm_classes([AllowAny])
+def data_fetch_status_view(request):
+    """Check status of recent data fetches."""
+    from .models import DataFetchLog
+    logs = DataFetchLog.objects.all()[:20]
+    data = [{
+        'source': l.source,
+        'command': l.command,
+        'started_at': l.started_at.isoformat(),
+        'completed_at': l.completed_at.isoformat() if l.completed_at else None,
+        'status': l.status,
+        'records_fetched': l.records_fetched,
+        'error_message': l.error_message[:200] if l.error_message else '',
+    } for l in logs]
+    return Response(data)
