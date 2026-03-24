@@ -62,13 +62,21 @@ export default function Navbar() {
             >
               Newsletters
             </Link>
-            <Link 
-              href="/pricing" 
+            <Link
+              href="/pricing"
               className={`text-sm hover:text-blue transition-colors ${
                 pathname === '/pricing' ? 'text-blue' : 'text-foreground'
               }`}
             >
               Pricing
+            </Link>
+            <Link
+              href="/store"
+              className={`text-sm hover:text-blue transition-colors ${
+                pathname === '/store' ? 'text-blue' : 'text-foreground'
+              }`}
+            >
+              Store
             </Link>
           </div>
 
@@ -209,6 +217,14 @@ export default function Navbar() {
                 }`}
               >
                 Pricing
+              </Link>
+              <Link
+                href="/store"
+                className={`text-sm hover:text-blue transition-colors ${
+                  pathname === '/store' ? 'text-blue' : 'text-foreground'
+                }`}
+              >
+                Store
               </Link>
               {/* Mobile Theme Toggle */}
               <button
