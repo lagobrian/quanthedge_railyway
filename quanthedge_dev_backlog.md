@@ -1,7 +1,17 @@
 # Quant (h)Edge — Website Dev Backlog
-> Last updated: 23rd March 2026
+> Last updated: 24th March 2026
 > Stack: Next.js (frontend), Django REST Framework (backend), PostgreSQL, Python, R
 > Ordered by priority: Foundation → Core UX → Content & Models → Growth & Monetisation → Advanced Infrastructure
+
+## Progress Summary
+
+| Phase | Status | Items Done |
+|-------|--------|------------|
+| Phase 1 — Foundation | ✅ Complete | Email verify, newsletter UX, premium hiding, health check |
+| Phase 2 — Core UX | ✅ Complete | Rename→Newsletters, reading time, avatars, reactions, comments, responsive, TipTap, profile banner |
+| Phase 3 — Content & Models | ✅ Complete | QuantModel framework, model pages, signal tables, backtest pipeline, data pipeline (FRED/WB/Alpaca/crypto2), cron |
+| Phase 4 — Growth | ✅ Complete | Paywall teaser, Stripe discounts+trial, model alerts, API keys |
+| Phase 5 — Infrastructure | 🔄 In Progress | Master doc, store page, performance optimization done. Remaining: Docker, 2FA, live dashboard |
 
 ---
 
