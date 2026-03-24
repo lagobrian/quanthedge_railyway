@@ -196,10 +196,16 @@ def password_reset_confirm_view(request):
 # ─── Categories ──────────────────────────────────────────────────────────────
 
 class CategoryListView(generics.ListAPIView):
-    queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
     pagination_class = None
+
+    def get_queryset(self):
+        qs = Category.objects.all()
+        # Hide admin category from non-authors
+        if not (self.request.user.is_authenticated and getattr(self.request.user, 'is_author', False)):
+            qs = qs.exclude(slug='admin')
+        return qs
 
 
 # ─── Posts ───────────────────────────────────────────────────────────────────
@@ -222,6 +228,9 @@ class PostListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         qs = Post.objects.filter(status='published')
+        # Hide admin category from non-authors
+        if not (self.request.user.is_authenticated and getattr(self.request.user, 'is_author', False)):
+            qs = qs.exclude(category__slug='admin')
         category = self.request.query_params.get('category')
         if category:
             qs = qs.filter(category__slug=category)
@@ -484,6 +493,24 @@ def comment_moderate_view(request, comment_id):
     return Response({'error': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def comment_report_view(request, comment_id):
+    """Report a comment for moderation."""
+    try:
+        comment = Comment.objects.get(id=comment_id)
+    except Comment.DoesNotExist:
+        return Response({'error': 'Comment not found.'}, status=404)
+    if comment.user == request.user:
+        return Response({'error': 'You cannot report your own comment.'}, status=400)
+    reason = request.data.get('reason', 'Inappropriate content')
+    comment.is_reported = True
+    comment.report_reason = reason
+    comment.reported_by = request.user
+    comment.save(update_fields=['is_reported', 'report_reason', 'reported_by'])
+    return Response({'message': 'Comment reported. Our team will review it.'})
+
+
 # ─── Dashboard ───────────────────────────────────────────────────────────────
 
 @api_view(['GET'])
@@ -518,8 +545,12 @@ def dashboard_posts_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def dashboard_comments_view(request):
-    comments = Comment.objects.filter(post__user=request.user).select_related('user', 'post')
-    serializer = CommentSerializer(comments, many=True, context={'request': request})
+    """Show reported comments for moderation. Use ?all=true to see all comments."""
+    qs = Comment.objects.filter(post__user=request.user).select_related('user', 'post')
+    show_all = request.query_params.get('all', 'false').lower() == 'true'
+    if not show_all:
+        qs = qs.filter(is_reported=True)
+    serializer = CommentSerializer(qs, many=True, context={'request': request})
     return Response(serializer.data)
 
 

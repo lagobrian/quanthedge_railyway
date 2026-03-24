@@ -111,6 +111,9 @@ class Comment(models.Model):
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)
+    is_reported = models.BooleanField(default=False)
+    report_reason = models.TextField(blank=True)
+    reported_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reported_comments')
 
     class Meta:
         ordering = ['-date']

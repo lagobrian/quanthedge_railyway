@@ -30,6 +30,7 @@ urlpatterns = [
     path('posts/<slug:slug>/comment/', views.comment_create_view, name='comment-create'),
     path('comments/<int:comment_id>/like/', views.comment_like_view, name='comment-like'),
     path('comments/<int:comment_id>/moderate/', views.comment_moderate_view, name='comment-moderate'),
+    path('comments/<int:comment_id>/report/', views.comment_report_view, name='comment-report'),
 
     # Dashboard
     path('dashboard/stats/', views.dashboard_stats_view, name='dashboard-stats'),

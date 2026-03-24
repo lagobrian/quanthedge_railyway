@@ -121,7 +121,7 @@ export default function Pricing() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold mb-4">
-            Choose Your <span className="text-[#00ced1]">Edge</span>
+            Choose Your <span className="text-primary">Edge</span>
           </h1>
           <p className="text-xl text-grey max-w-2xl mx-auto">
             Unlock quantitative insights, real-time models, and premium research to stay ahead of the markets
@@ -130,12 +130,12 @@ export default function Pricing() {
 
         {/* Billing Toggle */}
         <div className="flex justify-center mb-14">
-          <div className="bg-[#0a2438] p-1.5 rounded-xl inline-flex border border-blue/10">
+          <div className="bg-card p-1.5 rounded-xl inline-flex border border-border">
             <button
               onClick={() => setBillingCycle('monthly')}
               className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                 billingCycle === 'monthly'
-                  ? 'bg-[#00ced1] text-[#061829] shadow-lg shadow-[#00ced1]/20'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                   : 'text-grey hover:text-foreground'
               }`}
             >
@@ -145,12 +145,12 @@ export default function Pricing() {
               onClick={() => setBillingCycle('annual')}
               className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                 billingCycle === 'annual'
-                  ? 'bg-[#00ced1] text-[#061829] shadow-lg shadow-[#00ced1]/20'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                   : 'text-grey hover:text-foreground'
               }`}
             >
               Annual
-              <span className="ml-2 text-xs bg-[#00FF9D]/20 text-[#00FF9D] px-2 py-0.5 rounded-full font-bold">
+              <span className="ml-2 text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full font-bold">
                 -16%
               </span>
             </button>
@@ -176,7 +176,7 @@ export default function Pricing() {
               >
                 {plan.highlighted && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-[#00ced1] to-[#00FF9D] text-[#061829] text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+                    <span className="bg-gradient-to-r from-[#00ced1] to-[#00FF9D] text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
                       Most Popular
                     </span>
                   </div>
@@ -206,7 +206,7 @@ export default function Pricing() {
                     )}
                   </div>
                   {perMonth && (
-                    <p className="text-[#00FF9D] text-sm mt-1">
+                    <p className="text-accent text-sm mt-1">
                       That&apos;s just ${perMonth}/month
                     </p>
                   )}
@@ -251,7 +251,7 @@ export default function Pricing() {
                   {plan.features.map((feature) => (
                     <div key={feature.name} className="flex items-center gap-3">
                       {feature.included ? (
-                        <Check className="w-4 h-4 text-[#00FF9D] flex-shrink-0" />
+                        <Check className="w-4 h-4 text-accent flex-shrink-0" />
                       ) : (
                         <X className="w-4 h-4 text-grey/40 flex-shrink-0" />
                       )}
@@ -269,15 +269,15 @@ export default function Pricing() {
         {/* Trust badges */}
         <div className="flex flex-wrap justify-center gap-8 mb-20 text-grey text-sm">
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-[#00FF9D]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             Secured by Stripe
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-[#00FF9D]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Cancel anytime
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-[#00FF9D]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
             All major cards accepted
           </div>
         </div>
@@ -293,7 +293,7 @@ export default function Pricing() {
               { q: 'Can I switch plans?', a: 'Yes. Upgrades take effect immediately (prorated). Downgrades apply at the next billing cycle.' },
               { q: 'Do you offer refunds?', a: "We don't typically offer refunds, but contact us if you're unsatisfied and we'll work it out." },
             ].map(({ q, a }) => (
-              <details key={q} className="group bg-[#0a2438] border border-blue/10 rounded-xl overflow-hidden">
+              <details key={q} className="group bg-card border border-border rounded-xl overflow-hidden">
                 <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold hover:bg-muted transition-colors">
                   {q}
                   <svg className="w-5 h-5 text-grey group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
@@ -305,7 +305,7 @@ export default function Pricing() {
         </div>
 
         {/* CTA */}
-        <div className="mt-20 text-center bg-gradient-to-r from-[#0a2438] to-[#0c2c42] rounded-2xl border border-blue/10 p-12">
+        <div className="mt-20 text-center bg-card rounded-2xl border border-border p-12">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Your Edge?</h2>
           <p className="text-grey mb-8 max-w-xl mx-auto">
             Join traders and analysts who use Quant (h)Edge to make data-driven decisions
@@ -313,7 +313,7 @@ export default function Pricing() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="mailto:lagobrian@outlook.com"
-              className="border border-[#00ced1] text-[#00ced1] hover:bg-[#00ced1]/10 transition-colors px-8 py-3 rounded-xl font-semibold"
+              className="border border-primary text-primary hover:bg-primary/10 transition-colors px-8 py-3 rounded-xl font-semibold"
             >
               Contact Us
             </Link>
