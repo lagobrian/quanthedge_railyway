@@ -61,9 +61,8 @@ export default function Pricing() {
       ctaAction: 'link',
       ctaLink: '/register',
       highlighted: false,
-      gradient: 'from-[#0a2438] to-[#0e2d47]',
-      borderColor: 'border-blue/10',
-      iconColor: 'text-grey',
+      highlighted: false,
+      iconColor: 'text-muted-foreground',
     },
     {
       id: 'premium',
@@ -86,9 +85,7 @@ export default function Pricing() {
       ctaAction: 'checkout',
       ctaLink: '',
       highlighted: true,
-      gradient: 'from-[#0c2c42] to-[#0a2438]',
-      borderColor: 'border-[#00ced1]',
-      iconColor: 'text-[#00ced1]',
+      iconColor: 'text-primary',
     },
     {
       id: 'standard',
@@ -111,8 +108,6 @@ export default function Pricing() {
       ctaAction: 'checkout',
       ctaLink: '',
       highlighted: false,
-      gradient: 'from-[#0a2438] to-[#0e2d47]',
-      borderColor: 'border-blue/10',
       iconColor: 'text-[#FF8C00]',
     },
   ];
@@ -173,10 +168,10 @@ export default function Pricing() {
             return (
               <div
                 key={plan.name}
-                className={`relative rounded-2xl border bg-gradient-to-b ${plan.gradient} ${plan.borderColor} p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ${
+                className={`relative rounded-2xl border bg-card p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ${
                   plan.highlighted
-                    ? 'ring-2 ring-[#00ced1]/40 shadow-xl shadow-[#00ced1]/10 md:-mt-4 md:mb-4'
-                    : ''
+                    ? 'ring-2 ring-primary/40 shadow-xl shadow-primary/10 border-primary/30 md:-mt-4 md:mb-4'
+                    : 'border-border'
                 }`}
               >
                 {plan.highlighted && (
@@ -189,7 +184,7 @@ export default function Pricing() {
 
                 {/* Plan header */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className={`p-2 rounded-lg bg-[#061829]/50 ${plan.iconColor}`}>
+                  <div className={`p-2 rounded-lg bg-muted ${plan.iconColor}`}>
                     {plan.icon}
                   </div>
                   <div>
@@ -226,8 +221,8 @@ export default function Pricing() {
                     href={plan.ctaLink}
                     className={`block w-full text-center py-3.5 rounded-xl font-semibold transition-all duration-200 mb-8 ${
                       plan.highlighted
-                        ? 'bg-gradient-to-r from-[#00ced1] to-[#00b4b7] text-[#061829] hover:shadow-lg hover:shadow-[#00ced1]/30'
-                        : 'bg-[#0e2d47] text-foreground hover:bg-[#133654] border border-blue/10'
+                        ? 'bg-gradient-to-r from-primary to-[#00b4b7] text-primary-foreground hover:shadow-lg hover:shadow-primary/30'
+                        : 'bg-muted text-foreground hover:bg-muted/80 border border-border'
                     }`}
                   >
                     {plan.ctaText}
@@ -238,8 +233,8 @@ export default function Pricing() {
                     disabled={loadingPlan === plan.id}
                     className={`block w-full text-center py-3.5 rounded-xl font-semibold transition-all duration-200 mb-8 ${
                       plan.highlighted
-                        ? 'bg-gradient-to-r from-[#00ced1] to-[#00b4b7] text-[#061829] hover:shadow-lg hover:shadow-[#00ced1]/30'
-                        : 'bg-[#0e2d47] text-foreground hover:bg-[#133654] border border-blue/10'
+                        ? 'bg-gradient-to-r from-primary to-[#00b4b7] text-primary-foreground hover:shadow-lg hover:shadow-primary/30'
+                        : 'bg-muted text-foreground hover:bg-muted/80 border border-border'
                     } disabled:opacity-50`}
                   >
                     {loadingPlan === plan.id ? (
@@ -299,7 +294,7 @@ export default function Pricing() {
               { q: 'Do you offer refunds?', a: "We don't typically offer refunds, but contact us if you're unsatisfied and we'll work it out." },
             ].map(({ q, a }) => (
               <details key={q} className="group bg-[#0a2438] border border-blue/10 rounded-xl overflow-hidden">
-                <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold hover:bg-[#0e2d47] transition-colors">
+                <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold hover:bg-muted transition-colors">
                   {q}
                   <svg className="w-5 h-5 text-grey group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
                 </summary>
@@ -322,7 +317,7 @@ export default function Pricing() {
             >
               Contact Us
             </Link>
-            <Link href="/register" className="bg-gradient-to-r from-[#00ced1] to-[#00b4b7] text-[#061829] hover:shadow-lg hover:shadow-[#00ced1]/30 transition-all px-8 py-3 rounded-xl font-semibold">
+            <Link href="/register" className="bg-gradient-to-r from-primary to-[#00b4b7] text-primary-foreground hover:shadow-lg hover:shadow-primary/30 transition-all px-8 py-3 rounded-xl font-semibold">
               Get Started Free
             </Link>
           </div>
