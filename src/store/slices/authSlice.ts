@@ -9,6 +9,7 @@ interface User {
   is_premium?: boolean;
   is_author?: boolean;
   image?: string;
+  avatar_url?: string;
   bio?: string;
   about?: string;
   country?: string;

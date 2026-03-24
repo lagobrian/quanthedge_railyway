@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
 import Navbar from '@/components/Navbar';
+import ProfileCompletionBanner from '@/components/ProfileCompletionBanner';
 import StoreProvider from '@/providers/StoreProvider';
 import ThemeProvider from '@/providers/ThemeProvider';
 
@@ -39,6 +40,7 @@ export default function RootLayout({
           <StoreProvider>
             <div className="relative flex min-h-screen flex-col">
               <Navbar />
+              <ProfileCompletionBanner />
               <main className="flex-1">{children}</main>
             </div>
             <Toaster position="bottom-right" />
