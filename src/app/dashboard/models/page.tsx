@@ -50,7 +50,7 @@ export default function ModelsDashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
     Promise.all([
       fetch(`${API_BASE}/api/models/registry/`, { headers }).then(r => r.json()),
       fetch(`${API_BASE}/api/models/backtests/`, { headers }).then(r => r.json()),
