@@ -1,11 +1,16 @@
-from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework import generics, filters, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes as perm_classes
 from rest_framework.response import Response
-from .models import CryptoBreadth, CryptoPrice, CryptoIndex, CryptoGlobalQuote
+from .models import (
+    CryptoBreadth, CryptoPrice, CryptoIndex, CryptoGlobalQuote,
+    QuantModel, ModelDataPoint, ModelSignalResult,
+)
 from .serializers import (
     CryptoBreadthSerializer, CryptoPriceSerializer,
     CryptoIndexSerializer, CryptoGlobalQuoteSerializer,
+    QuantModelListSerializer, QuantModelDetailSerializer,
+    ModelDataPointSerializer, ModelSignalResultSerializer,
 )
 
 
@@ -123,3 +128,64 @@ def chart_thumbnail_view(request, model_name):
     response = HttpResponse(buf.getvalue(), content_type='image/png')
     response['Cache-Control'] = 'public, max-age=3600'
     return response
+
+
+# ─── QuantModel API ───────────────────────────────────────────────────────────
+
+class QuantModelListView(generics.ListAPIView):
+    """List all published models."""
+    serializer_class = QuantModelListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = QuantModel.objects.filter(is_published=True)
+        asset_class = self.request.query_params.get('asset_class')
+        if asset_class:
+            qs = qs.filter(asset_class=asset_class)
+        return qs
+
+
+class QuantModelDetailView(generics.RetrieveAPIView):
+    """Get details for a single model including signal results."""
+    serializer_class = QuantModelDetailSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'slug'
+    queryset = QuantModel.objects.filter(is_published=True)
+
+
+@api_view(['GET'])
+@perm_classes([AllowAny])
+def quant_model_data_view(request, slug):
+    """Get data points for a model."""
+    try:
+        model = QuantModel.objects.get(slug=slug, is_published=True)
+    except QuantModel.DoesNotExist:
+        return Response({'error': 'Model not found'}, status=404)
+    data = ModelDataPoint.objects.filter(model=model).order_by('timestamp')
+    limit = request.query_params.get('limit')
+    if limit:
+        data = data[:int(limit)]
+    serializer = ModelDataPointSerializer(data, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@perm_classes([IsAuthenticated])
+def quant_model_update_description_view(request, slug):
+    """Analyst can update description/methodology/how_to_trade."""
+    try:
+        model = QuantModel.objects.get(slug=slug)
+    except QuantModel.DoesNotExist:
+        return Response({'error': 'Model not found'}, status=404)
+    # Check if user is an analyst assigned to this model
+    if not (request.user.is_analyst and model.analysts.filter(id=request.user.id).exists()):
+        if not request.user.is_superuser:
+            return Response({'error': 'Not authorized'}, status=403)
+    allowed_fields = ['description', 'methodology', 'how_to_trade']
+    for field in allowed_fields:
+        if field in request.data:
+            setattr(model, field, request.data[field])
+    model.save()
+    serializer = QuantModelDetailSerializer(model)
+    return Response(serializer.data)
