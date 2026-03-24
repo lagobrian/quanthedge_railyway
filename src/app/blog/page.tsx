@@ -573,71 +573,35 @@ export default function Blog() {
     {post.title}
   </h2>
   <p className="text-grey mb-4 line-clamp-3">{post.excerpt}</p>
-  <div className="flex justify-between items-center mt-auto pt-4 border-t border-blue/10">
-    <div className="text-sm text-grey">
+  <div className="flex justify-between items-center mt-auto pt-4 border-t border-border">
+    <div className="text-sm text-muted-foreground">
       <span>{new Date(post.date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       })}</span>
       {post.reading_time > 0 && (
-        <><span className="mx-2">•</span><span>{post.reading_time} min read</span></>
+        <><span className="mx-1.5">·</span><span>{post.reading_time} min read</span></>
       )}
-      <span className="mx-2">•</span>
-      <span>{post.view} views</span>
     </div>
-    <div className="flex space-x-3">
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          handleLike(post.slug);
-        }}
-        className={`flex items-center ${post.is_liked ? 'text-red' : 'text-grey hover:text-red'}`}
-        aria-label="Like post"
-        tabIndex={0}
-      >
-        <Heart className={`h-5 w-5 ${post.is_liked ? 'fill-current' : ''}`} />
-        <span className="ml-1 text-xs">{post.likes_count}</span>
-      </button>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          handleBookmark(post.slug);
-        }}
-        className={`flex items-center ${post.is_bookmarked ? 'text-blue' : 'text-grey hover:text-blue'}`}
-        aria-label="Bookmark post"
-        tabIndex={0}
-      >
-        <Bookmark className={`h-5 w-5 ${post.is_bookmarked ? 'fill-current' : ''}`} />
-        <span className="ml-1 text-xs">{post.bookmarks_count}</span>
-      </button>
-      <button
-        onClick={async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const shareUrl = `${window.location.origin}/blog/${post.slug}`;
-          if (navigator.share) {
-            try {
-              await navigator.share({
-                title: post.title,
-                url: shareUrl,
-              });
-            } catch {}
-          } else {
-            await navigator.clipboard.writeText(shareUrl);
-            toast.success('Link copied!');
-          }
-        }}
-        className="flex items-center text-grey hover:text-blue"
-        aria-label={`Share post: ${post.title}`}
-        title="Share"
-        tabIndex={0}
-      >
-        <Share2 className="h-5 w-5" />
-      </button>
-    </div>
+    <button
+      onClick={async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const shareUrl = `${window.location.origin}/blog/${post.slug}`;
+        if (navigator.share) {
+          try { await navigator.share({ title: post.title, url: shareUrl }); } catch {}
+        } else {
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success('Link copied!');
+        }
+      }}
+      className="text-muted-foreground hover:text-primary transition-colors"
+      aria-label="Share"
+      tabIndex={0}
+    >
+      <Share2 className="h-4 w-4" />
+    </button>
   </div>
 </Link>
 
@@ -651,7 +615,7 @@ export default function Blog() {
                   <button 
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-2 rounded-md bg-darkBlue/30 text-grey hover:bg-darkBlue/50 transition-colors disabled:opacity-50"
+                    className="px-3 py-2 rounded-md bg-card border border-border text-foreground hover:bg-muted transition-colors disabled:opacity-30"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -672,7 +636,7 @@ export default function Blog() {
                       <button
                         key={i}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-2 rounded-md ${currentPage === pageNum ? 'bg-blue text-background' : 'bg-darkBlue/30 text-grey hover:bg-darkBlue/50'} transition-colors`}
+                        className={`px-3 py-2 rounded-md font-medium ${currentPage === pageNum ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-foreground hover:bg-muted'} transition-colors`}
                       >
                         {pageNum}
                       </button>
@@ -682,7 +646,7 @@ export default function Blog() {
                   <button 
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-2 rounded-md bg-darkBlue/30 text-grey hover:bg-darkBlue/50 transition-colors disabled:opacity-50"
+                    className="px-3 py-2 rounded-md bg-card border border-border text-foreground hover:bg-muted transition-colors disabled:opacity-30"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
