@@ -886,7 +886,13 @@ def send_test_email_view(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def send_newsletter_view(request, slug):
-    """Send a post as newsletter to all subscribers."""
+    """Send a post as newsletter. Supports audience targeting.
+
+    Body params:
+      audience: 'all' | 'free' | 'standard' | 'premium' (default: 'all')
+      exclude_emails: list of emails to skip (optional)
+      force_resend: true to resend even if already sent (optional)
+    """
     if not request.user.is_author:
         return Response({'error': 'Not authorized.'}, status=status.HTTP_403_FORBIDDEN)
 
@@ -895,12 +901,44 @@ def send_newsletter_view(request, slug):
     except Post.DoesNotExist:
         return Response({'error': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-    if post.email_sent:
-        return Response({'error': 'Newsletter already sent for this post.'}, status=status.HTTP_400_BAD_REQUEST)
+    force_resend = request.data.get('force_resend', False)
+    if post.email_sent and not force_resend:
+        return Response({'error': 'Newsletter already sent. Set force_resend=true to resend.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    subscribers = NewsletterSubscriber.objects.values_list('email', flat=True)
-    if not subscribers:
-        return Response({'error': 'No subscribers to send to.'}, status=status.HTTP_400_BAD_REQUEST)
+    audience = request.data.get('audience', 'all')
+    exclude_emails = set(request.data.get('exclude_emails', []))
+
+    # Build recipient list from newsletter subscribers + registered users
+    recipient_set = set()
+
+    # Newsletter subscribers (non-registered email list)
+    newsletter_emails = set(NewsletterSubscriber.objects.values_list('email', flat=True))
+    recipient_set.update(newsletter_emails)
+
+    # Registered users who might not be in the newsletter list
+    user_qs = User.objects.filter(is_active=True).exclude(email='')
+    if audience == 'premium':
+        user_qs = user_qs.filter(Q(subscription_tier='premium') | Q(is_premium=True))
+    elif audience == 'standard':
+        user_qs = user_qs.filter(Q(subscription_tier__in=['standard', 'premium']) | Q(is_premium=True))
+    elif audience == 'free':
+        user_qs = user_qs.filter(subscription_tier='free', is_premium=False)
+    # 'all' = everyone
+
+    registered_emails = set(user_qs.values_list('email', flat=True))
+    if audience != 'all':
+        # For targeted sends, only include registered users matching the tier
+        recipient_set = registered_emails
+    else:
+        recipient_set.update(registered_emails)
+
+    # Remove excluded emails
+    recipient_set -= exclude_emails
+    # Remove author's own email
+    recipient_set.discard(request.user.email)
+
+    if not recipient_set:
+        return Response({'error': 'No recipients matching this audience.'}, status=status.HTTP_400_BAD_REQUEST)
 
     from django.template.loader import render_to_string
     from datetime import datetime
@@ -917,33 +955,34 @@ def send_newsletter_view(request, slug):
 
     sent = 0
     failed = 0
-    # Send in batches of 50 to avoid SES rate limits
-    subscriber_list = list(subscribers)
-    batch_size = 50
+    failed_emails = []
+    recipient_list = list(recipient_set)
 
-    for i in range(0, len(subscriber_list), batch_size):
-        batch = subscriber_list[i:i + batch_size]
-        for email_addr in batch:
-            try:
-                send_mail(
-                    subject=post.title,
-                    message=post.excerpt or post.title,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email_addr],
-                    html_message=html_content,
-                    fail_silently=False,
-                )
-                sent += 1
-            except Exception:
-                failed += 1
+    for email_addr in recipient_list:
+        try:
+            send_mail(
+                subject=post.title,
+                message=post.excerpt or post.title,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email_addr],
+                html_message=html_content,
+                fail_silently=False,
+            )
+            sent += 1
+        except Exception as e:
+            failed += 1
+            failed_emails.append(f"{email_addr}: {str(e)[:50]}")
 
     post.email_sent = True
     post.save(update_fields=['email_sent'])
 
     return Response({
-        'message': f'Newsletter sent! {sent} delivered, {failed} failed.',
+        'message': f'Newsletter sent to {audience} audience! {sent} delivered, {failed} failed.',
         'sent': sent,
         'failed': failed,
+        'total_recipients': len(recipient_list),
+        'audience': audience,
+        'failed_emails': failed_emails[:10],  # Show first 10 failures
     })
 
 

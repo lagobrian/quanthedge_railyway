@@ -4,6 +4,11 @@ import shortuuid
 
 
 class User(AbstractUser):
+    TIER_CHOICES = [
+        ('free', 'Free'),
+        ('standard', 'Standard'),
+        ('premium', 'Premium'),
+    ]
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255, blank=True)
     bio = models.TextField(blank=True)
@@ -12,7 +17,8 @@ class User(AbstractUser):
     image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     twitter = models.URLField(blank=True)
     linkedin = models.URLField(blank=True)
-    is_premium = models.BooleanField(default=False)
+    subscription_tier = models.CharField(max_length=20, choices=TIER_CHOICES, default='free')
+    is_premium = models.BooleanField(default=False)  # Legacy - use subscription_tier instead
     premium_until = models.DateTimeField(null=True, blank=True)
     is_author = models.BooleanField(default=False)
     is_analyst = models.BooleanField(default=False)
