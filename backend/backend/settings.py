@@ -38,12 +38,27 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Cache middleware settings
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 60  # Cache anonymous GET requests for 60s
+CACHE_MIDDLEWARE_KEY_PREFIX = 'qhe'
+
+# Security & Performance
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+USE_ETAGS = True
+
+# GZip compression (handled by whitenoise for static, Django for API)
+MIDDLEWARE.insert(1, 'django.middleware.gzip.GZipMiddleware')
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -114,14 +129,25 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-# Cache (in-memory, upgrade to Redis when available)
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'quanthedge-cache',
-        'TIMEOUT': 300,  # 5 minutes default
+# Cache - use Redis if REDIS_URL is set, otherwise in-memory
+REDIS_URL = os.environ.get('REDIS_URL')
+if REDIS_URL:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_URL,
+            'TIMEOUT': 300,
+            'OPTIONS': {'db': 0},
+        }
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'quanthedge-cache',
+            'TIMEOUT': 300,
+        }
+    }
 
 # Simple JWT
 SIMPLE_JWT = {
