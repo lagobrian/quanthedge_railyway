@@ -16,6 +16,14 @@ export default function Navbar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const [animatedLogo, setAnimatedLogo] = React.useState(false);
+
+  React.useEffect(() => {
+    setAnimatedLogo(localStorage.getItem('animated_logo') === 'true');
+    const handler = () => setAnimatedLogo(localStorage.getItem('animated_logo') === 'true');
+    window.addEventListener('animated_logo_changed', handler);
+    return () => window.removeEventListener('animated_logo_changed', handler);
+  }, []);
 
   const handleLogoutClick = () => {
     dispatch(logout());
@@ -34,7 +42,10 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image src="/logo.jpg" alt="Quant (h)Edge" width={160} height={48} className="h-10 w-auto object-contain" priority />
+            {animatedLogo
+              ? <img src="/logo.gif" alt="Quant (h)Edge" className="h-10 w-auto object-contain" />
+              : <Image src="/logo.jpg" alt="Quant (h)Edge" width={160} height={48} className="h-10 w-auto object-contain" priority />
+            }
           </Link>
 
           {/* Desktop Navigation */}
