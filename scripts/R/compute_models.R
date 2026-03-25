@@ -41,13 +41,20 @@ on.exit(dbDisconnect(db), add = TRUE)
 STABLECOINS <- c(
   "USDT", "USDC", "DAI", "BUSD", "TUSD", "USDP", "FRAX", "USDD", "GUSD",
   "PYUSD", "FDUSD", "USDJ", "CUSD", "SUSD", "LUSD", "MIM", "UST", "USTC",
-  "USDS", "USDX", "USD0"
+  "USDS", "USDX", "USD0", "USD1", "USDY", "USDG", "RLUSD",
+  "USDe", "sUSDe", "USDf", "USDE", "SUSDE", "USDF"
 )
 WRAPPED <- c(
   "WBTC", "WETH", "WBNB", "STETH", "WSTETH", "RETH", "CBETH", "HBTC",
-  "RENBTC", "TBTC", "BTCB", "BETH"
+  "RENBTC", "TBTC", "BTCB", "BETH", "CBBTC",
+  "AETHWETH", "AETHUSDT", "weETH", "WEETH", "RSETH", "METH",
+  "LBTC", "SBTC", "TBTC"
 )
-EXCLUDE_INDEX <- c("BTC", STABLECOINS, WRAPPED)
+# Also exclude liquid staking derivatives and LP tokens
+EXCLUDE_OTHER <- c(
+  "JLP", "WLFI"
+)
+EXCLUDE_INDEX <- c("BTC", STABLECOINS, WRAPPED, EXCLUDE_OTHER)
 
 # ---- UPSERT HELPER ----
 upsert <- function(conn, table_name, data, conflict_cols) {
@@ -79,39 +86,55 @@ upsert <- function(conn, table_name, data, conflict_cols) {
 #    - Cumulative: 100 * cumprod(1 + weighted_returns)
 # =============================================================
 compute_altcoin_index <- function() {
-  cat("[Altcoin Index] Computing (notebook Cell 10-11 logic)...\n")
+  cat("[Altcoin Index] Computing (notebook Cell 10-11 logic + OHLC)...\n")
 
-  # Get all price + market_cap history
-  raw <- dbGetQuery(db, "
-    SELECT symbol, date, close, market_cap
+  # Get top 200 coins by latest market cap (only need 100 for index, buffer for monthly changes)
+  top_syms <- dbGetQuery(db, "
+    SELECT DISTINCT ON (symbol) symbol, market_cap
     FROM crypto_history
     WHERE close > 0 AND market_cap > 0
+    ORDER BY symbol, date DESC
+  ") %>%
+    filter(!symbol %in% EXCLUDE_INDEX) %>%
+    arrange(desc(market_cap)) %>%
+    head(200)
+
+  cat(sprintf("  Top 200 altcoins selected for index computation\n"))
+
+  raw <- dbGetQuery(db, sprintf("
+    SELECT symbol, date, open, high, low, close, market_cap
+    FROM crypto_history
+    WHERE close > 0 AND market_cap > 0 AND symbol IN (%s)
     ORDER BY date
-  ")
+  ", paste(sprintf("'%s'", top_syms$symbol), collapse = ",")))
   if (nrow(raw) == 0) { cat("  No data\n"); return() }
 
-  # Filter out BTC, stablecoins, wrapped
-  raw <- raw %>% filter(!symbol %in% EXCLUDE_INDEX)
+  # Deduplicate (keep first occurrence per symbol+date)
+  raw <- raw %>% distinct(date, symbol, .keep_all = TRUE)
 
-  # Pivot to wide: prices and market caps
-  prices_wide <- raw %>%
-    select(date, symbol, close) %>%
-    distinct(date, symbol, .keep_all = TRUE) %>%
-    pivot_wider(names_from = symbol, values_from = close) %>%
-    arrange(date)
-
-  mcaps_wide <- raw %>%
-    select(date, symbol, market_cap) %>%
-    distinct(date, symbol, .keep_all = TRUE) %>%
-    pivot_wider(names_from = symbol, values_from = market_cap) %>%
-    arrange(date)
-
+  # Pivot all fields at once using a single wide pivot
+  prices_wide <- raw %>% select(date, symbol, close) %>%
+    pivot_wider(names_from = symbol, values_from = close) %>% arrange(date)
   dates <- prices_wide$date
-  price_mat <- as.matrix(prices_wide[, -1])
-  mcap_mat <- as.matrix(mcaps_wide[, -1])
-  symbols <- colnames(price_mat)
+  symbols <- setdiff(names(prices_wide), "date")
 
-  # Compute log returns (matching notebook: returns = np.log(prices / prices.shift(1)))
+  # Build matrices using the same symbol order
+  to_mat <- function(field) {
+    wide <- raw %>% select(date, symbol, !!sym(field)) %>%
+      pivot_wider(names_from = symbol, values_from = !!sym(field)) %>% arrange(date)
+    # Ensure same column order
+    m <- as.matrix(wide[, symbols, drop = FALSE])
+    m
+  }
+
+  cat("  Building matrices...\n")
+  price_mat <- to_mat("close")
+  mcap_mat  <- to_mat("market_cap")
+  open_mat  <- to_mat("open")
+  high_mat  <- to_mat("high")
+  low_mat   <- to_mat("low")
+
+  # Compute log returns for close (matching notebook)
   log_returns <- matrix(NA_real_, nrow = nrow(price_mat), ncol = ncol(price_mat))
   for (j in 1:ncol(price_mat)) {
     for (i in 2:nrow(price_mat)) {
@@ -122,43 +145,58 @@ compute_altcoin_index <- function() {
   }
   colnames(log_returns) <- symbols
 
+  # Also compute returns for open/high/low (relative to prev close)
+  open_returns <- matrix(NA_real_, nrow = nrow(price_mat), ncol = ncol(price_mat))
+  high_returns <- matrix(NA_real_, nrow = nrow(price_mat), ncol = ncol(price_mat))
+  low_returns <- matrix(NA_real_, nrow = nrow(price_mat), ncol = ncol(price_mat))
+  for (j in 1:ncol(price_mat)) {
+    for (i in 2:nrow(price_mat)) {
+      prev_close <- price_mat[i-1, j]
+      if (!is.na(prev_close) && prev_close > 0) {
+        if (!is.na(open_mat[i, j])) open_returns[i, j] <- log(open_mat[i, j] / prev_close)
+        if (!is.na(high_mat[i, j])) high_returns[i, j] <- log(high_mat[i, j] / prev_close)
+        if (!is.na(low_mat[i, j]))  low_returns[i, j]  <- log(low_mat[i, j] / prev_close)
+      }
+    }
+  }
+
+  colnames(open_returns) <- symbols
+  colnames(high_returns) <- symbols
+  colnames(low_returns) <- symbols
+
   # Group by month
   months <- format(dates, "%Y-%m")
   unique_months <- unique(months)
-
   cat(sprintf("  %d months of data, %d symbols\n", length(unique_months), length(symbols)))
 
-  # For each month: rank by end-of-month market cap, select top 100,
-  # then apply daily mcap weights to next month's returns
-  crypto100_returns <- numeric(0)
-  crypto100_dates <- as.Date(character(0))
-  crypto100_nconstituents <- integer(0)
+  # Accumulators
+  idx_close_returns <- numeric(0)
+  idx_open_returns <- numeric(0)
+  idx_high_returns <- numeric(0)
+  idx_low_returns <- numeric(0)
+  idx_dates <- as.Date(character(0))
+  idx_nconstituents <- integer(0)
+  latest_constituents <- NULL
 
   for (m_idx in 1:(length(unique_months) - 1)) {
     this_month <- unique_months[m_idx]
     next_month <- unique_months[m_idx + 1]
 
-    # Get last row of this month's market caps
     this_month_rows <- which(months == this_month)
     last_row_idx <- tail(this_month_rows, 1)
     last_mcaps <- mcap_mat[last_row_idx, ]
 
-    # Rank: top 100 by market cap (non-NA, > 0)
     valid <- !is.na(last_mcaps) & last_mcaps > 0
     if (sum(valid) < 5) next
 
     ranked <- sort(last_mcaps[valid], decreasing = TRUE)
     top100_syms <- names(ranked)[1:min(100, length(ranked))]
-
-    # Get next month's rows
     next_month_rows <- which(months == next_month)
     if (length(next_month_rows) == 0) next
 
-    # Filter to coins available in next month
     available <- intersect(top100_syms, symbols)
 
     for (row_idx in next_month_rows) {
-      # Daily market cap weights (notebook: daily_weights = next_month_caps / sum(next_month_caps, axis=1))
       day_mcaps <- mcap_mat[row_idx, available]
       day_mcaps[is.na(day_mcaps)] <- 0
       total_mcap <- sum(day_mcaps)
@@ -166,37 +204,81 @@ compute_altcoin_index <- function() {
 
       weights <- day_mcaps / total_mcap
 
-      # Daily log returns weighted by market cap
-      day_returns <- log_returns[row_idx, available]
-      day_returns[is.na(day_returns)] <- 0
+      # Weighted returns for OHLC
+      dr_close <- log_returns[row_idx, available]; dr_close[is.na(dr_close)] <- 0
+      dr_open  <- open_returns[row_idx, available]; dr_open[is.na(dr_open)] <- 0
+      dr_high  <- high_returns[row_idx, available]; dr_high[is.na(dr_high)] <- 0
+      dr_low   <- low_returns[row_idx, available];  dr_low[is.na(dr_low)] <- 0
 
-      weighted_return <- sum(day_returns * weights)
-      crypto100_returns <- c(crypto100_returns, weighted_return)
-      crypto100_dates <- c(crypto100_dates, dates[row_idx])
-      crypto100_nconstituents <- c(crypto100_nconstituents, length(available))
+      idx_close_returns <- c(idx_close_returns, sum(dr_close * weights))
+      idx_open_returns  <- c(idx_open_returns,  sum(dr_open * weights))
+      idx_high_returns  <- c(idx_high_returns,  sum(dr_high * weights))
+      idx_low_returns   <- c(idx_low_returns,   sum(dr_low * weights))
+      idx_dates         <- c(idx_dates, dates[row_idx])
+      idx_nconstituents <- c(idx_nconstituents, length(available))
+
+      # Save the latest month's constituents for real-time use
+      if (m_idx == length(unique_months) - 1) {
+        latest_constituents <- data.frame(
+          symbol = available,
+          weight = round(as.numeric(weights), 6),
+          market_cap = as.numeric(day_mcaps),
+          stringsAsFactors = FALSE
+        )
+      }
     }
   }
 
-  if (length(crypto100_returns) == 0) { cat("  No index data computed\n"); return() }
+  if (length(idx_close_returns) == 0) { cat("  No index data computed\n"); return() }
 
-  # Cumulative index: 100 * cumprod(1 + returns) (notebook Cell 11)
-  cumulative <- 100 * cumprod(1 + crypto100_returns)
+  # Cumulative index OHLC
+  cum_close <- 100 * cumprod(1 + idx_close_returns)
+  cum_open  <- numeric(length(idx_close_returns))
+  cum_high  <- numeric(length(idx_close_returns))
+  cum_low   <- numeric(length(idx_close_returns))
 
+  prev_close <- 100
+  for (i in seq_along(idx_close_returns)) {
+    cum_open[i]  <- prev_close * (1 + idx_open_returns[i])
+    cum_high[i]  <- prev_close * (1 + idx_high_returns[i])
+    cum_low[i]   <- prev_close * (1 + idx_low_returns[i])
+    prev_close   <- cum_close[i]
+  }
+
+  # Store close-based index (existing table)
   result <- data.frame(
-    index_name       = "alt100",
-    date             = crypto100_dates,
-    value            = round(cumulative, 4),
-    daily_return     = round(crypto100_returns * 100, 4),
-    num_constituents = crypto100_nconstituents,
+    index_name = "alt100", date = idx_dates,
+    value = round(cum_close, 4),
+    daily_return = round(idx_close_returns * 100, 4),
+    num_constituents = idx_nconstituents,
     stringsAsFactors = FALSE
   )
-
-  # Clear old alt100 data and insert fresh
   dbExecute(db, "DELETE FROM crypto_models_cryptoindex WHERE index_name = 'alt100'")
   dbWriteTable(db, "crypto_models_cryptoindex", result, append = TRUE, row.names = FALSE)
   cat(sprintf("  [DB] Inserted %d rows -> crypto_models_cryptoindex\n", nrow(result)))
-  cat(sprintf("  Index: %d days, latest=%.2f, constituents=%d\n",
-    nrow(result), tail(result$value, 1), tail(result$num_constituents, 1)))
+
+  # Store OHLC index
+  ohlc <- data.frame(
+    date = idx_dates,
+    open = round(cum_open, 4), high = round(cum_high, 4),
+    low = round(cum_low, 4), close = round(cum_close, 4),
+    num_constituents = idx_nconstituents
+  )
+  dbExecute(db, "DELETE FROM model_altcoin_index_ohlc")
+  dbWriteTable(db, "model_altcoin_index_ohlc", ohlc, append = TRUE, row.names = FALSE)
+  cat(sprintf("  [DB] Inserted %d rows -> model_altcoin_index_ohlc\n", nrow(ohlc)))
+
+  # Store current constituents with Binance symbols (symbol + "USDT")
+  if (!is.null(latest_constituents) && nrow(latest_constituents) > 0) {
+    latest_constituents$binance_symbol <- paste0(latest_constituents$symbol, "USDT")
+    latest_constituents$updated_at <- Sys.Date()
+    dbExecute(db, "DELETE FROM model_altcoin_index_constituents")
+    dbWriteTable(db, "model_altcoin_index_constituents", latest_constituents, append = TRUE, row.names = FALSE)
+    cat(sprintf("  [DB] Inserted %d constituents -> model_altcoin_index_constituents\n", nrow(latest_constituents)))
+  }
+
+  cat(sprintf("  Index: %d days, latest close=%.2f, constituents=%d\n",
+    nrow(result), tail(cum_close, 1), tail(idx_nconstituents, 1)))
 }
 
 

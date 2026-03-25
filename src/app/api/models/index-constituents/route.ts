@@ -4,7 +4,7 @@ import pool from '@/lib/db';
 export async function GET() {
   try {
     const { rows } = await pool.query(
-      "SELECT date, close FROM crypto_history WHERE symbol = 'BTC' ORDER BY date"
+      'SELECT symbol, binance_symbol, weight, market_cap, updated_at FROM model_altcoin_index_constituents ORDER BY weight DESC'
     );
     return NextResponse.json(rows, {
       headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200' },

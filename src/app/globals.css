@@ -144,7 +144,9 @@
   }
   
   .card {
-    background-color: var(--card);
+    background-color: color-mix(in srgb, var(--card) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     color: var(--card-foreground);
     padding: 1.5rem;
     border-radius: 0.5rem;
@@ -385,6 +387,25 @@
     transition-duration: 200ms;
   }
 
+  .live-pulse {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .live-pulse::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #00FF9D;
+    animation: live-blink 1.5s ease-in-out infinite;
+    box-shadow: 0 0 6px #00FF9D;
+  }
+  .live-pulse.bearish::before {
+    background: #ff2400;
+    box-shadow: 0 0 6px #ff2400;
+  }
+
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -403,6 +424,11 @@
 @keyframes ticker {
   0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
+}
+
+@keyframes live-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
 
 .animate-ticker {
