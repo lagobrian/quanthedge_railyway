@@ -11,7 +11,7 @@ services:
     runtime: python
     plan: free
     buildCommand: chmod +x build.sh && ./build.sh
-    preDeployCommand: cd backend && python manage.py migrate
+    # preDeployCommand: cd backend && python manage.py migrate
     startCommand: cd backend && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: SECRET_KEY
