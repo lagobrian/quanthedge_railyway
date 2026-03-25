@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/LagoB/Desktop/Crypto_Breadth_Backtests/**)",
+      "Read(//c/Users/LagoB/**)"
+    ]
+  }
+}
