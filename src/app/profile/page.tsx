@@ -72,6 +72,18 @@ export default function Profile() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [animatedLogo, setAnimatedLogo] = useState(false);
+
+  useEffect(() => {
+    setAnimatedLogo(localStorage.getItem('animated_logo') === 'true');
+  }, []);
+
+  const toggleAnimatedLogo = () => {
+    const next = !animatedLogo;
+    setAnimatedLogo(next);
+    localStorage.setItem('animated_logo', String(next));
+    window.dispatchEvent(new Event('animated_logo_changed'));
+  };
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     full_name: '',
@@ -522,6 +534,26 @@ const [rawImageUrl, setRawImageUrl] = useState<string | null>(null);
               </div>
             </div>
           )}
+        </div>
+
+        {/* Appearance */}
+        <div className="card p-6 mt-6">
+          <h2 className="text-lg font-semibold mb-4">Appearance</h2>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium text-sm">Animated logo</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Show the animated GIF version of the logo in the navbar</p>
+            </div>
+            <button
+              type="button"
+              onClick={toggleAnimatedLogo}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${animatedLogo ? 'bg-blue' : 'bg-muted'}`}
+              aria-pressed={animatedLogo}
+              aria-label="Toggle animated logo"
+            >
+              <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${animatedLogo ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
