@@ -3,6 +3,7 @@
 import React from 'react';
 import NotificationDropdown from './NotificationDropdown';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
@@ -32,8 +33,8 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-blue">Quant (h)Edge</span>
+          <Link href="/" className="flex items-center">
+            <Image src="/logo.jpg" alt="Quant (h)Edge" width={160} height={48} className="h-10 w-auto object-contain" priority />
           </Link>
 
           {/* Desktop Navigation */}

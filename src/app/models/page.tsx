@@ -18,6 +18,17 @@ const mockModels = [
     link: '/models/crypto-breadth',
   },
   {
+    id: 103,
+    title: 'Equity Breadth',
+    description: 'Tracks the percentage of S&P 500 stocks trading above their 50, 100, and 200-day moving averages, plus the share outperforming the S&P 500.',
+    category: 'market-indicators',
+    dataSource: 'Yahoo Finance (yfinance)',
+    updateFrequency: 'Daily',
+    isPremium: false,
+    image: '/api/models/thumbnail/equity-breadth',
+    link: '/models/equity-breadth',
+  },
+  {
     id: 101,
     title: 'Altcoin 100 Index — Live',
     description: 'Live market-cap weighted index of top 100 altcoins vs BTC. OHLC candlestick charts with real-time Binance data.',

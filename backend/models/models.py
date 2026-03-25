@@ -364,6 +364,24 @@ class CryptoIndex(models.Model):
         return f"{self.index_name} {self.date}: {self.value}"
 
 
+class EquityBreadth(models.Model):
+    """Daily S&P 500 breadth indicators calculated from yfinance price data."""
+    date = models.DateField(unique=True)
+    pct_above_50dma = models.FloatField()
+    pct_above_100dma = models.FloatField()
+    pct_above_200dma = models.FloatField()
+    pct_outperforming_spx = models.FloatField(null=True, blank=True)
+    num_constituents = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = 'Equity Breadth Indicator'
+        verbose_name_plural = 'Equity Breadth Indicators'
+
+    def __str__(self):
+        return f"Equity Breadth {self.date}: 50DMA={self.pct_above_50dma:.1f}%, 200DMA={self.pct_above_200dma:.1f}%"
+
+
 class CryptoGlobalQuote(models.Model):
     """Global market metrics from CoinMarketCap."""
     date = models.DateField(unique=True)
