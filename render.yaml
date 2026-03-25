@@ -42,6 +42,38 @@ services:
       - key: PYTHON_VERSION
         value: "3.11.0"
 
+  # Cron Job: Daily data pipeline + thumbnail generation
+  - type: cron
+    name: quanthedge-data-pipeline
+    runtime: python
+    plan: free
+    schedule: "0 6 * * *"  # Daily at 6AM UTC
+    buildCommand: pip install plotly kaleido psycopg2-binary requests
+    startCommand: python scripts/generate_thumbnails.py
+    envVars:
+      - key: DB_NAME
+        fromDatabase:
+          name: quanthedge-db
+          property: database
+      - key: DB_HOST
+        fromDatabase:
+          name: quanthedge-db
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: quanthedge-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: quanthedge-db
+          property: password
+      - key: DB_PORT
+        fromDatabase:
+          name: quanthedge-db
+          property: port
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+
   # Next.js Frontend
   - type: web
     name: quanthedge-web
