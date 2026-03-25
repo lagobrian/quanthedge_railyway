@@ -38,19 +38,28 @@ on.exit(dbDisconnect(db), add = TRUE)
 #                                  total_market_cap, total_volume_24h, altcoin_market_cap
 
 # Stablecoins and wrapped tokens to exclude
+# Stablecoins (USD-pegged, EUR-pegged, gold-backed, etc.)
 STABLECOINS <- c(
   "USDT", "USDC", "DAI", "BUSD", "TUSD", "USDP", "FRAX", "USDD", "GUSD",
   "PYUSD", "FDUSD", "USDJ", "CUSD", "SUSD", "LUSD", "MIM", "UST", "USTC",
   "USDS", "USDX", "USD0", "USD1", "USDY", "USDG", "RLUSD",
-  "USDe", "sUSDe", "USDf", "USDE", "SUSDE", "USDF"
+  "USDe", "sUSDe", "USDf", "USDE", "SUSDE", "USDF", "USDtb",
+  "USDAI", "bUSD0", "STABLE", "GHO", "EURC", "EURS", "EURT",
+  "syrupUSDC", "syrupUSDT", "USDC.e", "BFUSD",
+  "XAUt", "PAXG"  # gold-backed tokens
 )
+# Wrapped tokens, liquid staking derivatives, bridged tokens
 WRAPPED <- c(
   "WBTC", "WETH", "WBNB", "STETH", "WSTETH", "RETH", "CBETH", "HBTC",
   "RENBTC", "TBTC", "BTCB", "BETH", "CBBTC",
   "AETHWETH", "AETHUSDT", "weETH", "WEETH", "RSETH", "METH",
-  "LBTC", "SBTC", "TBTC"
+  "LBTC", "SBTC", "FBTC", "BBTC", "BTCT", "vBTC",
+  "stETH", "EZETH", "osETH", "EETH", "LSETH",
+  "BNSOL", "JUPSOL", "JITOSOL", "slisBNB", "slisBNBx",
+  "SolvBTC", "vBNB", "WTRX", "WFLR", "WXTZ",
+  "KHYPE"
 )
-# Also exclude liquid staking derivatives and LP tokens
+# LP tokens, exchange tokens, misc non-crypto
 EXCLUDE_OTHER <- c(
   "JLP", "WLFI"
 )
@@ -256,17 +265,6 @@ compute_altcoin_index <- function() {
   dbExecute(db, "DELETE FROM crypto_models_cryptoindex WHERE index_name = 'alt100'")
   dbWriteTable(db, "crypto_models_cryptoindex", result, append = TRUE, row.names = FALSE)
   cat(sprintf("  [DB] Inserted %d rows -> crypto_models_cryptoindex\n", nrow(result)))
-
-  # Store OHLC index
-  ohlc <- data.frame(
-    date = idx_dates,
-    open = round(cum_open, 4), high = round(cum_high, 4),
-    low = round(cum_low, 4), close = round(cum_close, 4),
-    num_constituents = idx_nconstituents
-  )
-  dbExecute(db, "DELETE FROM model_altcoin_index_ohlc")
-  dbWriteTable(db, "model_altcoin_index_ohlc", ohlc, append = TRUE, row.names = FALSE)
-  cat(sprintf("  [DB] Inserted %d rows -> model_altcoin_index_ohlc\n", nrow(ohlc)))
 
   # Store current constituents with Binance symbols (symbol + "USDT")
   if (!is.null(latest_constituents) && nrow(latest_constituents) > 0) {
