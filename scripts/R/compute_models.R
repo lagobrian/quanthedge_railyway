@@ -61,7 +61,7 @@ WRAPPED <- c(
 )
 # LP tokens, exchange tokens, misc non-crypto
 EXCLUDE_OTHER <- c(
-  "JLP", "WLFI"
+  "JLP", "WLFI", "CC", "RAIN", "NIGHT", "KITE", "MORPHO", "ETHFI"
 )
 EXCLUDE_INDEX <- c("BTC", STABLECOINS, WRAPPED, EXCLUDE_OTHER)
 
@@ -98,13 +98,15 @@ compute_altcoin_index <- function() {
   cat("[Altcoin Index] Computing (notebook Cell 10-11 logic + OHLC)...\n")
 
   # Get top 200 coins by latest market cap (only need 100 for index, buffer for monthly changes)
+  # Get latest market cap per symbol (only where market_cap > 0)
   top_syms <- dbGetQuery(db, "
-    SELECT DISTINCT ON (symbol) symbol, market_cap
-    FROM crypto_history
-    WHERE close > 0 AND market_cap > 0
-    ORDER BY symbol, date DESC
+    SELECT symbol, market_cap FROM (
+      SELECT symbol, market_cap, ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY date DESC) as rn
+      FROM crypto_history
+      WHERE close > 0 AND market_cap > 0
+    ) sub WHERE rn = 1
   ") %>%
-    filter(!symbol %in% EXCLUDE_INDEX) %>%
+    filter(!symbol %in% EXCLUDE_INDEX, market_cap > 0) %>%
     arrange(desc(market_cap)) %>%
     head(200)
 

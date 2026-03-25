@@ -61,6 +61,7 @@ export default function OHLCChart({ data, title, livePrice, height = 500, tickpr
 
   const layout: any = {
     autosize: true,
+    uirevision: 'keep', // preserve zoom/pan state across re-renders
     paper_bgcolor: theme.paper_bgcolor,
     plot_bgcolor: theme.plot_bgcolor,
     font: { family: theme.fontFamily, size: 11, color: theme.fontColor },
@@ -103,6 +104,7 @@ export default function OHLCChart({ data, title, livePrice, height = 500, tickpr
       tickprefix,
       side: 'right',
       tickfont: { size: 10 },
+      fixedrange: false, // allow y-axis zoom
     },
   };
 
@@ -136,7 +138,7 @@ export default function OHLCChart({ data, title, livePrice, height = 500, tickpr
       <Plot
         data={traces}
         layout={layout}
-        config={{ ...plotConfig, displayModeBar: false, scrollZoom: true }}
+        config={{ ...plotConfig, displayModeBar: true, scrollZoom: true }}
         useResizeHandler
         style={{ width: '100%', height: height - 60 }}
       />
