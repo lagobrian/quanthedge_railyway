@@ -55,13 +55,14 @@ export default function AltcoinIndexLivePage() {
   // Fetch BTC OHLC from Binance when interval changes
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/binance/klines?symbol=BTCUSDT&interval=${interval}&limit=500`)
+    fetch(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=500`)
       .then((r) => r.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          setBtcOHLC(data.map((c: any) => ({
-            date: new Date(c.time).toISOString(),
-            open: c.open, high: c.high, low: c.low, close: c.close,
+          setBtcOHLC(data.map((k: any) => ({
+            date: new Date(k[0]).toISOString(),
+            open: parseFloat(k[1]), high: parseFloat(k[2]),
+            low: parseFloat(k[3]), close: parseFloat(k[4]),
           })));
         }
       })
@@ -80,8 +81,12 @@ export default function AltcoinIndexLivePage() {
       const totalWeight = topN.reduce((s, c) => s + c.weight, 0);
 
       const klinePromises = topN.map((c) =>
-        fetch(`/api/binance/klines?symbol=${c.binance_symbol}&interval=${interval}&limit=500`)
+        fetch(`https://api.binance.com/api/v3/klines?symbol=${c.binance_symbol}&interval=${interval}&limit=500`)
           .then((r) => r.json())
+          .then((raw: any) => Array.isArray(raw) ? raw.map((k: any) => ({
+            time: k[0], open: parseFloat(k[1]), high: parseFloat(k[2]),
+            low: parseFloat(k[3]), close: parseFloat(k[4]),
+          })) : [])
           .catch(() => [])
       );
 

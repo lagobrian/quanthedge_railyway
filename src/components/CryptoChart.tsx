@@ -63,9 +63,16 @@ export default function CryptoChart({
   // Fetch historical klines
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/binance/klines?symbol=${symbol}&interval=${interval}&limit=500`)
+    fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=500`)
       .then((r) => r.json())
-      .then((data) => { if (Array.isArray(data)) setCandles(data); })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCandles(data.map((k: any) => ({
+            time: k[0], open: parseFloat(k[1]), high: parseFloat(k[2]),
+            low: parseFloat(k[3]), close: parseFloat(k[4]), volume: parseFloat(k[5]),
+          })));
+        }
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [symbol, interval]);
