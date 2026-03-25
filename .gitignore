@@ -66,3 +66,4 @@ venv/
 ENV/
 
 # Removed 'lib/' from ignore list to allow utility files
+.claude/
