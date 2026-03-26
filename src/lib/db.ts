@@ -1,8 +1,20 @@
 import { Pool } from 'pg';
 
+const connectionString = process.env.DATABASE_URL;
+const useManagedPostgres = Boolean(connectionString);
+const useSsl =
+  !!connectionString &&
+  !/localhost|127\.0\.0\.1/i.test(connectionString) &&
+  process.env.PGSSLMODE !== 'disable';
+
 const pool = new Pool(
-  process.env.DATABASE_URL
-    ? { connectionString: process.env.DATABASE_URL, max: 5, idleTimeoutMillis: 30000 }
+  useManagedPostgres
+    ? {
+        connectionString,
+        ssl: useSsl ? { rejectUnauthorized: false } : false,
+        max: 5,
+        idleTimeoutMillis: 30000,
+      }
     : {
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT || '5432'),
