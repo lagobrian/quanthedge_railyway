@@ -34,7 +34,7 @@
     "date-fns": "^3.3.1",
     "isomorphic-ws": "^5.0.0",
     "lucide-react": "^0.341.0",
-    "next": "^15.2.0",
+    "next": "^15.2.8",
     "next-auth": "^4.24.6",
     "next-themes": "^0.2.1",
     "novel": "^1.0.2",
