@@ -82,14 +82,6 @@ export default function Navbar() {
             >
               Pricing
             </Link>
-            <Link
-              href="/store"
-              className={`text-sm hover:text-blue transition-colors ${
-                pathname === '/store' ? 'text-blue' : 'text-foreground'
-              }`}
-            >
-              Store
-            </Link>
           </div>
 
           {/* Auth Buttons */}
@@ -229,14 +221,6 @@ export default function Navbar() {
                 }`}
               >
                 Pricing
-              </Link>
-              <Link
-                href="/store"
-                className={`text-sm hover:text-blue transition-colors ${
-                  pathname === '/store' ? 'text-blue' : 'text-foreground'
-                }`}
-              >
-                Store
               </Link>
               {/* Mobile Theme Toggle */}
               <button
