@@ -3,6 +3,7 @@ set -o errexit
 
 pip install -r requirements.txt
 python manage.py collectstatic --no-input
+python fix_migrations.py
 python manage.py migrate
 python manage.py seed_data
 python manage.py seed_quant_models
