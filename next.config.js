@@ -6,7 +6,7 @@ const nextConfig = {
   images: {
     domains: ['localhost', 'res.cloudinary.com', 'images.unsplash.com', '127.0.0.1', 'substack-post-media.s3.amazonaws.com', 'api.dicebear.com'],
     remotePatterns: [
-      { protocol: 'https', hostname: '**.onrender.com' },
+      { protocol: 'https', hostname: '**.railway.app' },
       { protocol: 'https', hostname: 'substack-post-media.s3.amazonaws.com' },
       { protocol: 'https', hostname: 'api.dicebear.com' },
     ],

@@ -21,9 +21,9 @@
 | Payments | Stripe | via stripe Python SDK |
 | Email | Amazon SES (SMTP) | — |
 | Database (local) | SQLite | — |
-| Database (prod) | PostgreSQL (Render) | — |
+| Database (prod) | PostgreSQL (Railway) | — |
 | Data Pipeline | R (crypto2), Python (fredapi, yfinance, alpaca-py) | — |
-| Hosting | Render (web + API + DB) | — |
+| Hosting | Railway (web + API + DB) | — |
 | Source Control | GitHub (lagobrian/quanthedge) | — |
 
 ---
@@ -68,7 +68,7 @@ quanthedge/
 │   │   ├── urls.py                # Root URL config + health check
 │   │   └── wsgi.py
 │   ├── requirements.txt
-│   ├── build.sh                   # Render build script
+│   ├── build.sh                   # API bootstrapping script
 │   ├── Procfile                   # Gunicorn config
 │   └── .env                       # Local env vars (NOT committed)
 ├── src/
@@ -126,7 +126,8 @@ quanthedge/
 │   └── types/
 │       ├── blog.ts
 │       └── plotly.d.ts
-├── render.yaml                    # Render Blueprint (3 services)
+├── Dockerfile.web                 # Railway web service image
+├── RAILWAY.md                     # Railway deployment notes
 ├── tailwind.config.js
 ├── next.config.js
 ├── package.json
@@ -254,7 +255,7 @@ quanthedge/
 # Django
 SECRET_KEY=              # Django secret key
 DEBUG=True               # Set False in production
-ALLOWED_HOSTS=.onrender.com,localhost,127.0.0.1
+ALLOWED_HOSTS=.railway.app,localhost,127.0.0.1
 DATABASE_URL=            # PostgreSQL connection string (production only)
 
 # Email (Amazon SES)
@@ -277,7 +278,7 @@ ALPACA_SECRET_KEY=
 DATA_FETCH_SECRET=       # Random string for cron trigger auth
 
 # Frontend (baked at build time)
-NEXT_PUBLIC_API_URL=https://quanthedge-api.onrender.com
+NEXT_PUBLIC_API_URL=https://your-api.railway.app
 
 # Admin
 ADMIN_EMAIL=lagobrian@outlook.com
@@ -288,16 +289,17 @@ ADMIN_PASSWORD=          # Used by seed_data command
 
 ## 6. Deployment
 
-### Render Services (defined in render.yaml)
-1. **quanthedge-api** — Django backend (Gunicorn)
-2. **quanthedge-web** — Next.js frontend (standalone)
-3. **quanthedge-db** — PostgreSQL database
+### Railway Services
+1. **api** — Django backend (Gunicorn)
+2. **web** — Next.js frontend (standalone)
+3. **PostgreSQL** — managed database
+4. **Redis** — optional cache
 
 ### Deploy Process
 1. Push to `main` branch on GitHub
-2. Render auto-deploys both services
-3. Backend: `build.sh` runs pip install, collectstatic, migrate, seed_data
-4. Frontend: `npm install && npm run build`
+2. Railway deploys each service from the same repo using its assigned Dockerfile
+3. Backend container runs `build.sh`, then starts Gunicorn
+4. Frontend container builds the standalone Next.js app and starts `server.js`
 
 ### Rollback
 ```bash
@@ -407,9 +409,9 @@ View at: `/backtests/crypto-breadth-mean-reversion/`
 
 ## 10. Known Issues & Quirks
 
-- **Production blog empty**: Need to re-run `sync_to_production.py` after category changes or trigger Render web rebuild to pick up `NEXT_PUBLIC_API_URL`
+- **Production blog empty**: Confirm `NEXT_PUBLIC_API_URL` points at the Railway API domain and redeploy the web service after changing it
 - **SES sandbox mode**: Can only send emails to verified addresses until production access is approved
 - **SQLite locking**: yfinance bulk download can hit "database is locked" locally; not an issue with PostgreSQL
 - **Chart.js remnants**: Some old pages may still reference Chart.js; all new charts use Plotly
 - **`NEXT_PUBLIC_` vars**: Must rebuild web service after changing (baked at build time)
-- **crypto2 R package**: Only works where R is installed; not available on Render (use local machine or dedicated worker)
+- **crypto2 R package**: Only works where R is installed; use a dedicated worker or local machine for R-based tasks

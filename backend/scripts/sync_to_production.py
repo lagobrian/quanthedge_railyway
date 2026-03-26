@@ -5,7 +5,7 @@ Usage:
     python scripts/sync_to_production.py
 
 Set these environment variables:
-    PROD_API_URL  - Production API URL (default: https://quanthedge-api.onrender.com)
+    PROD_API_URL  - Production API URL
     PROD_EMAIL    - Admin email for login
     PROD_PASSWORD - Admin password
 """
@@ -15,9 +15,13 @@ import json
 import requests
 
 # Config
-PROD_API = os.environ.get('PROD_API_URL', 'https://quanthedge-api.onrender.com')
+PROD_API = os.environ.get('PROD_API_URL', '').rstrip('/')
 EMAIL = os.environ.get('PROD_EMAIL', 'lagobrian@outlook.com')
 PASSWORD = os.environ.get('PROD_PASSWORD', '')
+
+if not PROD_API:
+    print('Set PROD_API_URL to the target API base URL, e.g. https://your-api.up.railway.app')
+    sys.exit(1)
 
 if not PASSWORD:
     PASSWORD = input('Enter your production admin password: ')

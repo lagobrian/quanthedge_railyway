@@ -117,7 +117,7 @@ _cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,ht
 CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins.split(',') if o.strip()]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://.*\.onrender\.com$",
+    r"^https://.*\.railway\.app$",
 ]
 
 # REST Framework
@@ -175,7 +175,7 @@ STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', '')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
 
-# Logging — always output errors to stderr so they appear in Render logs
+# Logging — always output errors to stderr so they appear in platform logs
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
