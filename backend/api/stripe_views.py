@@ -148,15 +148,12 @@ def stripe_webhook_view(request):
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE', '')
 
-    if settings.STRIPE_WEBHOOK_SECRET:
-        try:
-            event = stripe.Webhook.construct_event(payload, sig_header, settings.STRIPE_WEBHOOK_SECRET)
-        except (ValueError, stripe.error.SignatureVerificationError):
-            return HttpResponse(status=400)
-    else:
-        # No webhook secret configured - parse event directly (dev mode)
-        import json
-        event = stripe.Event.construct_from(json.loads(payload), stripe.api_key)
+    if not settings.STRIPE_WEBHOOK_SECRET:
+        return HttpResponse(status=400)
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, settings.STRIPE_WEBHOOK_SECRET)
+    except (ValueError, stripe.error.SignatureVerificationError):
+        return HttpResponse(status=400)
 
     # Handle subscription events
     if event.type == 'checkout.session.completed':

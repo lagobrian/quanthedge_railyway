@@ -15,8 +15,8 @@ def health_check(request):
         with connection.cursor() as cursor:
             cursor.execute('SELECT 1')
         health['db'] = 'ok'
-    except Exception as e:
-        health['db'] = f'error: {str(e)}'
+    except Exception:
+        health['db'] = 'error'
         health['status'] = 'degraded'
     return JsonResponse(health)
 

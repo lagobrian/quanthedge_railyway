@@ -57,6 +57,16 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 USE_ETAGS = True
 
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+
 # GZip compression (handled by whitenoise for static, Django for API)
 MIDDLEWARE.insert(1, 'django.middleware.gzip.GZipMiddleware')
 
@@ -117,7 +127,7 @@ _cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,ht
 CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins.split(',') if o.strip()]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://.*\.railway\.app$",
+    r"^https://.*\.railway\.app$",  # kept for Railway preview deployments
 ]
 
 # REST Framework
