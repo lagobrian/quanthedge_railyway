@@ -73,7 +73,34 @@ else:
 if not migration_recorded("crypto_models", "0001_initial"):
     if table_exists("crypto_models_cryptobreadth"):
         print("fix_migrations: crypto_models.0001_initial missing but table exists — dropping conflicting tables.")
-        for t in ["crypto_models_cryptobreadth", "crypto_global_metrics"]:
+        for t in [
+            # 0001
+            "crypto_models_cryptobreadth",
+            # 0002
+            "crypto_models_cryptoglobalquote",
+            "crypto_models_cryptoprice",
+            "crypto_models_cryptoindex",
+            # 0003
+            "crypto_models_quantmodel_analysts",
+            "crypto_models_quantmodel",
+            "crypto_models_modeldatapoint",
+            "crypto_models_modelsignalresult",
+            # 0004
+            "crypto_models_backtesttrade",
+            "crypto_models_equitypoint",
+            "crypto_models_drawdownpoint",
+            "crypto_models_backtest",
+            # 0005
+            "crypto_models_datafetchlog",
+            "crypto_models_stockprice",
+            "crypto_models_macrodatapoint",
+            # 0006
+            "crypto_models_modelalert",
+            # 0007
+            "crypto_models_apikey",
+            # 0009
+            "crypto_models_equitybreadth",
+        ]:
             drop_table(t)
     else:
         print("fix_migrations: crypto_models.0001_initial not recorded, no conflicting tables found.")
